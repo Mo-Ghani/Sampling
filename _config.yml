@@ -1,4 +1,0 @@
-theme: jekyll-theme-cayman
-name: [MCMC and Nested Samplers]
-title: [The Uses Of MCMC And Nested Samplers]
-description: [A collection of demonstrations of how off-the-shelf Python Markov Chain Monte Carlo and Nested Sampling algorithms can be used to analyse real world data sets]
