@@ -1,3 +1,9 @@
+---
+layout: default
+comments: true
+title: Using PyMC3 to fit Gaussian curves to photopeaks in a gamma-ray spectrums
+---
+
 # Using PyMC3 to fit Gaussian curves to photopeaks in a gamma-ray spectrum
 
 A gamma-ray spectrum (GRS) is a histogram describing the counts of detected photons as a function of photon energy. GRS can be useful when evaluating the dosage received from a sample containing unknown radioisotopes. To do this, the total counts produced above background by a source has to be calculated. 
