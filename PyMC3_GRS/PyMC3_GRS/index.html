@@ -1,0 +1,1216 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.0">
+    
+    
+      
+        <title>PyMC3 - MCMC and Nested Samplers</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.b5d04df8.min.css">
+      
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#using-pymc3-and-dynesty-to-fit-gaussian-curves-to-photopeaks-in-a-gamma-ray-spectrum" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="../.." title="MCMC and Nested Samplers" class="md-header-nav__button md-logo" aria-label="MCMC and Nested Samplers">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            MCMC and Nested Samplers
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              PyMC3
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="MCMC and Nested Samplers" class="md-nav__button md-logo" aria-label="MCMC and Nested Samplers">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    MCMC and Nested Samplers
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Home" class="md-nav__link">
+      Home
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        PyMC3
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="PyMC3" class="md-nav__link md-nav__link--active">
+      PyMC3
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#useful-imports" class="md-nav__link">
+    Useful imports
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#viewing-the-data" class="md-nav__link">
+    Viewing the data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-model" class="md-nav__link">
+    The model
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelling-with-pymc3" class="md-nav__link">
+    Modelling with PyMC3
+  </a>
+  
+    <nav class="md-nav" aria-label="Modelling with PyMC3">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sampling-the-data" class="md-nav__link">
+    Sampling the data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sampling-the-data-alternate-method" class="md-nav__link">
+    Sampling the data - Alternate method
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results" class="md-nav__link">
+    Results
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plotting-the-posterior" class="md-nav__link">
+    Plotting the posterior
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-comparisons" class="md-nav__link">
+    Model comparisons
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelling-with-dynesty" class="md-nav__link">
+    Modelling with dynesty
+  </a>
+  
+    <nav class="md-nav" aria-label="Modelling with dynesty">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sampling-the-data_1" class="md-nav__link">
+    Sampling the data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results_1" class="md-nav__link">
+    Results
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plotting-the-posterior_1" class="md-nav__link">
+    Plotting the posterior
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-comparisons_1" class="md-nav__link">
+    Model comparisons
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../LightCurve/LightCurve/" title="emcee" class="md-nav__link">
+      emcee
+    </a>
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#useful-imports" class="md-nav__link">
+    Useful imports
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#viewing-the-data" class="md-nav__link">
+    Viewing the data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-model" class="md-nav__link">
+    The model
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelling-with-pymc3" class="md-nav__link">
+    Modelling with PyMC3
+  </a>
+  
+    <nav class="md-nav" aria-label="Modelling with PyMC3">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sampling-the-data" class="md-nav__link">
+    Sampling the data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sampling-the-data-alternate-method" class="md-nav__link">
+    Sampling the data - Alternate method
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results" class="md-nav__link">
+    Results
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plotting-the-posterior" class="md-nav__link">
+    Plotting the posterior
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-comparisons" class="md-nav__link">
+    Model comparisons
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelling-with-dynesty" class="md-nav__link">
+    Modelling with dynesty
+  </a>
+  
+    <nav class="md-nav" aria-label="Modelling with dynesty">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sampling-the-data_1" class="md-nav__link">
+    Sampling the data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results_1" class="md-nav__link">
+    Results
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plotting-the-posterior_1" class="md-nav__link">
+    Plotting the posterior
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-comparisons_1" class="md-nav__link">
+    Model comparisons
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  
+                
+                
+                <h1 id="using-pymc3-and-dynesty-to-fit-gaussian-curves-to-photopeaks-in-a-gamma-ray-spectrum">Using PyMC3 and dynesty to fit Gaussian curves to photopeaks in a gamma-ray spectrum</h1>
+<p>A gamma-ray spectrum (GRS) is a histogram describing the counts of detected photons as a function of photon energy. GRS can be useful when evaluating the dosage received from a sample containing unknown radioisotopes. To do this, the total counts produced above background by a source has to be calculated. </p>
+<p>Above the background level, a gamma source produces sharp peaks, called "photopeaks", due to discrete energy level changes in a nucleus. A method for finding the total counts is to fit a curve to every photopeak in a GRS, and integrate each one to find the total area contained under photopeaks.</p>
+<p>In this example, I'll use MCMC to fit Gaussian curves to peaks found in gamma-ray spectrum of a sample of Ba-133.</p>
+<h2 id="useful-imports">Useful imports</h2>
+<pre><code class="python"># numpy
+import numpy as np
+
+# scipy
+from scipy.signal import find_peaks
+from scipy.stats import gaussian_kde
+from scipy import integrate
+from scipy.special import ndtri, gammaln
+
+# Plotting
+import corner
+
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+# Samplers
+import pymc3 as pm
+print('PyMC3 version: {}'.format(pm.__version__))
+
+import dynesty
+from dynesty import NestedSampler
+from dynesty.utils import resample_equal
+print('dynesty version: {}'.format(dynesty.__version__))
+
+# misc
+import logging
+from time import time
+</code></pre>
+
+<pre><code>PyMC3 version: 3.8
+dynesty version: 1.0.1
+</code></pre>
+<h2 id="viewing-the-data">Viewing the data</h2>
+<p>The data is in the form of a histogram with over 16000 bins, each with width of one "MCA-Channel". This unit of energy is specific to the detector used to collect the GRS, and so we also must calibrate the spectrum to have a bin width in keV.</p>
+<p>Start by loading in both the calibration parameters, and the entire gamma-ray spectrum as a list:</p>
+<pre><code class="python">#Load detector calibration
+cali_dir = 'calibration.txt'
+with open(cali_dir, 'r') as file:
+    calibration = file.read().splitlines()
+calibration = list(map(float, calibration))
+c_0 = calibration[0]
+c_2 = calibration[2]
+
+#Load gamma-ray spectrum data
+spectra_dir = 'Ba.TKA'
+with open(spectra_dir, 'r') as file:
+    counts = [int(j) for j in file]
+counts = counts[2:]
+</code></pre>
+
+<p>The spectrum contains an X-ray region at lower energies, and an extremely noisy region at higher energies. Both of these regions are not very useful for this demonstration, so I'll only show the section I'll be searching for photopeaks.</p>
+<pre><code class="python">xrange = np.array(range(len(counts)))  # Bins for gamma-ray spectrum
+
+# Plot the spectrum
+plt.figure(figsize=(15,5))
+plt.plot(xrange, counts, 'b')
+plt.fill(xrange, counts, 'b', alpha= 0.4)
+plt.xlabel('Energy / MCA Channels')
+plt.ylabel('Counts')
+plt.title('Gamma-Ray Spectrum of a sample of Ba-133')
+plt.yscale('log')
+plt.xlim(540, 3500)
+plt.show()
+</code></pre>
+
+<p><img alt="png" src="../output_8_0.png" /></p>
+<p>The spectrum is made up of a smooth background counts curve, with sharp peaks sitting on top. These are the photopeaks we're searching for.
+Using scipy's "find_peaks" function, we can select some photopeaks in the spectrum to analyse. This function looks for local maxima by comparing a point to it's neighbours. The optional arguments specify the minimum height for a peak to be returned, and a "neighbourhood width", so only the largest peak in a given neighbourhood will be returned. </p>
+<pre><code class="python"># Find prominent peaks in data using scipy
+peaks = find_peaks(counts, height=1300, distance=100)[0][3:]
+</code></pre>
+
+<p>This function returns the indicies at which a peak maximum is located in the gamma-ray spectrum. Next, I'll define a "radius" of 20 bins around each peak centre, and create lists containing the data for each peak. </p>
+<p>Lets plot each peak to see what the function found:</p>
+<pre><code class="python"># select an area around peak to be plotted &amp; calibrate energy scale to keV 
+ranger = 20
+peaks_x = [c_0*np.array(range(peak-ranger, peak+ranger)) + c_2 for peak in peaks]
+peaks_y = [counts[peak-ranger:peak+ranger] for peak in peaks]
+
+# Plot selected peaks from gamma-ray spectrum
+fig, axs = plt.subplots(2,3, figsize=(12,7))
+for i in range(2):
+    for j in range(3):
+        ind = 3*i + j
+        axs[i,j].plot(peaks_x[ind], peaks_y[ind], 'b')
+        axs[i, j].fill(peaks_x[ind], peaks_y[ind], 'b', alpha=0.2)
+        if i == 1:
+            axs[i,j].set_xlabel('Energy / KeV')
+        if j == 0:
+            axs[i,j].set_ylabel('Counts')
+fig.suptitle('Photopeaks produced by a sample of Ba-133', y=0.95)
+plt.show()
+</code></pre>
+
+<p><img alt="png" src="../output_12_0.png" /></p>
+<h2 id="the-model">The model</h2>
+<p>The decays that cause the photopeaks in a GRS have a descrete energy. The width of the photopeaks is caused by imperfections in the detector crystal, such as defects or excess thermal energy. This causes each peak to have a Gaussian nature, rather than a sharp peak.</p>
+<p>I'll attempt to fit a Gaussian curve to each peak, by first defining the Gaussian fuction to be used:</p>
+<pre><code class="python">def gauss(x, a, xc, w, y0):
+    &quot;&quot;&quot;
+    Gaussian function
+    :param x: 1D array of input points
+    :param a: Amplitude of peak
+    :param xc: Mean peak energy
+    :param w: Standard deviation of peak
+    :param y0: Background counts under peak
+    :return: 1D array of Gaussian output points
+    &quot;&quot;&quot;
+    return a*np.exp(-(x-xc)**2/(2*w**2))+y0
+</code></pre>
+
+<h2 id="modelling-with-pymc3">Modelling with PyMC3</h2>
+<p>Our goal is to find the values of the parameters above that best explain each photopeak. To ensure that the algorithms quickly converge on the most likely parameter values, I'll guess some values for the parameters of each peak, simply by using the plots above. Since the standard deviation appears roughly the same for all the peaks, I'll set the prior to be uniform.</p>
+<pre><code class="python">#initialise a model for each peak, and define guesses for the parameters
+gauss_models = [pm.Model() for i in range(len(peaks))]
+a_guesses = [23000., 900., 6100., 13800., 39800., 5300.]
+xc_guesses = [81., 161., 276.5, 303., 356., 384.]
+y0_guesses = [1700., 1350., 300., 300., 250., 50.]
+</code></pre>
+
+<h3 id="sampling-the-data">Sampling the data</h3>
+<p>Next, I'll use the above guesses to initialise each model. PyMC3 requires the used to provide a prior for each parameter, and a likelihood function, which can be easily set using the PyMC3 in-built Normal, Uniform, and Poisson probabillity distribution functions. </p>
+<p>This is done within the scope of each model defined above, using the "with" statement:</p>
+<pre><code class="python">for i in range(len(peaks)):
+    with gauss_models[i]:
+        # set prior parameters
+        # amplitude
+        a_mu = a_guesses[i]     # mean of amplitude of peaks
+        a_sig = 100.            # standard deviation of amplitude of peaks
+
+        # peak energy
+        xc_mu = xc_guesses[i]  # mean of peak energy
+        xc_sig = 1.            # standard deviation of peak energy
+
+        # standard deviation
+        w_min = 0.3             # lower bound of peak standard deviation
+        w_max = 2.5             # upper bound of peak standard deviation
+
+        # background counts
+        y0_mu = y0_guesses[i]  # mean of background counts
+        y0_sig = 30.           # standard deviation of background counts
+
+        # set normal priors
+        a_model = pm.Normal('Amplitude', mu=a_mu, sd=a_sig) 
+        xc_model = pm.Normal('Peak Energy', mu=xc_mu, sd=xc_sig)  
+        w_model = pm.Uniform('Standard Deviation', lower=w_min, upper=w_max)  
+        y0_model = pm.Normal('Background Counts', mu=y0_mu, sd=y0_sig)
+
+        # Expected value of outcome
+        mu = gauss(peaks_x[i], a_model, xc_model, w_model, y0_model)
+
+        # Poisson likelihood of observations
+        Y_obs = pm.Poisson('Y_obs', mu=mu, observed=peaks_y[i])
+</code></pre>
+
+<p>Now each model has been initialised, the MCMC sampling algorithm can now be applied. PyMC3 uses a set of samples, as well as a set of tuning samples. We can also use the "time" package to record how long it took to sample all of the photopeaks.</p>
+<pre><code class="python">Nsamples = 800   # number of samples
+Ntune = 1000     # number of tuning samples
+
+# disable PyMC3 console logs, for neatness
+logger = logging.getLogger('pymc3')
+logger.setLevel(logging.ERROR)
+
+# perform sampling
+traces = []
+t0 = time()
+for i in range(len(peaks)):
+    with gauss_models[i]:
+        traces.append(pm.sample(Nsamples, tune=Ntune, discard_tuned_samples=True))
+t1 = time()
+
+timepymc3 = t1-t0  # time taken to sample all of the photopeaks
+
+print('{} seconds ({} seconds per peak) taken to run PyMC3 sampling.'.format(timepymc3, timepymc3/6))
+</code></pre>
+
+<pre><code>Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200 [00:10&lt;00:00, 699.00draws/s] 
+Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200 [00:09&lt;00:00, 757.94draws/s] 
+Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200 [00:10&lt;00:00, 715.65draws/s] 
+Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200 [00:10&lt;00:00, 674.49draws/s] 
+Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200 [00:10&lt;00:00, 661.42draws/s] 
+Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200 [00:10&lt;00:00, 710.30draws/s]
+
+
+276.74090600013733 seconds (46.123484333356224 seconds per peak) taken to run PyMC3 sampling.
+</code></pre>
+<h3 id="sampling-the-data-alternate-method">Sampling the data - Alternate method</h3>
+<p>The above method uses a Poisson likelihood, since a metric like counts is non-negative. Although, since the peaks in the gamma-ray spectrum have large enough amplitudes, the likelihood can be well approximated by a normal distribution, with a estimate for the noise standard deviation. Guessing this standard deviation value is tricky, so instead we can set it as an extra parameter for the sampler. A good prior to start with is a uniform probabillity distribution in log-space, meaning the standard deviation has an equal probabillity of having any order of magnitude between an upper and lower bound.</p>
+<p>I'll showcase this method, but I'll use the previous method for the results section below. I'll also use only the 2nd peak found, as it has the noisiest data and will likely produce the most interesting results. Start by initiating a new set of models using simillar code as before, but with the new likelihood.</p>
+<pre><code class="python">gauss_model_alt = pm.Model()
+with gauss_model_alt:
+    # set prior parameters
+    # amplitude
+    a_mu = a_guesses[1]    # mean of amplitude of peaks
+    a_sig = 50.            # standard deviation of amplitude of peaks
+
+    # peak energy
+    xc_mu = xc_guesses[1]  # mean of peak energy
+    xc_sig = 1.            # standard deviation of peak energy
+
+    # standard deviation
+    w_mu = 1.2             # mean of peak standard deviation
+    w_sig = 1.             # standard deviation of peak standard deviation
+
+    # background counts
+    y0_mu = y0_guesses[1]  # mean of background counts
+    y0_sig = 30.           # standard deviation of background counts
+
+    # noise deviation
+    sigma_min = -1         # minimum order of magnitude of the noise deviation
+    sigma_max = 2          # maximum order of magnitude of the noise deviation
+
+    # set normal priors
+    a_model = pm.Normal('Amplitude', mu=a_mu, sd=a_sig)
+    xc_model = pm.Normal('Peak Energy', mu=xc_mu, sd=xc_sig)
+    w_model = pm.Normal('Standard Deviation', mu=w_mu, sd=w_sig)
+    y0_model = pm.Normal('Background Counts', mu=y0_mu, sd=y0_sig)
+    # set uniform prior
+    sigma_model = pm.Uniform('Noise', lower=sigma_min, upper=sigma_max)
+
+    # Expected value of outcome
+    mu = gauss(peaks_x[1], a_model, xc_model, w_model, y0_model)
+    # Normal likelihood of observations with noise
+    Y_obs = pm.Normal('Y_obs', mu=mu, sd=10 ** sigma_model, observed=peaks_y[1])
+</code></pre>
+
+<p>Performing the sampling again gives our alternate posteriors:</p>
+<pre><code class="python">Nsamples = 800
+Ntune = 1000
+
+# perform sampling
+t0_alt = time()
+with gauss_model_alt:
+    trace_alt = pm.sample(Nsamples, tune=Ntune, discard_tuned_samples=True)
+t1_alt = time()
+
+timepymc3_alt = t1_alt-t0_alt
+
+print('{} seconds taken to run PyMC3 alternate sampling.'.format(timepymc3_alt))
+</code></pre>
+
+<pre><code>Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200 [00:09&lt;00:00, 727.73draws/s]
+
+
+43.72043991088867 seconds taken to run PyMC3 alternate sampling.
+</code></pre>
+<p>We can now briefly use the trace to see what values the sampler converged on for each parameter. I'll return to these values later when finding the uncertainty of the counts under the photopeak.</p>
+<pre><code class="python"># collect samples of each parameter
+samples_alt = np.vstack((trace_alt['Amplitude'],
+                         trace_alt['Peak Energy'],
+                         trace_alt['Standard Deviation'],
+                         trace_alt['Background Counts'],
+                         trace_alt['Noise'])).T
+
+# mean and standard deviation error of each parameter
+a_alt, a_err_alt = np.mean(samples_alt[:,0]), np.std(samples_alt[:,0])
+xc_alt, xc_err_alt = np.mean(samples_alt[:,1]), np.std(samples_alt[:,1])
+w_alt, w_err_alt = np.mean(samples_alt[:,2]), np.std(samples_alt[:,2])
+y0_alt, y0_err_alt = np.mean(samples_alt[:,3]), np.std(samples_alt[:,3])
+sigma_alt, sigma_err_alt = np.mean(samples_alt[:,4]), np.std(samples_alt[:,4])
+
+# print values
+print('Parameter mean values with uncertainties for a photopeak in a sample of Ba-133: \n \n ' +
+      '            Amplitude = {} \u00B1 {} counts \n'.format(a_alt, a_err_alt) +
+      '           Peak Energy = {} \u00B1 {} keV \n'.format(xc_alt, xc_err_alt) +
+      '    Standard Deviation = {} \u00B1 {} keV \n'.format(w_alt, w_err_alt) +
+      '     Background Counts = {} \u00B1 {} counts \n'.format(y0_alt, y0_err_alt) +
+      '                 Noise = {} \u00B1 {} counts'.format(sigma_alt, sigma_err_alt))
+</code></pre>
+
+<pre><code>Parameter mean values with uncertainties for a photopeak in a sample of Ba-133:
+
+             Amplitude = 805.5161312481847 ± 22.51101688252669 counts 
+           Peak Energy = 160.6059216398261 ± 0.018834853387709613 keV 
+    Standard Deviation = 0.5233786079419919 ± 0.019371192247871535 keV 
+     Background Counts = 1333.599554840382 ± 7.251969008469188 counts 
+                 Noise = 1.5885697487281636 ± 0.05223363708405703 counts
+</code></pre>
+<h3 id="results">Results</h3>
+<p>Now that the data has been sampled, we can collect the information for each parameter posterior using the traces. By using a dictionary, we can also collect the mean and standard deviation for each parameter, which will be useful later for plotting the fitted curves.</p>
+<pre><code class="python"># collect traces of each parameter from each peak
+all_pymc3_samples = [np.vstack((trace['Amplitude'],
+                                trace['Peak Energy'],
+                                trace['Standard Deviation'],
+                                trace['Background Counts'])).T for trace in traces]
+
+# dictionaries to contain mean and standard deviation of each peak
+resdict = [{} for i in range(len(peaks))]
+for ind in range(len(peaks)):
+    resdict[ind]['a_mu'] = np.mean(all_pymc3_samples[ind][:, 0])
+    resdict[ind]['a_sig'] = np.std(all_pymc3_samples[ind][:, 0])
+    resdict[ind]['xc_mu'] = np.mean(all_pymc3_samples[ind][:, 1])
+    resdict[ind]['xc_sig'] = np.std(all_pymc3_samples[ind][:, 1])
+    resdict[ind]['w_mu'] = np.mean(all_pymc3_samples[ind][:, 2])
+    resdict[ind]['w_sig'] = np.std(all_pymc3_samples[ind][:, 2])
+    resdict[ind]['y0_mu'] = np.mean(all_pymc3_samples[ind][:, 3])
+    resdict[ind]['y0_sig'] = np.std(all_pymc3_samples[ind][:, 3])
+</code></pre>
+
+<p>To visualise the information given for each parameter, we can define a function to plot the parameter posteriors, and also create contour plots that describe how any two parameters might depend on each other. This is done using "corner.py". </p>
+<p>As an example, I'll use the 2nd peak again due to its noisy data: </p>
+<pre><code class="python">def plotposts(samples, labels, **kwargs):
+    &quot;&quot;&quot;
+    Function to plot posteriors using corner.py and scipy's gaussian KDE function.
+    &quot;&quot;&quot;
+
+    fig = corner.corner(samples, labels=labels, hist_kwargs={'density': True}, **kwargs)
+    plt.subplots_adjust(wspace=0.2, hspace=0.2)
+    # plot KDE smoothed version of distributions
+    for axidx, samps in zip([0, 5, 10, 15], samples.T):
+        kde = gaussian_kde(samps)
+        xvals = fig.axes[axidx].get_xlim()
+        xvals = np.linspace(xvals[0], xvals[1], 100)
+        fig.axes[axidx].plot(xvals, kde(xvals), color=&quot;firebrick&quot;)
+
+# create corner plot for peak with noisiest data 
+labels = [r'Amplitude', r'Peak Energy', r'Standard Deviation', r'Background Counts']
+corner_plot_samples = all_pymc3_samples[1]
+
+plotposts(corner_plot_samples, labels)
+</code></pre>
+
+<p><img alt="png" src="../output_35_0.png" /></p>
+<p>This corner plot shows that the amplitude of a photopeak and its standard deviation are dependant, since their contour plot is not symmetric.</p>
+<p>Now that we have the parameter posteriors, along with their means and standard deviations, we can state the most likely value of each parameter, with their uncertainties:</p>
+<pre><code class="python">a, a_err = resdict[1]['a_mu'], resdict[1]['a_sig']
+xc, xc_err = resdict[1]['xc_mu'], resdict[1]['xc_sig']
+w, w_err = resdict[1]['w_mu'], resdict[1]['w_sig']
+y0, y0_err = resdict[1]['y0_mu'], resdict[1]['y0_sig']
+
+print('Parameter mean values with uncertainties for a photopeak in a sample of Ba-133: \n \n' +
+      '            Amplitude = {} \u00B1 {} counts \n'.format(a, a_err) +
+      '           Peak Energy = {} \u00B1 {} keV \n'.format(xc, xc_err) +
+      '    Standard Deviation = {} \u00B1 {} keV \n'.format(w, w_err) +
+      '     Background Counts = {} \u00B1 {} counts \n'.format(y0, y0_err))
+</code></pre>
+
+<pre><code>Parameter mean values with uncertainties for a photopeak in a sample of Ba-133:
+
+            Amplitude = 789.3499838312316 ± 25.40762174271906 counts 
+           Peak Energy = 160.60556153256505 ± 0.019374762693360942 keV 
+    Standard Deviation = 0.5324207733753832 ± 0.017697951515753676 keV 
+     Background Counts = 1334.1324943543657 ± 6.560639436166777 counts
+</code></pre>
+<h3 id="plotting-the-posterior">Plotting the posterior</h3>
+<p>Using the mean values for each parameter, we can define a Gaussian curve for each peak. Plotting this curve over the original data gives the best fit curve for that data. This best fit can be integrated, and by summing the integrals for each peak, the total counts of the gamma-ray spectrum can be found.</p>
+<pre><code class="python"># plot each peak, with the fitted Gaussians superimposed
+fig, axs = plt.subplots(2, 3, figsize=(12, 7))
+for i in range(2):
+    for j in range(3):
+        ind = 3 * i + j
+
+        a = resdict[ind]['a_mu']
+        xc = resdict[ind]['xc_mu']
+        w = resdict[ind]['w_mu']
+        y0 = resdict[ind]['y0_mu']
+
+        x = peaks_x[ind]
+        y = peaks_y[ind]
+
+        # plot original data
+        axs[i, j].plot(x, y, 'b.', 
+                       alpha=1, 
+                       label=('Original Data' if all(num == 0 for num in [i,j]) else ''))
+
+        # plot fitted curve over the data
+        xsmooth = np.linspace(x[0], x[-1], len(x) * 100)
+        axs[i, j].plot(xsmooth, gauss(xsmooth, a, xc, w, y0), 'k:',
+                       alpha=1,
+                       label=('Fitted Model' if all(num == 0 for num in [i,j]) else ''))
+
+        if i == 1:
+            axs[i, j].set_xlabel('Energy / keV')
+        if j == 0:
+            axs[i, j].set_ylabel('Counts')
+leg = fig.legend(loc='lower right', numpoints=1)
+for lh in leg.legendHandles: 
+    lh.set_alpha(1)
+fig.suptitle('Photopeaks produced by a sample of Ba-133,' +
+             ' with fitted Gaussian curves from MCMC sampling')
+plt.show()
+</code></pre>
+
+<p><img alt="png" src="../output_40_0.png" /></p>
+<p>Alternatively, instead of using the means of the parameters to plot the fitted curve, we can use the posterior distributions to randomly sample predictions of each parameter. We can then overplot multiple curves onto the data set. This is useful as instead of only showing the most likely model, it visualises the overall uncertainty of the fit.</p>
+<p>Again, I'll use the noisiest peak as an example. First, randomly choose 300 of each parameter from their posteriors:</p>
+<pre><code class="python"># number of curves to plot per peak
+n_fits = 300
+a_samps_pymc3, xc_samps_pymc3, w_samps_pymc3, y0_samps_pymc3 = ([] for i in range(4))
+for ind in range(len(peaks)):
+    a_samps_pymc3.append(np.random.choice(all_pymc3_samples[ind][:, 0], size=n_fits))
+    xc_samps_pymc3.append(np.random.choice(all_pymc3_samples[ind][:, 1], size=n_fits))
+    w_samps_pymc3.append(np.random.choice(all_pymc3_samples[ind][:, 2], size=n_fits))
+    y0_samps_pymc3.append(np.random.choice(all_pymc3_samples[ind][:, 3], size=n_fits))
+</code></pre>
+
+<p>We now have 300 sets of potential parammeters. For each set of parameters, define and overplot a Gaussian curve as before, each curve being slightly different. In regions of the plot where a lot of curves overlap, the plot will appear darker relative to regions with fewer curves. The resulting plots show the regions where a fitted curve is more likely to fall. This is called a posterior predictive plot.</p>
+<p>The plot below shows the posterior predictive distribution for the noisiest photopeak. I also included a second plot, which shows a "zoomed in" view of the tip of the peak, at which the most deviation occurs.</p>
+<pre><code class="python">ind = 1
+x = peaks_x[ind]
+xsmooth = np.linspace(x[0], x[-1], len(x) * 100)
+fig, (ax1, ax2) = plt.subplots(1,2, figsize=(12,4))
+for i in range(n_fits):
+    ax1.plot(xsmooth, gauss(xsmooth, a_samps_pymc3[ind][i], xc_samps_pymc3[ind][i],
+                                  w_samps_pymc3[ind][i], y0_samps_pymc3[ind][i]),
+             'b-', alpha=0.01, linewidth=2)
+    ax2.plot(xsmooth, gauss(xsmooth, a_samps_pymc3[ind][i], xc_samps_pymc3[ind][i],
+                                  w_samps_pymc3[ind][i], y0_samps_pymc3[ind][i]),
+             'b-', alpha=0.02, linewidth=2)
+ax1.set_ylabel('Counts')
+ax1.set_xlabel('Energy / keV')
+
+ax2.set_xlim(159.4,161.8)
+ax2.set_ylim(1800, 2250)
+ax2.set_xlabel('Energy / keV')
+
+fig.suptitle('Posterior predictive plot for a photopeak from a sample of Ba-133')
+plt.show()
+</code></pre>
+
+<p><img alt="png" src="../output_44_0.png" /></p>
+<h3 id="model-comparisons">Model comparisons</h3>
+<p>Now that we have a model with the mean fitted parameters for each curve, we can integrate to find the total area under a curve. Using the uncertainty in each parameter from above, the pecentage error in the total counts can be found. This can be used as a nice way to judge the quality of the fit, and whether the curve can be "trusted" to approximate the data. </p>
+<p>Using scipy's "integrate.quad" function makes the integration simple. I'll use the same example peak as perviously, integrating between the bottom of the tails of the peak:</p>
+<pre><code class="python"># parameter means and standard deviations of peak
+a_pymc3, aerr_pymc3 = resdict[1]['a_mu'], resdict[1]['a_sig']
+xc_pymc3, xcerr_pymc3 = resdict[1]['xc_mu'], resdict[1]['xc_sig']
+w_pymc3, werr_pymc3 = resdict[1]['w_mu'], resdict[1]['w_sig']
+y0_pymc3, y0err_pymc3 = resdict[1]['y0_mu'], resdict[1]['y0_sig']
+
+# integrate, dividing by the calibration coefficient (to remove keV from the units)
+peak_integral = integrate.quad(lambda t: gauss(t, a_pymc3, xc_pymc3,
+                                               w_pymc3, y0_pymc3), 159.1, 162.2)[0] / c_0
+peak_integral_err = np.sqrt(2 * np.pi * ((w_pymc3 * aerr_pymc3) ** 2 +
+                                         (a_pymc3 * werr_pymc3) ** 2 )) / c_0
+
+percent_err = 100*peak_integral_err/peak_integral
+
+print('Total counts = {} \u00B1 {} counts \n'.format(peak_integral, peak_integral_err) +
+      'Percentage error = {}%'.format(percent_err))
+</code></pre>
+
+<pre><code>Total counts = 22933.86204613347 ± 215.58699451020811 counts 
+Percentage error = 0.9400378971345341%
+</code></pre>
+<p>This percentage error was found using a Poisson likelihood, as described above. For a comparison, this integration can be repeated for the alternate sampling method, with a normal likelihood. Using the same alternate parameters that were found earlier, run the same integration process as before:</p>
+<pre><code class="python">peak_integral_alt = integrate.quad(lambda t: 
+                                   gauss(t, a_alt, xc_alt, w_alt, y0_alt), 159.1, 162.2)[0] / c_0
+peak_integral_err_alt = np.sqrt(2 * np.pi * 
+                                ((w_alt * a_err_alt) ** 2 + (a_alt * w_err_alt) ** 2 )) / c_0
+
+percent_err_alt = 100*peak_integral_err_alt/peak_integral_alt
+
+print('Alternate total counts = {} \u00B1 {} counts \n'.format(peak_integral_alt,
+                                                               peak_integral_err_alt) +
+      'Alternate percentage error = {}%'.format(percent_err_alt))
+</code></pre>
+
+<pre><code>Alternate total counts = 22943.751210742565 ± 216.76313608385547 counts 
+Alternate percentage error = 0.9447589197287152%
+</code></pre>
+<p>It appears both methods result in a very simillar pecentage error, even though the alternate method is a little faster on my machine. This validates the theory that using a normal likelihood distribution on this photopeak approximates a Poisson distribution pretty well.</p>
+<p>In both cases, a percentage error of around 1% is more than acceptable, in general. Initially, I used a least-squares algorithm to fit curves to this same data set, which produced a percentage error around 1.3%. This leads me to conclude that using an MCMC algorithm was quite successful.</p>
+<h2 id="modelling-with-dynesty">Modelling with dynesty</h2>
+<p>Now that we've evaluated PyMC3's abillity to sample the gamma-ray spectrum, we can explore other samplers to see if they can do a better job. For this, I'll use "dynesty". This sampler uses nested sampling, rather than MCMC. The key difference between these algorithms is that nested sampling produces an estimate for the marginal likelihood, whilst MCMC does not. I'll again stick to using just the second peak, since we're only really interested in the relative performance of the samplers here.</p>
+<h3 id="sampling-the-data_1">Sampling the data</h3>
+<p>Using dynesty is slightly more complicated than PyMC3. Nested sampling algorithms need to sample from a uniform hyper-cube parameter space. All of our priors have a normal prior distribution, so we first need to define a "prior transform" function. This function will transform the priors into the right format, and then transform them back after the sampling.</p>
+<pre><code class="python">def priortransform(theta):
+
+    # unpack the transformed parameters
+    a_t, xc_t, w_t, y0_t = theta  
+
+    # define our prior guesses for each parameter
+    a_mu, a_sig = a_guesses[1], 50.
+    xc_mu, xc_sig = xc_guesses[1], 1.
+    w_mu, w_sig = 0.7, 0.3
+    y0_mu, y0_sig = y0_guesses[1], 30.
+
+    # convert back to 
+    a = a_mu + a_sig*ndtri(a_t)
+    xc = xc_mu + xc_sig*ndtri(xc_t)
+    w = w_mu + w_sig*ndtri(w_t)
+    y0 = y0_mu + y0_sig*ndtri(y0_t)
+
+    return a,xc,w,y0
+</code></pre>
+
+<p>Next, we need to define a Poisson log likelihood function. For dynesty, I'll be using a hand-made likelihood function:</p>
+<pre><code class="python">def loglike(theta):
+    &quot;&quot;&quot;
+    Function to return the log likelihood
+    :param theta: tuple or list containing each parameter
+    :param obs: list or array containing the observed counts of each data point
+    :param times: list or array containing the energy at which each data point is recorded
+    &quot;&quot;&quot;
+    # unpack parameters
+    a_like, xc_like, w_like, y0_like = theta
+    # expected value
+    lmbda = np.array(gauss(peaks_x[1], a_like, xc_like, w_like, y0_like))
+    n = len(peaks_y[1])
+    a = np.sum(gammaln(np.array(peaks_y[1])+1))
+    b = np.sum(np.array(peaks_y[1]) * np.log(lmbda))
+    return -np.sum(lmbda) - a + b
+</code></pre>
+
+<p>Now we can begin to set up the hyperparameters for the nested sampling algorithm. For dynesty, we need to provide the number of live points, sampling algorithm, sampling method, and a stopping criterion. Since the Gaussian model only has 4 parameters, we can choose a bound and sampling method that work well with low-dimensional models:</p>
+<pre><code class="python">stop = 0.1  # stopping criterion 
+nparam = 4  # number of parameters
+
+sampler = NestedSampler(loglike, priortransform, nparam,
+                        bound='multi', sample='unif', nlive=1000)
+
+t0_dynesty = time()
+sampler.run_nested(dlogz=stop, print_progress=False)
+t1_dynesty = time()
+
+print('{} seconds taken to run dynesty sampling'.format(t1_dynesty-t0_dynesty))
+</code></pre>
+
+<pre><code>10.890472173690796 seconds taken to run dynesty sampling
+</code></pre>
+<p>We can now collect the results and view the summary of the sampling process, which includes the log of the marginal likelihood, number of interations, and some other values:</p>
+<pre><code class="python">results = sampler.results
+print(results.summary())
+</code></pre>
+
+<pre><code>Summary
+=======
+nlive: 1000
+niter: 13873
+ncall: 86323
+eff(%): 17.229
+logz: -212.097 +/-  0.141
+None
+</code></pre>
+<h3 id="results_1">Results</h3>
+<p>To retrieve the posteriors for each parameter from a nested sampling algorithm, you need to resample using weights, which dynesty outputs with the results. This can be done easily as is shown below:</p>
+<pre><code class="python">weights = np.exp(results['logwt'] - results['logz'][-1])
+samples = results.samples
+
+dynesty_samples = resample_equal(samples, weights)
+</code></pre>
+
+<p>Now, using the same methods as before, we can print the mean and error of the parameters, and sample the posteriors to produce a posterior predictive plot for the second peak in our data:</p>
+<pre><code class="python">a, xc, w, y0 = [dynesty_samples[:,i] for i in range(4)]
+
+a_dynesty, aerr_dynesty = np.mean(a), np.std(a)
+xc_dynesty, xcerr_dynesty = np.mean(xc), np.std(xc)
+w_dynesty, werr_dynesty = np.mean(w), np.std(w)
+y0_dynesty, y0err_dynesty = np.mean(y0), np.std(y0)
+
+nfits = 300
+a_samps_dynesty = np.random.normal(a_dynesty, aerr_dynesty, nfits)
+xc_samps_dynesty = np.random.normal(xc_dynesty, xcerr_dynesty, nfits)
+w_samps_dynesty = np.random.normal(w_dynesty, werr_dynesty, nfits)
+y0_samps_dynesty = np.random.normal(y0_dynesty, y0err_dynesty, nfits)
+
+print('Parameter mean values with uncertainties for a photopeak in a sample of Ba-133: \n \n ' +
+      '            Amplitude = {} \u00B1 {} counts \n'.format(a_dynesty, aerr_dynesty) +
+      '           Peak Energy = {} \u00B1 {} keV \n'.format(xc_dynesty, xcerr_dynesty) +
+      '    Standard Deviation = {} \u00B1 {} keV \n'.format(w_dynesty, werr_dynesty) +
+      '     Background Counts = {} \u00B1 {} counts \n'.format(y0_dynesty, y0err_dynesty))
+</code></pre>
+
+<pre><code>Parameter mean values with uncertainties for a photopeak in a sample of Ba-133:
+
+             Amplitude = 809.6473274589662 ± 24.636099224592314 counts 
+           Peak Energy = 160.60478084398832 ± 0.019342705091128825 keV 
+    Standard Deviation = 0.5237467836545735 ± 0.01933901750104941 keV 
+     Background Counts = 1333.4565559019425 ± 6.802782860785766 counts
+</code></pre>
+<h3 id="plotting-the-posterior_1">Plotting the posterior</h3>
+<p>So far, dynesty is in strong agreement with PyMC3, with both the values and errors being comparable to those from either PyMC3 sampling method we investigated. Below are two plots, the left plot shows the mean Gaussian curve produced by dynesty, and the right shows the posterior predictive plot:</p>
+<pre><code class="python">x, y = peaks_x[1], peaks_y[1]
+fig, (ax1, ax2) = plt.subplots(1,2,figsize=(12,5))
+
+xsmooth = np.linspace(min(x),max(x), 1000)
+
+# mean posterior plot
+ax1.plot(x, y, 'b.')
+ax1.plot(xsmooth, gauss(xsmooth,a_dynesty,xc_dynesty,w_dynesty,y0_dynesty),'k:')
+ax1.set_ylim(1200)
+
+# posterior predictive plot
+for i in range(nfits):
+    ax2.plot(xsmooth, gauss(xsmooth,a_samps_dynesty[i],xc_samps_dynesty[i],
+                            w_samps_dynesty[i],y0_samps_dynesty[i]),'b-',alpha=0.01)
+ax2.set_ylim(1200)
+
+plt.suptitle('Mean posterior (left) and posterior predictive (right) of a photopeak in a sample of\n'
+           + ' Ba-133, sampled by dynesty')
+plt.show()
+</code></pre>
+
+<p><img alt="png" src="../output_69_0.png" /></p>
+<p>Again, this looks very simillar to the results produced by PyMC3. We can confirm this by remaking the same plot as above, but this time overplotting the mean and posterior predictive plots from PyMC3:</p>
+<pre><code class="python">x, y = peaks_x[1], peaks_y[1]
+fig, (ax1, ax2) = plt.subplots(1,2,figsize=(12,5))
+
+xsmooth = np.linspace(min(x),max(x), 1000)
+
+# mean posterior plot
+ax1.plot(x, y, 'k.',label='Data')
+ax1.plot(xsmooth, gauss(xsmooth,a_dynesty,xc_dynesty,w_dynesty,y0_dynesty),'b:',label='dynesty')
+ax1.plot(xsmooth, gauss(xsmooth,a_pymc3,xc_pymc3,w_pymc3,y0_pymc3),'r:',label='PyMC3')
+ax1.set_ylim(1200)
+leg1 = ax1.legend(loc='upper right')
+for lh in leg1.legendHandles: 
+    lh.set_alpha(1)
+
+# posterior predictive plot
+for i in range(nfits):
+    ax2.plot(xsmooth, gauss(xsmooth,a_samps_dynesty[i],xc_samps_dynesty[i],
+                            w_samps_dynesty[i],y0_samps_dynesty[i]),'b-',alpha=0.01,
+            label=('dynesty' if i == 0 else ''))
+    ax2.plot(xsmooth, gauss(xsmooth,a_samps_pymc3[1][i],xc_samps_pymc3[1][i],
+                            w_samps_pymc3[1][i],y0_samps_pymc3[1][i]),'r-',alpha=0.01,
+            label=('PyMC3' if i == 0 else ''))
+ax2.set_ylim(1200)
+leg2 = ax2.legend(loc='upper right')
+for lh in leg2.legendHandles: 
+    lh.set_alpha(1)
+
+plt.suptitle('Mean posterior (left) and posterior predictive (right) plots of a photopeak in a sample'
+             + '\n Ba-133, sampled by PyMC3 (red) and dynesty (blue)')
+plt.show()
+</code></pre>
+
+<p><img alt="png" src="../output_71_0.png" /></p>
+<h3 id="model-comparisons_1">Model comparisons</h3>
+<p>This above plot shows quite nicely that whilst dynesty predicts a slightly higher amplitude than PyMC3, both samplers do agree with eachother to very simillar degrees of accuracy, with only a small discrepancy at the very tip of the peak. We can determine if this has a large impact on the results of the GRS analysis by finding the area under the mean curve produced by dynesty:</p>
+<pre><code class="python">peak_integral_dynesty = integrate.quad(lambda t: 
+                                       gauss(t, a_dynesty, xc_dynesty,
+                                             w_dynesty, y0_dynesty), 159.1, 162.2)[0] / c_0
+peak_integral_err_dynesty = np.sqrt(2 * np.pi * 
+                                    ((w_dynesty * aerr_dynesty)** 2 +
+                                     (a_dynesty * werr_dynesty) ** 2 )) / c_0
+
+percent_err_dynesty = 100*peak_integral_err_dynesty/peak_integral_dynesty
+
+print('Total counts = {} \u00B1 {} counts \n'.format(peak_integral_dynesty,
+                                                               peak_integral_err_dynesty) +
+      'Percentage error = {}%'.format(percent_err_dynesty))
+</code></pre>
+
+<pre><code>Total counts = 22968.854117562147 ± 224.93466521968398 counts 
+Percentage error = 0.9793029468008915%
+</code></pre>
+<p>Within their errors, dynesty and both PyMC3 methods agree on the total counts under the curve, and have produce a percentage error around 1%. </p>
+<p>PyMC3 is a little more intuative to use in general, however dynesty is a lot faster than PyMC3 on my machine, and also gives a value for the marginal likelihood in the process.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../.." title="Home" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Home
+              </div>
+            </div>
+          </a>
+        
+        
+          <a href="../../LightCurve/LightCurve/" title="emcee" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                emcee
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.92ffa368.min.js"></script>
+      <script src="../../assets/javascripts/bundle.5123e3d4.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.a68abb33.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>
