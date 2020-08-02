@@ -15,7 +15,7 @@
     
     
       
-        <title>emcee - MCMC and Nested Samplers</title>
+        <title>Exoplanet Light Curve Analysis with emcee and UltraNest - Demonstrations of MCMC and Nested Samplers</title>
       
     
     
@@ -60,7 +60,7 @@
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="../.." title="MCMC and Nested Samplers" class="md-header-nav__button md-logo" aria-label="MCMC and Nested Samplers">
+    <a href="../.." title="Demonstrations of MCMC and Nested Samplers" class="md-header-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -73,11 +73,11 @@
       
         <div class="md-header-nav__ellipsis">
           <span class="md-header-nav__topic md-ellipsis">
-            MCMC and Nested Samplers
+            Demonstrations of MCMC and Nested Samplers
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              emcee
+              Exoplanet Light Curve Analysis with emcee and UltraNest
             
           </span>
         </div>
@@ -134,13 +134,13 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="MCMC and Nested Samplers" class="md-nav__button md-logo" aria-label="MCMC and Nested Samplers">
+    <a href="../.." title="Demonstrations of MCMC and Nested Samplers" class="md-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
-    MCMC and Nested Samplers
+    Demonstrations of MCMC and Nested Samplers
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -151,8 +151,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../.." title="Home" class="md-nav__link">
-      Home
+    <a href="../.." title="Introduction" class="md-nav__link">
+      Introduction
     </a>
   </li>
 
@@ -163,8 +163,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../PyMC3_GRS/PyMC3_GRS/" title="PyMC3" class="md-nav__link">
-      PyMC3
+    <a href="../../PyMC3_GRS/PyMC3_GRS/" title="Gamma-Ray Spectroscopy with PyMC3 and dynesty" class="md-nav__link">
+      Gamma-Ray Spectroscopy with PyMC3 and dynesty
     </a>
   </li>
 
@@ -184,14 +184,14 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        emcee
+        Exoplanet Light Curve Analysis with emcee and UltraNest
         <span class="md-nav__icon md-icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
         </span>
       </label>
     
-    <a href="./" title="emcee" class="md-nav__link md-nav__link--active">
-      emcee
+    <a href="./" title="Exoplanet Light Curve Analysis with emcee and UltraNest" class="md-nav__link md-nav__link--active">
+      Exoplanet Light Curve Analysis with emcee and UltraNest
     </a>
     
       
@@ -316,6 +316,18 @@
   
 </nav>
     
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../Sunspots2/Sunspots2/" title="Solar Cycle Analysis with Zeus and Nestle" class="md-nav__link">
+      Solar Cycle Analysis with Zeus and Nestle
+    </a>
   </li>
 
     
@@ -625,8 +637,8 @@ def unaug_df(df_aug, f_mean, f_is_aug=False):
 </code></pre>
 
 <h2 id="modelling-with-emcee">Modelling with emcee</h2>
-<p>Now that we know the parameters that will describe the model, we can start guessing at the parameter priors by using the plots above. Since the square transit model does not require the "tf" parameter, we can omit it from the list of square transit priors for a little extra time save. This model is quite complicated with six parameters, and eyeballing the values of each parameter can be tricky. Using a little trial and error, I came up with the following guesses:</p>
-<pre><code class="python"># normal prior on flux
+<p>Now that we know the parameters that will describe the model, we can start guessing at the parameter priors by using the plots above. Due to the noise, I'll use a uniform prior on f, but a normal prior on other parameters. Since the square transit model does not require the "tf" parameter, we can omit it from the list of square transit priors for a little extra time save. This model is quite complicated with six parameters, and eyeballing the values of each parameter can be tricky. Using a little trial and error, I came up with the following guesses:</p>
+<pre><code class="python"># uniform prior on flux
 f_min = 4.9
 f_max = 5.8
 
@@ -1310,7 +1322,7 @@ print(&quot;Bayes factor: {}&quot;.format(K))
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../../PyMC3_GRS/PyMC3_GRS/" title="PyMC3" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../../PyMC3_GRS/PyMC3_GRS/" title="Gamma-Ray Spectroscopy with PyMC3 and dynesty" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -1319,11 +1331,25 @@ print(&quot;Bayes factor: {}&quot;.format(K))
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                PyMC3
+                Gamma-Ray Spectroscopy with PyMC3 and dynesty
               </div>
             </div>
           </a>
         
+        
+          <a href="../../Sunspots2/Sunspots2/" title="Solar Cycle Analysis with Zeus and Nestle" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Solar Cycle Analysis with Zeus and Nestle
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
         
       </nav>
     </div>
