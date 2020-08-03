@@ -538,12 +538,14 @@ result = bilby.run_sampler(
     sample=method, nlive=nlive, dlogz=stop) 
 </code></pre>
 
-<p>16:23 bilby INFO    : Sampling time: 1:12:43.878674
+<pre><code class="python">16:23 bilby INFO    : Sampling time: 1:12:43.878674
 16:23 bilby INFO    : Summary of results:
                       nsamples: 23105
                       ln_noise_evidence: -8112.144
                       ln_evidence: -8729.851 +/-  0.188
-                      ln_bayes_factor: -617.707 +/-  0.188</p>
+                      ln_bayes_factor: -617.707 +/-  0.188
+</code></pre>
+
 <h2 id="plotting-the-posterior">Plotting the posterior</h2>
 <p>Eventually, the sampling will be complete. Bilby creates a few useful plots of the posteriors, along with saving samples of the posteriors for us to further analyse. Lets start by plotting a corner plot, which nicely shows the posteriors for all the parameters, as well as contour plots showing how one parameter varies with any other.</p>
 <pre><code class="python">result.plot_corner()
