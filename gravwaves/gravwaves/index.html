@@ -1,0 +1,706 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.0">
+    
+    
+      
+        <title>Gravitational Wave parameter estimation with bilby - Demonstrations of MCMC and Nested Samplers</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.b5d04df8.min.css">
+      
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#using-bilby-with-dynesty-to-estimate-the-properties-of-the-first-ever-detected-gravitational-wave-signal" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="../.." title="Demonstrations of MCMC and Nested Samplers" class="md-header-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            Demonstrations of MCMC and Nested Samplers
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              Gravitational Wave parameter estimation with bilby
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Demonstrations of MCMC and Nested Samplers" class="md-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Demonstrations of MCMC and Nested Samplers
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../PyMC3_GRS/PyMC3_GRS/" title="Gamma-Ray Spectroscopy with PyMC3 and dynesty" class="md-nav__link">
+      Gamma-Ray Spectroscopy with PyMC3 and dynesty
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../LightCurve/LightCurve/" title="Exoplanet Light Curve Analysis with emcee and UltraNest" class="md-nav__link">
+      Exoplanet Light Curve Analysis with emcee and UltraNest
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../Sunspots2/Sunspots2/" title="Solar Cycle Analysis with Zeus and Nestle" class="md-nav__link">
+      Solar Cycle Analysis with Zeus and Nestle
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Gravitational Wave parameter estimation with bilby
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="Gravitational Wave parameter estimation with bilby" class="md-nav__link md-nav__link--active">
+      Gravitational Wave parameter estimation with bilby
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#useful-imports" class="md-nav__link">
+    Useful imports
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#viewing-the-data" class="md-nav__link">
+    Viewing the data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setting-the-priors" class="md-nav__link">
+    Setting the priors
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setting-the-likelihood" class="md-nav__link">
+    Setting the likelihood
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sampling-the-data" class="md-nav__link">
+    Sampling the data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plotting-the-posterior" class="md-nav__link">
+    Plotting the posterior
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estimating-the-black-hole-masses" class="md-nav__link">
+    Estimating the black hole masses
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#useful-imports" class="md-nav__link">
+    Useful imports
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#viewing-the-data" class="md-nav__link">
+    Viewing the data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setting-the-priors" class="md-nav__link">
+    Setting the priors
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setting-the-likelihood" class="md-nav__link">
+    Setting the likelihood
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sampling-the-data" class="md-nav__link">
+    Sampling the data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#plotting-the-posterior" class="md-nav__link">
+    Plotting the posterior
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#estimating-the-black-hole-masses" class="md-nav__link">
+    Estimating the black hole masses
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  
+                
+                
+                <h1 id="using-bilby-with-dynesty-to-estimate-the-properties-of-the-first-ever-detected-gravitational-wave-signal">Using bilby with dynesty to estimate the properties of the first ever detected gravitational wave signal</h1>
+<p>Einstein's theory of General Relativity, 1916, predicted that space-time can act as a medium for "gravitational waves", which are ripples caused by extremely violent cosmic events, such as black holes or neutron stars colliding. It was predicted that these waves travel at the speed of light, and could carry information about the event that caused them, and even reveal the true nature of gravity. Einstein also predicted that the waves would be so small, that their presence would never be detected. However, almost 100 years later in 2015, LIGO detected the first gravitational wave signal "GW150914" using a 4km long interferometer. the arms of which only stretched by a thousandth the width of a proton. </p>
+<p>The event that caused the gravitational waves was a collision between two massive black holes. In this example, I'll use the gravitational wave analysis package "bilby" along with the sampler "dynesty" to find the mass of the two black holes that caused GW150914.</p>
+<h2 id="useful-imports">Useful imports</h2>
+<pre><code class="python"># numpy
+import numpy as np
+
+# pandas
+import pandas as pd
+
+# plotting
+import matplotlib.pyplot as plt
+
+# sampler
+import bilby
+from bilby.core.prior import Uniform
+
+# misc
+from gwpy.timeseries import TimeSeries
+</code></pre>
+
+<h2 id="viewing-the-data">Viewing the data</h2>
+<p>Bilby has in-built features that allow us to view the data that we'll be using. To do this, we have to set up interferometer objects that contain the data we'll be using. The data in question is made up of a strain dataset which contains the information of the waveform, and a Power Spectral Density (PSD) dataset which approximates the noise. </p>
+<p>We start by defining a directory for bilby to save results, and defining the source we want to analyse, and creating some empty interferometer objects to store the data:</p>
+<pre><code class="python">logger = bilby.core.utils.logger
+outdir = &quot;outdir&quot;
+# gravitational wave source
+label = &quot;GW150914&quot;  
+
+H1 = bilby.gw.detector.get_empty_interferometer(&quot;H1&quot;)
+L1 = bilby.gw.detector.get_empty_interferometer(&quot;L1&quot;)
+</code></pre>
+
+<p>To obtain the data, a time range around the event has to be defined and passed to "gwpy", which will download the data for us.</p>
+<pre><code class="python">event_start_time = 1126259462.4    # event GPS time at which first GW discovered
+post_event = 2                     # time after event
+pre_event = 2                      # time before event
+duration = pre_event + post_event  # total time range containing event
+analysis_begin = event_start_time - pre_event  # GPS time at which to start analysis
+</code></pre>
+
+<p>Using these time settings, we can fetch the data we want to analyse. Once the data is downloaded, we can use in-built plot functions to visualise what our data will look like. The two plots below show the strain data for Hanford and Livingston detectors respectively.</p>
+<pre><code class="python">H1_data = TimeSeries.fetch_open_data(&quot;H1&quot;, analysis_begin, 
+                                     analysis_begin + duration,
+                                     sample_rate=4096, cache=True)
+
+L1_data = TimeSeries.fetch_open_data(&quot;L1&quot;, analysis_begin, 
+                                     analysis_begin + duration,
+                                     sample_rate=4096, cache=True)
+
+H1_data.plot()
+plt.savefig(&quot;H1_data&quot;)
+L1_data.plot()
+plt.savefig(&quot;L1_data&quot;)
+</code></pre>
+
+<p><img alt="" src="../H1_analysis.png" /></p>
+<p><img alt="" src="../L1_analysis.png" title="Title" /></p>
+<p>We can also check out the PSD data that we'll be using to estimate noise in the data. Again using gwpy, the data can be obtained as follows: </p>
+<pre><code class="python"># duration typically multiplied by 32 for psd
+psd_duration = duration * 32                
+psd_begin = analysis_start - psd_duration
+
+# fetch data for psd
+H1psd = TimeSeries.fetch_open_data(
+    &quot;H1&quot;, psd_begin, psd_begin + psd_duration,
+    sample_rate=4096, cache=True)
+L1psd = TimeSeries.fetch_open_data(
+    &quot;L1&quot;, psd_begin, psd_begin + psd_duration,
+    sample_rate=4096, cache=True)
+
+# set interferometers with psd data
+psd_alpha = 2 * H1.strain_data.roll_off / duration
+H1psd_data = H1psd.psd(fftlength=duration, overlap=0, window=(&quot;tukey&quot;, psd_alpha), method=&quot;median&quot;)
+L1psd_data = L1psd.psd(fftlength=duration, overlap=0, window=(&quot;tukey&quot;, psd_alpha), method=&quot;median&quot;)
+H1.power_spectral_density = bilby.gw.detector.PowerSpectralDensity(
+    frequency_array=H1psd_data.frequencies.value, psd_array=H1psd_data.value)
+L1.power_spectral_density = bilby.gw.detector.PowerSpectralDensity(
+    frequency_array=L1psd_data.frequencies.value, psd_array=L1psd_data.value)
+</code></pre>
+
+<p>Before plotting the PSD, its useful to set an upper frequency limit as higher frequencies aren't so useful. After limiting the frequency, we can plot the PSD data:</p>
+<pre><code class="python">H1.maximum_frequency = 1024
+L1.maximum_frequency = 1024
+
+plt.figure()
+idxs = H1.strain_data.frequency_mask
+a,b = list(H1.strain_data.frequency_array[idxs]),list(np.abs(H1.strain_data.frequency_domain_strain[idxs]))
+c,d = list(H1.power_spectral_density.frequency_array[idxs]),list(H1.power_spectral_density.asd_array[idxs])
+plt.plot(a,b)
+plt.plot(c,d)
+plt.yscale('log')
+plt.xscale('log')
+plt.xlabel(&quot;Frequency [Hz]&quot;)
+plt.ylabel(&quot;Strain [strain/$\sqrt{Hz}$]&quot;)
+plt.savefig(&quot;strainvfreq&quot;)
+</code></pre>
+
+<p><img alt="" src="../strainvfreq.png" /></p>
+<h2 id="setting-the-priors">Setting the priors</h2>
+<p>The model describing the black hole merger depends on 15 parameters. Running a sampler with this many parameters can take half a day to run. To save some time, I'll fix all but 4 parameters: the chirp mass, the mass ratio, the phase, and the geocent time.</p>
+<p>The chirp mass and mass ratio are two parameters wich depend on the mass of the two black holes that caused the gravitational waves. When these two parameters are derived, we can use them to calculate the masses of the black holes. Since we don't know much about the system parameters that we're allowing to vary, uniform priors are most appropriate:</p>
+<pre><code class="python">prior = bilby.core.prior.PriorDict()
+# uniform priors for variable parameters
+prior['chirp_mass'] = Uniform(name='chirp_mass', minimum=30.0,maximum=32.5)
+prior['mass_ratio'] = Uniform(name='mass_ratio', minimum=0.5, maximum=1)
+prior['phase'] = Uniform(name=&quot;phase&quot;, minimum=0, maximum=2*np.pi)
+prior['geocent_time'] = Uniform(name=&quot;geocent_time&quot;, minimum=event_start_time-0.1,
+                                maximum=event_start_time+0.1)
+# fixed values for all other parameters
+prior['a_1'] =  0.0     
+prior['a_2'] =  0.0
+prior['tilt_1'] =  0.0
+prior['tilt_2'] =  0.0
+prior['phi_12'] =  0.0
+prior['phi_jl'] =  0.0
+prior['dec'] =  -1.2232
+prior['ra'] =  2.19432
+prior['theta_jn'] =  1.89694
+prior['psi'] =  0.532268
+prior['luminosity_distance'] = 412.066
+</code></pre>
+
+<h2 id="setting-the-likelihood">Setting the likelihood</h2>
+<p>Bilby comes with in-built likelihood functions. To use them, first a waveform has to be generated using the properties of the data, like duration and sampling frequency. We also need to combine the interferometers into a list, so that both will be used at once when it comes to sampling.</p>
+<pre><code class="python">interferometers = [H1, L1]
+
+waveform_arguments = dict(waveform_approximant='IMRPhenomPv2',
+                          reference_frequency=50., minimum_frequency=20.)
+
+# set sampling frequency of data
+sampling_frequency = 2048.
+
+# generate waveforms
+waveform_generator = bilby.gw.WaveformGenerator(
+    duration=duration, sampling_frequency=sampling_frequency,
+    frequency_domain_source_model=bilby.gw.source.lal_binary_black_hole,
+    parameter_conversion=bilby.gw.conversion.convert_to_lal_binary_black_hole_parameters,
+    waveform_arguments=waveform_arguments)
+
+likelihood = bilby.gw.GravitationalWaveTransient(
+    interferometers=interferometers, waveform_generator=waveform_generator)
+</code></pre>
+
+<h2 id="sampling-the-data">Sampling the data</h2>
+<p>Now that the likelihood and prior functions are set up, the sampler can now be implemented to derive some of the properties of the binary black hole system. This process is intensive, and takes a long time (1 hour 15 minutes) to run on my machine. </p>
+<p>The sampler I chose to use is "dynesty", which uses nested sampling to estimate the model parameters. For a more in-depth work through of dynesty, you can read through an example of <a href="https://mo-ghani.github.io/Sampling/PyMC3_GRS/PyMC3_GRS/#modelling-with-dynesty">gamma-ray spectroscopy using dynesty</a> on this site.</p>
+<p>Using bilby, we can run the sampler. First, we have to set the number of live points, and the stopping criterion as hyperparameters. For neatness, I've removed the log that bilby outputs whilst running. Instead I'll just show the summary that is outputted by bilby once the sampler has finished iterating. This summary contains information on the log evidence, and the Bayes factor of the model.</p>
+<pre><code class="python">nlive = 1000          # live points
+stop = 0.1            # stopping criterion
+method = &quot;unif&quot;       # method of sampling
+sampler = &quot;dynesty&quot;   # sampler to use
+
+result = bilby.run_sampler(
+    likelihood, prior, sampler=sampler, outdir=outdir, label=label,
+    conversion_function=bilby.gw.conversion.generate_all_bbh_parameters,
+    sample=method, nlive=nlive, dlogz=stop) 
+</code></pre>
+
+<p>16:23 bilby INFO    : Sampling time: 1:12:43.878674
+16:23 bilby INFO    : Summary of results:
+                      nsamples: 23105
+                      ln_noise_evidence: -8112.144
+                      ln_evidence: -8729.851 +/-  0.188
+                      ln_bayes_factor: -617.707 +/-  0.188</p>
+<h2 id="plotting-the-posterior">Plotting the posterior</h2>
+<p>Eventually, the sampling will be complete. Bilby creates a few useful plots of the posteriors, along with saving samples of the posteriors for us to further analyse. Lets start by plotting a corner plot, which nicely shows the posteriors for all the parameters, as well as contour plots showing how one parameter varies with any other.</p>
+<pre><code class="python">result.plot_corner()
+</code></pre>
+
+<p><img alt="" src="../GWSampleDemo_corner.png" /></p>
+<p>We can also view the traces for each parameter, which bilby will save by default under the directory labeled as "outdir":</p>
+<p><img alt="" src="../GWSampleDemo_checkpoint_trace.png" /></p>
+<h2 id="estimating-the-black-hole-masses">Estimating the black hole masses</h2>
+<p>To estimate the black hole masses, we need to obtain the samples describing the posteriors of the data. This can be done quite easily as bilby returns the posterior samples. Alternatively, bilby also saves posterior samples to a text file, which can be loaded using pandas. I'll use the latter method, so I don't have to re-run the sampler.</p>
+<pre><code class="python"># load posterior samples into a pandas dataframe directly
+# posts = result.posterior
+
+# alternatively, load posts using samples saved by bilby using pandas
+posts = pd.read_csv(&quot;GWSampleDemo_samples.dat&quot;, sep = &quot; &quot;)
+print(posts.head())
+
+chirp_mass_samps = list(posts[&quot;chirp_mass&quot;])
+mass_ratio_samps = list(posts[&quot;mass_ratio&quot;])
+geocent_time_samps = list(posts[&quot;geocent_time&quot;])
+</code></pre>
+
+<pre><code>   chirp_mass  mass_ratio     phase  geocent_time
+0   30.067428    0.519342  5.669147  1.126259e+09
+1   30.056653    0.510167  5.643203  1.126259e+09
+2   30.000122    0.520294  5.637245  1.126259e+09
+3   30.072352    0.515579  2.668268  1.126259e+09
+4   30.061333    0.519504  5.839349  1.126259e+09
+</code></pre>
+<p>Next, we can take the posterior samples and find their mean values:</p>
+<pre><code class="python">chirp_mass, chirp_mass_err = np.mean(chirp_mass_samps), np.std(chirp_mass_samps)
+mass_ratio, mass_ratio_err = np.mean(mass_ratio_samps), np.std(mass_ratio_samps)
+geocent_time, geocent_time_err = np.mean(geocent_time_samps), np.std(geocent_time_samps)
+
+print(&quot;Parameters describing the GW150914 signal: \n \n&quot; + 
+      &quot;  chirp mass = {}   \u00B1 {} \n&quot;.format(chirp_mass, chirp_mass_err) + 
+      &quot;  mass ratio = {} \u00B1 {} \n \n&quot;.format(mass_ratio, mass_ratio_err) + 
+      &quot;geocent time = {} \u00B1 {} \n&quot;.format(geocent_time, geocent_time_err) + 
+      &quot;True geocent time = 1126259462.4&quot;)
+</code></pre>
+
+<pre><code>Parameters describing the GW150914 signal:
+
+  chirp mass = 30.0257687994421   ± 0.026061576881674566 
+  mass ratio = 0.5025567739492637 ± 0.002563518022159185
+
+geocent time = 1126259462.4044259 ± 0.0001356963097756189 
+True geocent time = 1126259462.4
+</code></pre>
+<p>The time of the event lines up quite nicely. Next, we can attempt to calculate the mass of each black hole, which is fairly straight forward now that we know the chirp mass and mass ratio. The following function will return the masses of the black holes, given the chirp mass, mass ratio, and their errors.</p>
+<pre><code class="python">def bbhMass(chirp,chirperr,ratio,ratioerr):
+    &quot;&quot;&quot;
+    Function that calculates black hole masses with errors
+
+    m1,m2 = larger black hole mass, smaller black hole mass 
+    chirp = (m1*m2)**(3/5) / (m1+m2)**(1/5)
+    ratio = m2/m1
+    &quot;&quot;&quot;
+
+    # use chirp mass and ratio to find primary black hole mass
+    m1 = chirp / (ratio**(3/5) * (1/(1+ratio))**(1/5))
+    m1err = (chirp + chirperr) / ((ratio-ratioerr)**(3/5) *
+                                  (1/(1+(ratio+ratioerr))**(1/5))) - m1
+
+    # use primary black hole mass and ratio to find secondary black hole mass
+    m2 = m1*ratio
+    m2err = (m1+m1err)*(ratio+ratioerr) - m2
+
+    return (m1,m1err),(m2,m2err)
+
+(m1,m1err), (m2,m2err) = bbhMass(chirp_mass,chirp_mass_err,
+                                 mass_ratio,mass_ratio_err)
+
+print(&quot;Black hole masses (in solar masses): \n \n&quot; + 
+      &quot;   largest black hole = {} \u00B1 {} \n&quot;.format(m1, m1err) + 
+      &quot;  smallest black hole = {} \u00B1 {} \n \n&quot;.format(m2, m2err) +
+      &quot;True black hole masses (in solar masses): \n \n&quot; + 
+      &quot;   largest black hole = {}\n&quot;.format(36.2) + 
+      &quot;  smallest black hole = {}&quot;.format(29.1))
+</code></pre>
+
+<pre><code>Black hole masses (in solar masses):
+
+   largest black hole = 49.22086431380112 ± 0.21096506288449035 
+  smallest black hole = 24.73627878053833 ± 0.23274130689466332
+
+True black hole masses (in solar masses):
+
+   largest black hole = 36.2
+  smallest black hole = 29.1
+</code></pre>
+<p>We can see our estimations aren't so good here. This is because I simplified the model earlier, by fixing 11 of the 15 parameters. Given this, and the fact that we only have a percentage error of 15% on the smaller black hole, the deviations are acceptable.</p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../../Sunspots2/Sunspots2/" title="Solar Cycle Analysis with Zeus and Nestle" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Solar Cycle Analysis with Zeus and Nestle
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.92ffa368.min.js"></script>
+      <script src="../../assets/javascripts/bundle.5123e3d4.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.a68abb33.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+    
+  </body>
+</html>

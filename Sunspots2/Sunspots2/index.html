@@ -331,6 +331,18 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../gravwaves/gravwaves/" title="Gravitational Wave parameter estimation with bilby" class="md-nav__link">
+      Gravitational Wave parameter estimation with bilby
+    </a>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -589,7 +601,7 @@ plt.plot(x,y,label=&quot;Example Model&quot;)
 
 plt.xlabel(&quot;Date / years&quot;)
 plt.ylabel(&quot;Square Root of Sunspot Number&quot;)
-plt.title(&quot;A typical solar cycle&quot;)
+plt.title(&quot;A typical solar cycle, with an \n example model overplotted&quot;)
 plt.legend()
 plt.show()
 </code></pre>
@@ -705,9 +717,9 @@ print(&quot;Time taken to sample first peak with Zeus: {} seconds&quot;.format(t
 </code></pre>
 
 <pre><code>Initialising ensemble of 100 walkers...
-Sampling progress : 100%|██████████| 1000/1000 [01:12&lt;00:00, 13.84it/s]
+Sampling progress : 100%|██████████| 1000/1000 [01:16&lt;00:00, 13.13it/s]
 
-Time taken to sample first peak with Zeus: 72.26702880859375 seconds
+Time taken to sample first peak with Zeus: 76.26689600944519 seconds
 </code></pre>
 <h3 id="results">Results</h3>
 <p>Collecting the samples after the sampling is equally simple, remembering to discard the burn-in samples at the start of the chain. We can create a corner plot, which shows the posteriors of each parameter along with contour plots describing how one parameter varies with any other:</p>
@@ -746,12 +758,12 @@ print(&quot;Parameters describing the square root SSN cycle starting 1923: \n \n
 
 <pre><code>Parameters describing the square root SSN cycle starting 1923:
 
-   c = 11.235859600042037 ± 0.5215026875027372 square root counts
-  a1 = 2.0512996667503938 ± 0.5507731307368571 
-  a2 = 1.3134491063165001 ± 0.2501776677187202 
-  t0 = 1923.4484201628645 ± 0.3547836069094943 years
-tmax = 1927.5792309869332  ± 0.6491606607901439 years
-  t1 = 1935.0575941486698 ± 0.31425239983590497 years
+   c = 11.23419227189279 ± 0.5155512374811139 square root counts
+  a1 = 2.046091218734536 ± 0.5511917043187438 
+  a2 = 1.3175512464689283 ± 0.2551941095539496 
+  t0 = 1923.4364606185572 ± 0.3683613113062203 years
+tmax = 1927.5745437571138  ± 0.6532168763478214 years
+  t1 = 1935.0535923941627 ± 0.30717761056370796 years
 </code></pre>
 <h3 id="plotting-the-posterior">Plotting the posterior</h3>
 <p>Below I'll show two plots. The left plot will show the model produced using the mean parameters for the first peak. The right plot will show a posterior predictive plot, where the darker the colour of the plot, the higher the probabillty of the model passing through that region.</p>
@@ -764,7 +776,7 @@ y = cycle(x,*param_mu)
 ax1.plot(x,y)
 ax1.set_xlabel(&quot;Date / years&quot;)
 ax1.set_ylabel(&quot;square root counts&quot;)
-ax1.set_title(&quot;Mean posterior plot for SSN cycle starting 1856&quot;)
+ax1.set_title(&quot;Mean posterior plot for solar cycle starting 1924&quot;)
 
 # posterior predictive plot
 x = np.linspace(min(peaktimes[0]),max(peaktimes[0]),300)
@@ -774,7 +786,7 @@ for i in range(len(post_samples)):
     y = cycle(x,*params)
     ax2.plot(x,y,'orange',alpha=0.02, linewidth=3,label=&quot;Fitted Model&quot; if i == 0 else &quot;&quot;)
 ax2.set_xlabel(&quot;Date / years&quot;)
-ax2.set_title(&quot;Posterior predictive plot for SSN cycle starting 1856&quot;)
+ax2.set_title(&quot;Posterior predictive plot for SSN cycle starting 1924&quot;)
 leg = ax2.legend()
 for lh in leg.legendHandles: 
     lh.set_alpha(1)
@@ -907,9 +919,9 @@ print(&quot;Time taken to sample predict function with Zeus: {} seconds&quot;.fo
 </code></pre>
 
 <pre><code>Initialising ensemble of 100 walkers...
-Sampling progress : 100%|██████████| 1000/1000 [01:16&lt;00:00, 13.10it/s]
+Sampling progress : 100%|██████████| 1000/1000 [01:19&lt;00:00, 12.56it/s]
 
-Time taken to sample predict function with Zeus: 76.33164262771606 seconds
+Time taken to sample predict function with Zeus: 79.66238069534302 seconds
 </code></pre>
 <h3 id="predictions">Predictions</h3>
 <p>Out of curiosity, we can check the corner plot for the prediction model. Since the prediction model has every parameter interacting with eachother, we can expect a load of covariance between parameters.</p>
@@ -1054,7 +1066,7 @@ time1 = time()
 print(&quot;Time taken to sample second solar cycle with Nestle: {} seconds&quot;.format(time1-time0))
 </code></pre>
 
-<pre><code>Time taken to sample second solar cycle with Nestle: 18.07349967956543 seconds
+<pre><code>Time taken to sample second solar cycle with Nestle: 18.891968965530396 seconds
 </code></pre>
 <p>We'll now try the sampling again, but this time we'll use the parameters from the first solar cycle (found using Zeus), and sample the parameters of the prediction model. Start by guessing at the parameters for the prediction model:</p>
 <pre><code class="python"># reuse our guesses from Zeus
@@ -1113,7 +1125,7 @@ time1 = time()
 print(&quot;Time taken to sample prediction model with Nestle: {} seconds&quot;.format(time1-time0))
 </code></pre>
 
-<pre><code>Time taken to sample prediction model with Nestle: 14.57199764251709 seconds
+<pre><code>Time taken to sample prediction model with Nestle: 13.779999017715454 seconds
 </code></pre>
 <h3 id="results_1">Results</h3>
 <p>Next, we find the log of the marginalised evidence provided by Nestle. This can be done as follows, using the information gain to estimate the error:</p>
@@ -1127,15 +1139,15 @@ print(&quot;log(Z) from sampling the solar cycle = {} ± {}&quot;.format(logZ_sa
 print(&quot;log(Z) from predicting the solar cycle = {} ± {}&quot;.format(logZ_predict, logZerr_predict))
 </code></pre>
 
-<pre><code>log(Z) from sampling the solar cycle = -266.7678218108872 ± 0.07474929979047762
-log(Z) from predicting the solar cycle = -266.69101856955064 ± 0.07202857357654911
+<pre><code>log(Z) from sampling the solar cycle = -266.75746256813557 ± 0.07494693736170717
+log(Z) from predicting the solar cycle = -266.81473144676227 ± 0.07314472974917986
 </code></pre>
 <p>The Bayes factor is a metric that describes how much more likely a model is to produce an observed data set. It's defined as the ratios between the marginalised evidences of the two models:</p>
 <pre><code class="python">K = np.exp(logZ_predict - logZ_sample)
 print(&quot;Bayes factor: {}&quot;.format(K))
 </code></pre>
 
-<pre><code>Bayes factor: 1.0798295896621817
+<pre><code>Bayes factor: 0.9443401223523545
 </code></pre>
 <p>This tells us that sampling via the prediction method rather than just sampling the peak doesn't come at a cost to the quality of the model. Since the methods produce simillar results, lets collect the samples from the prediction method to use for visualising our results. Since Nestle uses nested sampling, we have to resample with weights to obtain the posteriors.</p>
 <pre><code class="python">weights = results_predict.weights/np.max(results_predict.weights)
@@ -1158,9 +1170,8 @@ predict_post_samples_nestle = np.array(predict_param_samples).T
 new_param_mu_zeus = predict_cycle(param_mu,*predict_param_mu)
 new_param_mu_nestle = predict_cycle(param_mu,*predict_param_mu_nestle)
 ax1.plot(peaktimes[1],peaks[1],label=&quot;Original Data&quot;)
-
 x = np.linspace(min(peaktimes[1]),max(peaktimes[1]),300)
-ax1.plot(x,cycle(x,*new_param_mu),&quot;orange&quot;,label=&quot;Zeus Prediction&quot;)
+ax1.plot(x,cycle(x,*new_param_mu_zeus),&quot;orange&quot;,label=&quot;Zeus Prediction&quot;)
 ax1.plot(x,cycle(x,*new_param_mu_nestle),&quot;purple&quot;,label=&quot;Nestle Prediction&quot;)
 ax1.set_ylabel(&quot;Square Root of Sunspot Number&quot;)
 ax1.set_xlabel(&quot;Date / years&quot;)
@@ -1175,7 +1186,7 @@ for i in range(len(predict_post_samples)):
     y = cycle(x,*pred)
     ax2.plot(x,y,&quot;orange&quot;,alpha=0.04,linewidth=3)
 
-    pred = predict_cycle(param_mu,*predict_post_samples_nestle[i])
+    pred = predict_cycle(param_mu,*(np.array(predict_post_samples_nestle[i])+0.01))
     y = cycle(x,*pred)
     ax2.plot(x,y,&quot;purple&quot;,alpha=0.04,linewidth=3)
 ax1.set_ylabel(&quot;Date / years&quot;)
@@ -1185,7 +1196,7 @@ plt.show()
 </code></pre>
 
 <p><img alt="png" src="../output_75_0.png" /></p>
-<p>Whilst the posterior predictive plot looks a little messy, it tells us that the posterior predictives from Zeus and Nestle are difficult to tell apart, since they overlap so much. The mean posterior plot supports this, showing that the two samplers only start deviating on the descending limb of the cycle.</p>
+<p>Whilst the posterior predictive plot looks a little messy, it tells us that the posterior predictives from Zeus and Nestle are difficult to tell apart, since they overlap so much. The mean posterior plot supports this, showing that the two samplers have no deviation over the entire cycle.</p>
 <p>Finally, lets plot a posterior predictive plot that shows the evolution of the prediction accuracy over time. Below is a plot that shows predictions for the entire range of 4 solar cycles between 1923 and 1965.</p>
 <pre><code class="python">plt.figure(figsize=(14,4))
 # plot data between 1923 and 1965
@@ -1271,6 +1282,20 @@ plt.show()
             </div>
           </a>
         
+        
+          <a href="../../gravwaves/gravwaves/" title="Gravitational Wave parameter estimation with bilby" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Gravitational Wave parameter estimation with bilby
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
         
       </nav>
     </div>
