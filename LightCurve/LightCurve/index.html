@@ -15,7 +15,7 @@
     
     
       
-        <title>Exoplanet Light Curve Analysis with emcee and UltraNest - Demonstrations of MCMC and Nested Samplers</title>
+        <title>Exoplanet Light Curve Analysis with emcee and UltraNest - Demonstrations of MCMC and Nested Samplers in Physics</title>
       
     
     
@@ -60,7 +60,7 @@
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="../.." title="Demonstrations of MCMC and Nested Samplers" class="md-header-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers">
+    <a href="../.." title="Demonstrations of MCMC and Nested Samplers in Physics" class="md-header-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers in Physics">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -73,7 +73,7 @@
       
         <div class="md-header-nav__ellipsis">
           <span class="md-header-nav__topic md-ellipsis">
-            Demonstrations of MCMC and Nested Samplers
+            Demonstrations of MCMC and Nested Samplers in Physics
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
@@ -134,13 +134,13 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Demonstrations of MCMC and Nested Samplers" class="md-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers">
+    <a href="../.." title="Demonstrations of MCMC and Nested Samplers in Physics" class="md-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers in Physics">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
-    Demonstrations of MCMC and Nested Samplers
+    Demonstrations of MCMC and Nested Samplers in Physics
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -337,8 +337,20 @@
 
 
   <li class="md-nav__item">
-    <a href="../../gravwaves/gravwaves/" title="Gravitational Wave parameter estimation with bilby" class="md-nav__link">
-      Gravitational Wave parameter estimation with bilby
+    <a href="../../gravwaves/gravwaves/" title="Gravitational Wave Parameter Estimation with bilby" class="md-nav__link">
+      Gravitational Wave Parameter Estimation with bilby
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan" class="md-nav__link">
+      Particle Identification in Proton-Proton Collisions with PyStan
     </a>
   </li>
 
@@ -489,831 +501,847 @@
                 
                 <h1 id="using-emcee-and-ultranest-to-model-the-light-curves-from-kepler-10">Using emcee and UltraNest to model the light curves from Kepler-10</h1>
 <p>Kepler-10 is a star located roughly 608 lightyears from Earth. Kepler-10 was targeted by NASA in their search for an Earth-like exoplanet, and in 2011 the first exoplanet orbiting Kepler-10 was discovered. The planet, Kepler-10b, is a rocky planet with 1.4x the radius of Earth, and 3.7x the mass.</p>
-<p>As Kepler-10b passes infront of its star, it obstructs some flux (the light energy per unit time per unit area) from the star, casting a shadow towards Earth. We see this as a slight periodic dip in light intesity, occuring every time the exoplanet is infront of its star. Measuring the light curve (flux as a function of time) from a star with an exoplanet is called "transit detection", and can be used to infer the existense of an exoplanet and find the properties of the star-planet system.</p>
+<p>As Kepler-10b passes in front of its star, it obstructs some flux (the light energy per unit time per unit area) from the star, casting a shadow towards Earth. We see this as a slight periodic dip in light intesity, occuring every time the exoplanet is infront of its star. Measuring the light curve (flux as a function of time) from a star with an exoplanet is called "transit detection", and can be used to infer the existense of an exoplanet and find the properties of the star-planet system.</p>
 <p>In this example, I will create a model describing the flux of a star with, a single orbiting planet, as a function of time. I will then use the "emcee" and "UltraNest" samplers to fit the model parameters to some real Kepler-10 light curve data, provided by NASA.</p>
 <h2 id="useful-imports">Useful imports</h2>
-<pre><code class="python"># numpy
-import numpy as np
+<div class="codehilite"><pre><span></span><code><span class="c1"># numpy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-# scipy
-from scipy.special import gammaln, ndtri
-from scipy.stats import gaussian_kde
+<span class="c1"># scipy</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">gammaln</span><span class="p">,</span> <span class="n">ndtri</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gaussian_kde</span>
 
-# astropy
-from astropy.io import fits
-from astropy.table import Table
+<span class="c1"># astropy</span>
+<span class="kn">from</span> <span class="nn">astropy.io</span> <span class="kn">import</span> <span class="n">fits</span>
+<span class="kn">from</span> <span class="nn">astropy.table</span> <span class="kn">import</span> <span class="n">Table</span>
 
-# plotting
-import corner
-from matplotlib import pyplot as plt
-%matplotlib inline
+<span class="c1"># plotting</span>
+<span class="kn">import</span> <span class="nn">corner</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 
-# samplers
-import emcee as mc
-import ultranest
-import ultranest.stepsampler as stepsampler
-print('emcee version: {}'.format(mc.__version__))
-print('UltraNest version: {}'.format(ultranest.__version__))
+<span class="c1"># samplers</span>
+<span class="kn">import</span> <span class="nn">emcee</span> <span class="k">as</span> <span class="nn">mc</span>
+<span class="kn">import</span> <span class="nn">ultranest</span>
+<span class="kn">import</span> <span class="nn">ultranest.stepsampler</span> <span class="k">as</span> <span class="nn">stepsampler</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;emcee version: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mc</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;UltraNest version: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ultranest</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
-# misc
-from time import time as timer
-</code></pre>
+<span class="c1"># misc</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span> <span class="k">as</span> <span class="n">timer</span>
+</code></pre></div>
 
-<pre><code>emcee version: 3.0.2
-UltraNest version: 2.2.2
-</code></pre>
+
+<div class="codehilite"><pre><span></span><code><span class="err">emcee version: 3.0.2</span>
+<span class="err">UltraNest version: 2.2.2</span>
+</code></pre></div>
+
+
 <h2 id="viewing-the-data">Viewing the data</h2>
 <p>Light curve models can vary from simple square shaped transits, to extremely complicated transits involving limb-darkening and other effects. To decide which model is most appropriate, we need to first see the data we will be using.</p>
 <p>The light curve data is in the form of a FITS file. These files can be easily loaded into a Table format (simillar to a Pandas DataFrame) using astropy. The data is quite large, so I chose to look at the first 1325 data points only. Whilst extracting the data, any data points with a flux of "nan" need to be removed from both the "flux" and "time" lists.</p>
-<pre><code class="python">table = fits.open(&quot;kplr011904151-2010265121752_llc.fits&quot;)
-tab = table[1]
-data = Table(tab.data)
+<div class="codehilite"><pre><span></span><code><span class="n">table</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;kplr011904151-2010265121752_llc.fits&quot;</span><span class="p">)</span>
+<span class="n">tab</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">tab</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
 
-flux_orig = data['PDCSAP_FLUX'][:1325]
-time_orig = data['TIME'][:1325]
-flux = [flux_orig[i] for i in range(len(flux_orig)) if str(flux_orig[i]) != &quot;nan&quot;]
-time = [time_orig[i] for i in range(len(time_orig)) if str(flux_orig[i]) != &quot;nan&quot;]
-</code></pre>
+<span class="n">flux_orig</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;PDCSAP_FLUX&#39;</span><span class="p">][:</span><span class="mi">1325</span><span class="p">]</span>
+<span class="n">time_orig</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;TIME&#39;</span><span class="p">][:</span><span class="mi">1325</span><span class="p">]</span>
+<span class="n">flux</span> <span class="o">=</span> <span class="p">[</span><span class="n">flux_orig</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">flux_orig</span><span class="p">))</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">flux_orig</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">!=</span> <span class="s2">&quot;nan&quot;</span><span class="p">]</span>
+<span class="n">time</span> <span class="o">=</span> <span class="p">[</span><span class="n">time_orig</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_orig</span><span class="p">))</span> <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">flux_orig</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">!=</span> <span class="s2">&quot;nan&quot;</span><span class="p">]</span>
+</code></pre></div>
+
 
 <p>Now, we can plot the light curve we will be using and decide how complicated our model needs to be. Of the two plots below, the first shows the whole light curve that I'll be using, and the second shows a "zoomed in" segment of the light curve. </p>
-<pre><code class="python">fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15,6))
-# plot all useful data
-ax1.plot(time, flux, &quot;k:&quot;)
-ax1.set_ylabel(&quot;Flux / e-/s&quot;)
+<div class="codehilite"><pre><span></span><code><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+<span class="c1"># plot all useful data</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span> <span class="s2">&quot;k:&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux / e-/s&quot;</span><span class="p">)</span>
 
-# plot zoomed in view of transits
-ax2.plot(time, flux, &quot;k:&quot;)
-ax2.set_ylabel(&quot;Flux / e-/s&quot;)
-ax2.set_xlabel(&quot;Time / days&quot;)
-ax2.set_ylim(541325, 541700)
-ax2.set_xlim(540, 545)
+<span class="c1"># plot zoomed in view of transits</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span> <span class="s2">&quot;k:&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux / e-/s&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time / days&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">541325</span><span class="p">,</span> <span class="mi">541700</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">540</span><span class="p">,</span> <span class="mi">545</span><span class="p">)</span>
 
-plt.suptitle(&quot;Kepler-10 light curves showing evidence of exoplanet transits&quot;)
-plt.show()
-</code></pre>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Kepler-10 light curves showing evidence of exoplanet transits&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+
 
 <p><img alt="png" src="../output_8_0.png" /></p>
 <p>The above plot shows regular dips in flux, as expected from exoplanet transits. The dips appear to be "V-shaped", with sloped sides and a flat bottom. This suggests we could use a model of regular trapezium shaped flux drops. However, the slopes are fairly steep, so we could also use a much simpler square shaped flux drop instead. This would save on time, but may come at the cost of accuracy.</p>
-<p>A problem you may notice right away with this data set is that the flux drop during each transit is small; the flux only decreases by 0.025%. This fluctuation is even comparable to the level of noise in the data. To solve this, I augmented the data set by making two changes.</p>
-<p>First, I subtracted all the flux below the light curve, so that the lowest points in the data sit just above 1 unit of flux, and then took the natural log of the entire data set. The purpose of this was to stretch out the transit flux change, whilst keeping the noise level in check. This augmentation reults in the flux drop increasing to 20%.</p>
-<p>The second augmentation is shortening the data set. The full data is made up of over 1300 points, which takes around 8 minutes total to run this script on my machine. To save time, I'll just use the "zoomed in" data shown above.</p>
-<pre><code class="python">floor = 541300
-flux_aug = [np.log(i-floor) if i - floor &gt; 1 else 0 for i in flux][:155]
-time_aug = time[:155]
-
-# plot augmented lightcurve
-plt.figure(figsize=(15,3))
-plt.plot(time_aug, flux_aug, 'k:')
-plt.ylabel('Augmented flux')
-plt.xlabel('Time / days')
-plt.title('Augmented light curve from Kepler-10')
-plt.show()
-</code></pre>
-
-<p><img alt="png" src="../output_10_0.png" /></p>
 <h2 id="the-model">The model</h2>
 <p>Below is a diagram showing which parameters are needed to define a trapezium shaped transit (left), and how I will go about implementing the model in Python (right). I started with a simple recurring step function, then modified the step to have the triangular shape with height "h", which can be calculated using basic trigonometry. Finally, I added a hard floor at a flux change of df, to create the trapezium shape. The square transit shape is simillar, but tt and tf are equal.</p>
 <p><img alt="" src="../transits.png" title="Model" /></p>
 <p>Using this, I defined a the function that will be used to model the transit:</p>
-<pre><code class="python">def transit(time, f, df, p, tt, tf=None, off=0, square=False):
-    &quot;&quot;&quot;
-    Flux, from a uniform star source with single orbiting planet, as a function of time
-    :param time: 1D array, input times
-    :param f: unobscured flux, max flux level
-    :param df: ratio of obscured to unobscured flux
-    :param p: period of planet's orbit
-    :param tt: total time of transit
-    :param tf: time during transit in which flux doesn't change
-    :param off: time offset. A value of 0 means the transit begins immidiately
-    :param square: If True, the shape of the transit will be square (tt == tf)
-    :return: 1D array, flux from the star
-    &quot;&quot;&quot; 
-    if tf is None:
-        tf = tt
-    if tt &lt;= tf:
-        # Default to square shaped transit 
-        square = True
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">transit</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tt</span><span class="p">,</span> <span class="n">tf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">off</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">square</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Flux, from a uniform star source with single orbiting planet, as a function of time</span>
+<span class="sd">    :param time: 1D array, input times</span>
+<span class="sd">    :param f: unobscured flux, max flux level</span>
+<span class="sd">    :param df: ratio of obscured to unobscured flux</span>
+<span class="sd">    :param p: period of planet&#39;s orbit</span>
+<span class="sd">    :param tt: total time of transit</span>
+<span class="sd">    :param tf: time during transit in which flux doesn&#39;t change</span>
+<span class="sd">    :param off: time offset. A value of 0 means the transit begins immidiately</span>
+<span class="sd">    :param square: If True, the shape of the transit will be square (tt == tf)</span>
+<span class="sd">    :return: 1D array, flux from the star</span>
+<span class="sd">    &quot;&quot;&quot;</span> 
+    <span class="k">if</span> <span class="n">tf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">tf</span> <span class="o">=</span> <span class="n">tt</span>
+    <span class="k">if</span> <span class="n">tt</span> <span class="o">&lt;=</span> <span class="n">tf</span><span class="p">:</span>
+        <span class="c1"># Default to square shaped transit </span>
+        <span class="n">square</span> <span class="o">=</span> <span class="kc">True</span>
 
-    y = []
-    if not square:
-        # define slope of sides of trapezium 
-        h = f*df*tt/(tt-tf)
-        grad = 2*h/tt
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">square</span><span class="p">:</span>
+        <span class="c1"># define slope of sides of trapezium </span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">f</span><span class="o">*</span><span class="n">df</span><span class="o">*</span><span class="n">tt</span><span class="o">/</span><span class="p">(</span><span class="n">tt</span><span class="o">-</span><span class="n">tf</span><span class="p">)</span>
+        <span class="n">grad</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="o">/</span><span class="n">tt</span>
 
-    for i in time:
-        j = (i + off) % p
-        if j &lt; tt:
-            # transit
-            # square shaped transit
-            if square:
-                y.append(f*(1 - df))
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">time</span><span class="p">:</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">off</span><span class="p">)</span> <span class="o">%</span> <span class="n">p</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">tt</span><span class="p">:</span>
+            <span class="c1"># transit</span>
+            <span class="c1"># square shaped transit</span>
+            <span class="k">if</span> <span class="n">square</span><span class="p">:</span>
+                <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">df</span><span class="p">))</span>
 
-            # trapezium shaped transit
-            elif j/tt &lt; 0.5:
-                # first half of transit
-                val = f - grad*j
-                if val &lt; f*(1 - df):
-                    y.append(f*(1 - df))
-                else:
-                    y.append(val)
-            else:
-                # last half of transit
-                val = (grad*j) - 2*h + f
-                if val &lt; f*(1 - df):
-                    y.append(f*(1 - df))
-                else:
-                    y.append(val)
-        else:
-            # no transit
-            y.append(f)
-    return y
-</code></pre>
+            <span class="c1"># trapezium shaped transit</span>
+            <span class="k">elif</span> <span class="n">j</span><span class="o">/</span><span class="n">tt</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>
+                <span class="c1"># first half of transit</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="n">f</span> <span class="o">-</span> <span class="n">grad</span><span class="o">*</span><span class="n">j</span>
+                <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="n">f</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">df</span><span class="p">):</span>
+                    <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">df</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># last half of transit</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="n">grad</span><span class="o">*</span><span class="n">j</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">h</span> <span class="o">+</span> <span class="n">f</span>
+                <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="n">f</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">df</span><span class="p">):</span>
+                    <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">df</span><span class="p">))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># no transit</span>
+            <span class="n">y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">y</span>
+</code></pre></div>
+
 
 <p>I'll be using both a trapezium and square shape transit in tandem throughout this example, and I'll compare the performance and accuracies of both models.</p>
-<p>After the sampling has been completed, all of the augmentations I made earlier need to be undone. The following functions will do just that:</p>
-<pre><code class="python">def unaug_f(f_aug):
-    &quot;&quot;&quot;
-    returns array of original f, given array of augmented f
-    &quot;&quot;&quot;
-    f = np.exp(np.array(f_aug))+floor
-    return f
-
-def unaug_df(df_aug, f_mean, f_is_aug=False):
-    &quot;&quot;&quot;
-    returns array of original df, given array of augmented df and mean original/augmented f
-    &quot;&quot;&quot;
-    if f_is_aug:
-        f_mean =  unaug_f(f_mean)
-    df = 1 - ( (f_mean-floor)**(1-df_aug) + floor ) / f 
-    return df
-</code></pre>
-
 <h2 id="modelling-with-emcee">Modelling with emcee</h2>
 <p>Now that we know the parameters that will describe the model, we can start guessing at the parameter priors by using the plots above. Due to the noise, I'll use a uniform prior on f, but a normal prior on other parameters. Since the square transit model does not require the "tf" parameter, we can omit it from the list of square transit priors for a little extra time save. This model is quite complicated with six parameters, and eyeballing the values of each parameter can be tricky. Using a little trial and error, I came up with the following guesses:</p>
-<pre><code class="python"># uniform prior on flux
-f_min = 4.9
-f_max = 5.8
+<div class="codehilite"><pre><span></span><code><span class="c1"># uniform prior on flux</span>
+<span class="n">f_min</span> <span class="o">=</span> <span class="mf">4.9</span>
+<span class="n">f_max</span> <span class="o">=</span> <span class="mf">5.8</span>
 
-# normal prior on flux drop
-df_mu = 0.19
-df_sig = 0.005
+<span class="c1"># normal prior on flux drop</span>
+<span class="n">df_mu</span> <span class="o">=</span> <span class="mf">0.19</span>
+<span class="n">df_sig</span> <span class="o">=</span> <span class="mf">0.005</span>
 
-# normal prior on period
-p_mu = 0.8372
-p_sig = 0.008
+<span class="c1"># normal prior on period</span>
+<span class="n">p_mu</span> <span class="o">=</span> <span class="mf">0.8372</span>
+<span class="n">p_sig</span> <span class="o">=</span> <span class="mf">0.008</span>
 
-# normal prior on total transit time
-tt_mu = 0.145
-tt_sig = 0.01
+<span class="c1"># normal prior on total transit time</span>
+<span class="n">tt_mu</span> <span class="o">=</span> <span class="mf">0.145</span>
+<span class="n">tt_sig</span> <span class="o">=</span> <span class="mf">0.01</span>
 
-# normal prior on flat transit time
-tf_mu = 0.143
-tf_sig = 0.01
+<span class="c1"># normal prior on flat transit time</span>
+<span class="n">tf_mu</span> <span class="o">=</span> <span class="mf">0.143</span>
+<span class="n">tf_sig</span> <span class="o">=</span> <span class="mf">0.01</span>
 
-# normal prior on offset
-off_mu = 0.1502
-off_sig = 0.0008
+<span class="c1"># normal prior on offset</span>
+<span class="n">off_mu</span> <span class="o">=</span> <span class="mf">0.1502</span>
+<span class="n">off_sig</span> <span class="o">=</span> <span class="mf">0.0008</span>
 
-priors = [(f_min, f_max), (df_mu, df_sig), (p_mu, p_sig),
-          (tt_mu, tt_sig), (tf_mu, tf_sig), (off_mu, off_sig)]
-# remove tf for square transit parameters
-priors_square = priors[:4] + priors[5:]
-</code></pre>
+<span class="n">priors</span> <span class="o">=</span> <span class="p">[(</span><span class="n">f_min</span><span class="p">,</span> <span class="n">f_max</span><span class="p">),</span> <span class="p">(</span><span class="n">df_mu</span><span class="p">,</span> <span class="n">df_sig</span><span class="p">),</span> <span class="p">(</span><span class="n">p_mu</span><span class="p">,</span> <span class="n">p_sig</span><span class="p">),</span>
+          <span class="p">(</span><span class="n">tt_mu</span><span class="p">,</span> <span class="n">tt_sig</span><span class="p">),</span> <span class="p">(</span><span class="n">tf_mu</span><span class="p">,</span> <span class="n">tf_sig</span><span class="p">),</span> <span class="p">(</span><span class="n">off_mu</span><span class="p">,</span> <span class="n">off_sig</span><span class="p">)]</span>
+<span class="c1"># remove tf for square transit parameters</span>
+<span class="n">priors_square</span> <span class="o">=</span> <span class="n">priors</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="n">priors</span><span class="p">[</span><span class="mi">5</span><span class="p">:]</span>
+</code></pre></div>
+
 
 <h3 id="sampling-the-data">Sampling the data</h3>
 <p>The "emcee" sampler requires the user to provide a prior, likelihood, and posterior function, all in their log forms. These functions are very simillar for the trapezium and square shaped transit models; the key difference being the "tf" parameter is omitted for the square model. Since I decided on using normal and uniform priors for each parameter, The log of the prior takes the following forms:</p>
-<pre><code class="python">def logprior(theta):
-    &quot;&quot;&quot;
-    Function to return the log of the prior for a trapezium shaped transit light curve model
-    :param theta: tuple or list containing each parameter
-    &quot;&quot;&quot;
-    lprior = 0
-    for i in range(len(priors)):
-        # sum log priors from each parameter
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">logprior</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to return the log of the prior for a trapezium shaped transit light curve model</span>
+<span class="sd">    :param theta: tuple or list containing each parameter</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lprior</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">priors</span><span class="p">)):</span>
+        <span class="c1"># sum log priors from each parameter</span>
 
-        if i == 0:
-            # prior for uniform parameters
-            if priors[i][0] &lt; theta[i] &lt; priors[i][1]:
-                pass
-            else:
-                lprior = -np.inf
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># prior for uniform parameters</span>
+            <span class="k">if</span> <span class="n">priors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">priors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lprior</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
 
-        else:
-            # prior for non-uniform parameters
-            lprior -= 0.5*((theta[i] - priors[i][0]) / priors[i][1])**2
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># prior for non-uniform parameters</span>
+            <span class="n">lprior</span> <span class="o">-=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">((</span><span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">priors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">priors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
 
-    return lprior
+    <span class="k">return</span> <span class="n">lprior</span>
 
-def logprior_square(theta):
-    &quot;&quot;&quot;
-    Function to return the log of the prior for a square shaped transit light curve model
-    :param theta: tuple or list containing each parameter
-    &quot;&quot;&quot;
-    lprior = 0
-    for i in range(len(priors_square)):
-        # sum log priors from each parameter
+<span class="k">def</span> <span class="nf">logprior_square</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to return the log of the prior for a square shaped transit light curve model</span>
+<span class="sd">    :param theta: tuple or list containing each parameter</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lprior</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">priors_square</span><span class="p">)):</span>
+        <span class="c1"># sum log priors from each parameter</span>
 
-        if i == 0:
-            # prior for uniform parameters
-            if priors_square[i][0] &lt; theta[i] &lt; priors_square[i][1]:
-                pass
-            else:
-                lprior = -np.inf
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># prior for uniform parameters</span>
+            <span class="k">if</span> <span class="n">priors_square</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">priors_square</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="k">pass</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">lprior</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
 
-        else:
-            # prior for non-uniform parameters
-            lprior -= 0.5*((theta[i] - priors_square[i][0]) / priors_square[i][1])**2
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># prior for non-uniform parameters</span>
+            <span class="n">lprior</span> <span class="o">-=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">((</span><span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">priors_square</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">priors_square</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
 
-    return lprior
-</code></pre>
+    <span class="k">return</span> <span class="n">lprior</span>
+</code></pre></div>
+
 
 <p>The likelihood takes the form of a Poisson distribution, since flux is a non-negative quantity. The expected value of the likelihood "lmbda" is found using the "transit" function defined above.</p>
-<pre><code class="python">def loglike(theta):
-    &quot;&quot;&quot;
-    Function to return the log likelihood of the trapezium shpaed transit light curve model
-    :param theta: tuple or list containing each parameter
-    :param obs: list or array containing the observed flux of each data point
-    :param times: list or array containing the times at which each data point is recorded
-    &quot;&quot;&quot;
-    # unpack parameters
-    f_like, df_like, p_like, tt_like, tf_like, off_like = theta
-    # expected value
-    lmbda = np.array(transit(time_aug, f_like, df_like, p_like, tt_like, tf_like, off=off_like))
-    n = len(flux_aug)
-    a = np.sum(gammaln(np.array(flux_aug)+1))
-    b = np.sum(np.array(flux_aug) * np.log(lmbda))
-    return -np.sum(lmbda) - a + b
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">loglike</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to return the log likelihood of the trapezium shpaed transit light curve model</span>
+<span class="sd">    :param theta: tuple or list containing each parameter</span>
+<span class="sd">    :param obs: list or array containing the observed flux of each data point</span>
+<span class="sd">    :param times: list or array containing the times at which each data point is recorded</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># unpack parameters</span>
+    <span class="n">f_like</span><span class="p">,</span> <span class="n">df_like</span><span class="p">,</span> <span class="n">p_like</span><span class="p">,</span> <span class="n">tt_like</span><span class="p">,</span> <span class="n">tf_like</span><span class="p">,</span> <span class="n">off_like</span> <span class="o">=</span> <span class="n">theta</span>
+    <span class="c1"># expected value</span>
+    <span class="n">lmbda</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">transit</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">f_like</span><span class="p">,</span> <span class="n">df_like</span><span class="p">,</span> <span class="n">p_like</span><span class="p">,</span> <span class="n">tt_like</span><span class="p">,</span> <span class="n">tf_like</span><span class="p">,</span> <span class="n">off</span><span class="o">=</span><span class="n">off_like</span><span class="p">))</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">flux</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">gammaln</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">flux</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">flux</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lmbda</span><span class="p">))</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">lmbda</span><span class="p">)</span> <span class="o">-</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
 
-def loglike_square(theta):
-    &quot;&quot;&quot;
-    Function to return the log likelihood of the square shpaed transit light curve model
-    :param theta: tuple or list containing each parameter
-    :param obs: list or array containing the observed flux of each data point
-    :param times: list or array containing the times at which each data point is recorded
-    &quot;&quot;&quot;
-    # unpack parameters
-    f_like, df_like, p_like, tt_like, off_like = theta
-    # expected value
-    lmbda = np.array(transit(time_aug, f_like, df_like, p_like, tt_like, off=off_like, square=True))
-    n = len(flux_aug)
-    a = np.sum(gammaln(np.array(flux_aug)+1))
-    b = np.sum(np.array(flux_aug) * np.log(lmbda))
-    return -np.sum(lmbda) - a + b
-</code></pre>
+<span class="k">def</span> <span class="nf">loglike_square</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to return the log likelihood of the square shpaed transit light curve model</span>
+<span class="sd">    :param theta: tuple or list containing each parameter</span>
+<span class="sd">    :param obs: list or array containing the observed flux of each data point</span>
+<span class="sd">    :param times: list or array containing the times at which each data point is recorded</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># unpack parameters</span>
+    <span class="n">f_like</span><span class="p">,</span> <span class="n">df_like</span><span class="p">,</span> <span class="n">p_like</span><span class="p">,</span> <span class="n">tt_like</span><span class="p">,</span> <span class="n">off_like</span> <span class="o">=</span> <span class="n">theta</span>
+    <span class="c1"># expected value</span>
+    <span class="n">lmbda</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">transit</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">f_like</span><span class="p">,</span> <span class="n">df_like</span><span class="p">,</span> <span class="n">p_like</span><span class="p">,</span> <span class="n">tt_like</span><span class="p">,</span> <span class="n">off</span><span class="o">=</span><span class="n">off_like</span><span class="p">,</span> <span class="n">square</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">flux</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">gammaln</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">flux</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">flux</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lmbda</span><span class="p">))</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">lmbda</span><span class="p">)</span> <span class="o">-</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</code></pre></div>
+
 
 <p>When using MCMC, the log posterior can be found as the sum of the log prior and log likelihood:</p>
-<pre><code class="python">def logposterior(theta):
-    lprior = logprior(theta)
-    # check log prior is finite
-    if not np.isfinite(lprior):
-        return -np.inf
-    return lprior + loglike(theta)
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">logposterior</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="n">lprior</span> <span class="o">=</span> <span class="n">logprior</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="c1"># check log prior is finite</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">lprior</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="k">return</span> <span class="n">lprior</span> <span class="o">+</span> <span class="n">loglike</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
 
-def logposterior_square(theta):
-    lprior = logprior_square(theta)
-    # check log prior is finite
-    if not np.isfinite(lprior):
-        return -np.inf
-    return lprior + loglike_square(theta)
-</code></pre>
+<span class="k">def</span> <span class="nf">logposterior_square</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="n">lprior</span> <span class="o">=</span> <span class="n">logprior_square</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="c1"># check log prior is finite</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">lprior</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="k">return</span> <span class="n">lprior</span> <span class="o">+</span> <span class="n">loglike_square</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+</code></pre></div>
 
-<p>Next, we can start setting up the MCMC model. To start, I'll draw 200 "ensemble" sanples from each prior distribution, which will be used to represent the priors. I'll also define 500 "burn-in" iterations to allow the chain to converge, and 500 further iterations to produce the posteriors.</p>
-<pre><code class="python"># no. ensemble points
-Nens = 200
-inisamples = []
 
-for i in range(len(priors)):
-    if i == 0:
-        inisamples.append(np.random.uniform(priors[i][0], priors[i][1],Nens))
-    else:
-        inisamples.append(np.random.normal(priors[i][0], priors[i][1],Nens))
-inisamples = np.array(inisamples).T
+<p>Next, we can start setting up the MCMC model. To start, I'll draw 200 <a href="https://en.wikipedia.org/wiki/Statistical_ensemble_(mathematical_physics)">"ensemble"</a> samples from each prior distribution, which will be used to represent the priors. I'll also define 500 "burn-in" iterations to allow the chain to converge, and 500 further iterations to produce the posteriors.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># no. ensemble points</span>
+<span class="n">Nens</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">inisamples</span> <span class="o">=</span> <span class="p">[]</span>
 
-inisamples_square = []
-for i in range(len(priors_square)):
-    if i == 0:
-        inisamples_square.append(np.random.uniform(priors_square[i][0], priors_square[i][1],Nens))
-    else:
-        inisamples_square.append(np.random.normal(priors_square[i][0], priors_square[i][1],Nens))
-inisamples_square = np.array(inisamples_square).T
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">priors</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">inisamples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">priors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">priors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">Nens</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">inisamples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">priors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">priors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">Nens</span><span class="p">))</span>
+<span class="n">inisamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inisamples</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 
-ndims = inisamples.shape[1]
-ndims_square = inisamples_square.shape[1]
+<span class="n">inisamples_square</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">priors_square</span><span class="p">)):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">inisamples_square</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">priors_square</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">priors_square</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">Nens</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">inisamples_square</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">priors_square</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">priors_square</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">Nens</span><span class="p">))</span>
+<span class="n">inisamples_square</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">inisamples_square</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
 
-# no. iterations
-Nburn = 500
-Nsamples = 500
+<span class="n">ndims</span> <span class="o">=</span> <span class="n">inisamples</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">ndims_square</span> <span class="o">=</span> <span class="n">inisamples_square</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
-loglike.ncalls = 0
-loglike_square.ncalls = 0
-</code></pre>
+<span class="c1"># no. iterations</span>
+<span class="n">Nburn</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">Nsamples</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="n">loglike</span><span class="o">.</span><span class="n">ncalls</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">loglike_square</span><span class="o">.</span><span class="n">ncalls</span> <span class="o">=</span> <span class="mi">0</span>
+</code></pre></div>
+
 
 <p>Now that everything is set up, we can perform the sampling process:</p>
-<pre><code class="python">sampler = mc.EnsembleSampler(Nens, ndims, logposterior)
-sampler_square = mc.EnsembleSampler(Nens, ndims_square, logposterior_square)
+<div class="codehilite"><pre><span></span><code><span class="n">sampler</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">EnsembleSampler</span><span class="p">(</span><span class="n">Nens</span><span class="p">,</span> <span class="n">ndims</span><span class="p">,</span> <span class="n">logposterior</span><span class="p">)</span>
+<span class="n">sampler_square</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">EnsembleSampler</span><span class="p">(</span><span class="n">Nens</span><span class="p">,</span> <span class="n">ndims_square</span><span class="p">,</span> <span class="n">logposterior_square</span><span class="p">)</span>
 
-# perform sampling
-t0 = timer()
-sampler.run_mcmc(inisamples, Nsamples+Nburn)
-t1 = timer()
-print(&quot;time taken to sample a trapezium transit model with emcee: {} seconds&quot;.format(t1-t0))
-sampler_square.run_mcmc(inisamples_square, Nsamples+Nburn)
-t2 = timer()
-print(&quot;time taken to sample a square transit model with emcee: {} seconds&quot;.format(t2-t1))
-</code></pre>
+<span class="c1"># perform sampling</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+<span class="n">sampler</span><span class="o">.</span><span class="n">run_mcmc</span><span class="p">(</span><span class="n">inisamples</span><span class="p">,</span> <span class="n">Nsamples</span><span class="o">+</span><span class="n">Nburn</span><span class="p">)</span>
+<span class="n">t1</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;time taken to sample a trapezium transit model with emcee: </span><span class="si">{}</span><span class="s2"> seconds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t1</span><span class="o">-</span><span class="n">t0</span><span class="p">))</span>
+<span class="n">sampler_square</span><span class="o">.</span><span class="n">run_mcmc</span><span class="p">(</span><span class="n">inisamples_square</span><span class="p">,</span> <span class="n">Nsamples</span><span class="o">+</span><span class="n">Nburn</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;time taken to sample a square transit model with emcee: </span><span class="si">{}</span><span class="s2"> seconds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">))</span>
+</code></pre></div>
 
-<pre><code>time taken to sample a trapezium transit model with emcee: 22.782975673675537 seconds
-time taken to sample a square transit model with emcee: 19.97200083732605 seconds
-</code></pre>
+
+<div class="codehilite"><pre><span></span><code><span class="err">time taken to sample a trapezium transit model with emcee: 22.782975673675537 seconds</span>
+<span class="err">time taken to sample a square transit model with emcee: 19.97200083732605 seconds</span>
+</code></pre></div>
+
+
 <p>The burn-in points can be removed before collecting the chains as follows:</p>
-<pre><code class="python">samples_trapez = sampler.chain[:, Nburn:, :].reshape((-1, ndims))
-samples_square = sampler_square.chain[:, Nburn:, :].reshape((-1, ndims_square))
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="n">samples_trapez</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">chain</span><span class="p">[:,</span> <span class="n">Nburn</span><span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ndims</span><span class="p">))</span>
+<span class="n">samples_square</span> <span class="o">=</span> <span class="n">sampler_square</span><span class="o">.</span><span class="n">chain</span><span class="p">[:,</span> <span class="n">Nburn</span><span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ndims_square</span><span class="p">))</span>
+</code></pre></div>
+
 
 <h3 id="results">Results</h3>
 <p>Let's take a look at what we found. Looking at the trapezium model, we can plot the posteriors of each parameter, along with contour plots describing how one parameter may vary with any other. This can be done using "corner.py", and a scipy Gaussian KDE function.</p>
-<pre><code class="python">def plotposts(samples, labels, **kwargs):
-    fig = corner.corner(samples, labels=labels, hist_kwargs={'density': True}, **kwargs)
-    pos = [i*(len(labels)+1) for i in range(len(labels))]
-    for axidx, samps in zip(pos, samples.T):
-        kde = gaussian_kde(samps)
-        xvals = fig.axes[axidx].get_xlim()
-        xvals = np.linspace(xvals[0], xvals[1], 50)
-        fig.axes[axidx].plot(xvals, kde(xvals), color='firebrick')
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">plotposts</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">hist_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))]</span>
+    <span class="k">for</span> <span class="n">axidx</span><span class="p">,</span> <span class="n">samps</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">samples</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
+        <span class="n">kde</span> <span class="o">=</span> <span class="n">gaussian_kde</span><span class="p">(</span><span class="n">samps</span><span class="p">)</span>
+        <span class="n">xvals</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="n">axidx</span><span class="p">]</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+        <span class="n">xvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xvals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xvals</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="n">axidx</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xvals</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">xvals</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;firebrick&#39;</span><span class="p">)</span>
 
-labels = ['Aug Flux', 'Aug dFlux', 'Period', 'Transit Time', 'Transit Flat Time', 'Offset']
-plotposts(samples_trapez, labels)
-</code></pre>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Flux&#39;</span><span class="p">,</span> <span class="s1">&#39;dFlux&#39;</span><span class="p">,</span> <span class="s1">&#39;Period&#39;</span><span class="p">,</span> <span class="s1">&#39;Transit Time&#39;</span><span class="p">,</span> <span class="s1">&#39;Transit Flat Time&#39;</span><span class="p">,</span> <span class="s1">&#39;Offset&#39;</span><span class="p">]</span>
+<span class="n">plotposts</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+</code></pre></div>
+
 
 <p><img alt="png" src="../output_36_0.png" /></p>
-<p>For each model, we can find the mean and standard deviation of each parameter using the traces. To do this, we have to unaugment f and df, using the functions described above. For the trapezium transit model:</p>
-<pre><code class="python">f, ferr = np.mean(unaug_f(samples_trapez[:,0])
-                 ), np.std(unaug_f(samples_trapez[:,0]))
-df, dferr = np.mean(unaug_df(samples_trapez[:,1],f)
-                   ), np.std(unaug_df(samples_trapez[:,1],f))
-p, perr = np.mean(samples_trapez[:,2]), np.std(samples_trapez[:,2])
-tt, tterr = np.mean(samples_trapez[:,3]), np.std(samples_trapez[:,3])
-tf, tferr = np.mean(samples_trapez[:,4]), np.std(samples_trapez[:,4])
-off, offerr = np.mean(samples_trapez[:,5]), np.std(samples_trapez[:,5])
+<p>For each model, we can find the mean and standard deviation of each parameter using the traces. For the trapezium transit model:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">f</span><span class="p">,</span> <span class="n">ferr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">df</span><span class="p">,</span> <span class="n">dferr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">p</span><span class="p">,</span> <span class="n">perr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">tt</span><span class="p">,</span> <span class="n">tterr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">tf</span><span class="p">,</span> <span class="n">tferr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">off</span><span class="p">,</span> <span class="n">offerr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">5</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">5</span><span class="p">])</span>
 
-print(&quot;Parameters describing a trapezium shaped transit model: \n \n&quot; + 
-      &quot;       unobstructed flux = {} \u00B1 {} e-/s \n&quot;.format(f,ferr) + 
-      &quot;fractional flux decrease = {} \u00B1 {} \n&quot;.format(df,dferr) +
-      &quot;                  period = {} \u00B1 {} days \n&quot;.format(p,perr) + 
-      &quot;      total transit time = {} \u00B1 {} days \n&quot;.format(tt,tterr) +
-      &quot;       flat transit time = {} \u00B1 {} days \n&quot;.format(tf,tferr) + 
-      &quot;                  offset = {} \u00B1 {} days \n&quot;.format(off,offerr))
-</code></pre>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parameters describing a trapezium shaped transit model: </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> 
+      <span class="s2">&quot;       unobstructed flux = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> e-/s </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">ferr</span><span class="p">)</span> <span class="o">+</span> 
+      <span class="s2">&quot;fractional flux decrease = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">dferr</span><span class="p">)</span> <span class="o">+</span>
+      <span class="s2">&quot;                  period = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> days </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">perr</span><span class="p">)</span> <span class="o">+</span> 
+      <span class="s2">&quot;      total transit time = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> days </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tt</span><span class="p">,</span><span class="n">tterr</span><span class="p">)</span> <span class="o">+</span>
+      <span class="s2">&quot;       flat transit time = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> days </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tf</span><span class="p">,</span><span class="n">tferr</span><span class="p">)</span> <span class="o">+</span> 
+      <span class="s2">&quot;                  offset = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> days </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">off</span><span class="p">,</span><span class="n">offerr</span><span class="p">))</span>
+</code></pre></div>
 
-<pre><code>Parameters describing a trapezium shaped transit model:
 
-       unobstructed flux = 541508.1852844431 ± 36.9344420907229 e-/s 
-fractional flux decrease = 0.00024461083692660444 ± 3.7035342916871527e-06 
-                  period = 0.8370801841354675 ± 0.008002462715920132 days 
-      total transit time = 0.14446313515960185 ± 0.010012520942390852 days 
-       flat transit time = 0.14221868661500203 ± 0.010486564635702324 days 
-                  offset = 0.1501856219851231 ± 0.000792190343252601 days
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">Parameters</span> <span class="n">describing</span> <span class="n">a</span> <span class="n">trapezium</span> <span class="n">shaped</span> <span class="n">transit</span> <span class="n">model</span><span class="p">:</span>
+
+       <span class="n">unobstructed</span> <span class="n">flux</span> <span class="o">=</span> <span class="mi">541508</span><span class="p">.</span><span class="mi">1852844431</span> <span class="err">±</span> <span class="mi">36</span><span class="p">.</span><span class="mi">9344420907229</span> <span class="n">e</span><span class="o">-/</span><span class="n">s</span> 
+<span class="n">fractional</span> <span class="n">flux</span> <span class="n">decrease</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">00024461083692660444</span> <span class="err">±</span> <span class="mi">3</span><span class="p">.</span><span class="mi">7035342916871527</span><span class="n">e</span><span class="o">-</span><span class="mi">06</span> 
+                  <span class="k">period</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8370801841354675</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">008002462715920132</span> <span class="n">days</span> 
+      <span class="n">total</span> <span class="n">transit</span> <span class="k">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">14446313515960185</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">010012520942390852</span> <span class="n">days</span> 
+       <span class="n">flat</span> <span class="n">transit</span> <span class="k">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">14221868661500203</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">010486564635702324</span> <span class="n">days</span> 
+                  <span class="k">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1501856219851231</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">000792190343252601</span> <span class="n">days</span>
+</code></pre></div>
+
+
 <p>The same can be done for the square transit model:</p>
-<pre><code class="python">f_square, ferr_square = np.mean(unaug_f(samples_square[:,0])
-                               ), np.std(unaug_f(samples_square[:,0]))
-df_square, dferr_square = np.mean(unaug_df(samples_square[:,1],f_square)
-                                 ), np.std(unaug_df(samples_square[:,1],f_square))
-p_square, perr_square = np.mean(samples_square[:,2]), np.std(samples_square[:,2])
-tt_square, tterr_square = np.mean(samples_square[:,3]), np.std(samples_square[:,3])
-off_square, offerr_square = np.mean(samples_square[:,4]), np.std(samples_square[:,4])
+<div class="codehilite"><pre><span></span><code><span class="n">f_square</span><span class="p">,</span> <span class="n">ferr_square</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+                               <span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">df_square</span><span class="p">,</span> <span class="n">dferr_square</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+                                 <span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">p_square</span><span class="p">,</span> <span class="n">perr_square</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">tt_square</span><span class="p">,</span> <span class="n">tterr_square</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">off_square</span><span class="p">,</span> <span class="n">offerr_square</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">4</span><span class="p">])</span>
 
-print(&quot;Parameters describing a square shaped transit model: \n \n&quot; + 
-      &quot;       unobstructed flux = {} \u00B1 {} e-/s \n&quot;.format(f_square,ferr_square) + 
-      &quot;fractional flux decrease = {} \u00B1 {} \n&quot;.format(df_square,dferr_square) +
-      &quot;                  period = {} \u00B1 {} days \n&quot;.format(p_square,perr_square) + 
-      &quot;      total transit time = {} \u00B1 {} days \n&quot;.format(tt_square,tterr_square) +
-      &quot;                  offset = {} \u00B1 {} days \n&quot;.format(off_square,offerr_square))
-</code></pre>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parameters describing a square shaped transit model: </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> 
+      <span class="s2">&quot;       unobstructed flux = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> e-/s </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f_square</span><span class="p">,</span><span class="n">ferr_square</span><span class="p">)</span> <span class="o">+</span> 
+      <span class="s2">&quot;fractional flux decrease = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">df_square</span><span class="p">,</span><span class="n">dferr_square</span><span class="p">)</span> <span class="o">+</span>
+      <span class="s2">&quot;                  period = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> days </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p_square</span><span class="p">,</span><span class="n">perr_square</span><span class="p">)</span> <span class="o">+</span> 
+      <span class="s2">&quot;      total transit time = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> days </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tt_square</span><span class="p">,</span><span class="n">tterr_square</span><span class="p">)</span> <span class="o">+</span>
+      <span class="s2">&quot;                  offset = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> days </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">off_square</span><span class="p">,</span><span class="n">offerr_square</span><span class="p">))</span>
+</code></pre></div>
 
-<pre><code>Parameters describing a square shaped transit model:
 
-       unobstructed flux = 541509.5710077788 ± 38.29278598182498 e-/s 
-fractional flux decrease = 0.00024373683466889182 ± 3.7647641082140636e-06 
-                  period = 0.8372673158389097 ± 0.008000578546054328 days 
-      total transit time = 0.14409081829513087 ± 0.010074301386211069 days 
-                  offset = 0.1501740077644908 ± 0.00081315394152917 days
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="k">Parameters</span> <span class="n">describing</span> <span class="n">a</span> <span class="n">square</span> <span class="n">shaped</span> <span class="n">transit</span> <span class="n">model</span><span class="p">:</span>
+
+       <span class="n">unobstructed</span> <span class="n">flux</span> <span class="o">=</span> <span class="mi">541509</span><span class="p">.</span><span class="mi">5710077788</span> <span class="err">±</span> <span class="mi">38</span><span class="p">.</span><span class="mi">29278598182498</span> <span class="n">e</span><span class="o">-/</span><span class="n">s</span> 
+<span class="n">fractional</span> <span class="n">flux</span> <span class="n">decrease</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">00024373683466889182</span> <span class="err">±</span> <span class="mi">3</span><span class="p">.</span><span class="mi">7647641082140636</span><span class="n">e</span><span class="o">-</span><span class="mi">06</span> 
+                  <span class="k">period</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8372673158389097</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">008000578546054328</span> <span class="n">days</span> 
+      <span class="n">total</span> <span class="n">transit</span> <span class="k">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">14409081829513087</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">010074301386211069</span> <span class="n">days</span> 
+                  <span class="k">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1501740077644908</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">00081315394152917</span> <span class="n">days</span>
+</code></pre></div>
+
+
 <p>The period in both cases is around 20 hours. This is unique to one body in the Kepler-10 system: Our model describes the transits of Kepler-10b.</p>
 <h3 id="plotting-the-posterior">Plotting the posterior</h3>
 <p>We can sample from the posteriors further to create slightly different sets of the parameters. From this, we can plot a new line over our original data, creating a posterior predictive plot. The regions in which the model is most likely to fall in will appear darker on the plot, and so the darker the plot, the higher the probabillity of the flux passing through it.</p>
 <p>Start by randomly choosing 400 of each parameter for the trapezium and square models:</p>
-<pre><code class="python">n_fits = 400
+<div class="codehilite"><pre><span></span><code><span class="n">n_fits</span> <span class="o">=</span> <span class="mi">400</span>
 
-fsamps_trap_emcee = np.random.choice(unaug_f(samples_trapez[:,0]),n_fits)
-dfsamps_trap_emcee = np.random.choice(unaug_df(samples_trapez[:,1],f),n_fits)
-psamps_trap_emcee = np.random.choice(samples_trapez[:,2],n_fits)
-ttsamps_trap_emcee = np.random.choice(samples_trapez[:,3],n_fits)
-tfsamps_trap_emcee = np.random.choice(samples_trapez[:,4],n_fits)
-offsamps_trap_emcee = np.random.choice(samples_trapez[:,5],n_fits)
+<span class="n">fsamps_trap_emcee</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">n_fits</span><span class="p">)</span>
+<span class="n">dfsamps_trap_emcee</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">n_fits</span><span class="p">)</span>
+<span class="n">psamps_trap_emcee</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span><span class="n">n_fits</span><span class="p">)</span>
+<span class="n">ttsamps_trap_emcee</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">3</span><span class="p">],</span><span class="n">n_fits</span><span class="p">)</span>
+<span class="n">tfsamps_trap_emcee</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">4</span><span class="p">],</span><span class="n">n_fits</span><span class="p">)</span>
+<span class="n">offsamps_trap_emcee</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_trapez</span><span class="p">[:,</span><span class="mi">5</span><span class="p">],</span><span class="n">n_fits</span><span class="p">)</span>
 
-fsamps_square_emcee = np.random.choice(unaug_f(samples_square[:,0]),n_fits)
-dfsamps_square_emcee = np.random.choice(unaug_df(samples_square[:,1],f_square),n_fits)
-psamps_square_emcee = np.random.choice(samples_square[:,2],n_fits)
-ttsamps_square_emcee = np.random.choice(samples_square[:,3],n_fits)
-offsamps_square_emcee = np.random.choice(samples_square[:,4],n_fits)
-</code></pre>
+<span class="n">fsamps_square_emcee</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">n_fits</span><span class="p">)</span>
+<span class="n">dfsamps_square_emcee</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">n_fits</span><span class="p">)</span>
+<span class="n">psamps_square_emcee</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span><span class="n">n_fits</span><span class="p">)</span>
+<span class="n">ttsamps_square_emcee</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">3</span><span class="p">],</span><span class="n">n_fits</span><span class="p">)</span>
+<span class="n">offsamps_square_emcee</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">4</span><span class="p">],</span><span class="n">n_fits</span><span class="p">)</span>
+</code></pre></div>
+
 
 <p>Below are two plots of the results of the MCMC algorithm. The first shows the entire original light curve data set, with a model with mean parameters plotted on top. The second shows a "zoomed in" view of a few exoplanet transits, with the posterior predictive overplotted. </p>
-<pre><code class="python">fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15,6))
+<div class="codehilite"><pre><span></span><code><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 
-# mean plot
-ax1.plot(time, flux, &quot;k:&quot;, linewidth=3)
-x = np.linspace(min(time), max(time), 1500)
-y = transit(x,f,df,p,tt,tf,off)
-ax1.plot(x, y, &quot;b-&quot;, alpha=0.8)
-ax1.set_ylabel(&quot;Flux / e-/s&quot;)
+<span class="c1"># mean plot</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span> <span class="s2">&quot;k:&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">time</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">time</span><span class="p">),</span> <span class="mi">1500</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">transit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">tt</span><span class="p">,</span><span class="n">tf</span><span class="p">,</span><span class="n">off</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;b-&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux / e-/s&quot;</span><span class="p">)</span>
 
-# posterior predictive plot
-for i in range(n_fits):
-    y = transit(x, fsamps_trap_emcee[i], dfsamps_trap_emcee[i], psamps_trap_emcee[i],
-                ttsamps_trap_emcee[i], tfsamps_trap_emcee[i], offsamps_trap_emcee[i])
-    ax2.plot(x, y, &quot;b-&quot;, alpha=0.01, linewidth=5)
-ax2.plot(time, flux, &quot;k:&quot;, linewidth=3)
-ax2.set_ylabel(&quot;Flux / e-/s&quot;)
-ax2.set_xlabel(&quot;Time / days&quot;)
-ax2.set_ylim(541300, 541600)
-ax2.set_xlim(540, 545)
+<span class="c1"># posterior predictive plot</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_fits</span><span class="p">):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">transit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fsamps_trap_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dfsamps_trap_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">psamps_trap_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">ttsamps_trap_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tfsamps_trap_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">offsamps_trap_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;b-&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span> <span class="s2">&quot;k:&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux / e-/s&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time / days&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">541300</span><span class="p">,</span> <span class="mi">541600</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">540</span><span class="p">,</span> <span class="mi">545</span><span class="p">)</span>
 
-plt.suptitle(&quot;A light curve from Kepler-10 with overplotted&quot; +
-             &quot; mean trapezium transit model (top) and posterior predictive plot (bottom)&quot;)
-plt.show()
-</code></pre>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;A light curve from Kepler-10 with overplotted&quot;</span> <span class="o">+</span>
+             <span class="s2">&quot; mean trapezium transit model (top) and posterior predictive plot (bottom)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+
 
 <p><img alt="png" src="../output_46_0.png" /></p>
 <p>The same process can be repeated for the square transit model:</p>
-<pre><code class="python">fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(15,6))
+<div class="codehilite"><pre><span></span><code><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
 
-# mean plot
-ax1.plot(time, flux, &quot;k:&quot;, linewidth=3)
-x = np.linspace(min(time), max(time), 1500)
-y = transit(x,f_square,df_square,p_square,tt_square,off=off_square)
-ax1.plot(x, y, &quot;b-&quot;, alpha = 0.8)
-ax1.set_ylabel(&quot;Flux / e-/s&quot;)
+<span class="c1"># mean plot</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span> <span class="s2">&quot;k:&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">time</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">time</span><span class="p">),</span> <span class="mi">1500</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">transit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">f_square</span><span class="p">,</span><span class="n">df_square</span><span class="p">,</span><span class="n">p_square</span><span class="p">,</span><span class="n">tt_square</span><span class="p">,</span><span class="n">off</span><span class="o">=</span><span class="n">off_square</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;b-&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.8</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux / e-/s&quot;</span><span class="p">)</span>
 
-# posterior predictive plot
-for i in range(n_fits):
-    y = transit(x, fsamps_square_emcee[i], dfsamps_square_emcee[i], psamps_square_emcee[i],
-             ttsamps_square_emcee[i], off=offsamps_square_emcee[i])
-    ax2.plot(x, y, &quot;b-&quot;, alpha=0.01, linewidth=5)
-ax2.plot(time, flux, &quot;k:&quot;, linewidth=3)
-ax2.set_ylabel(&quot;Flux / e-/s&quot;)
-ax2.set_xlabel(&quot;Time / days&quot;)
-ax2.set_ylim(541300, 541600)
-ax2.set_xlim(540, 545)
+<span class="c1"># posterior predictive plot</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_fits</span><span class="p">):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">transit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fsamps_square_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dfsamps_square_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">psamps_square_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+             <span class="n">ttsamps_square_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">off</span><span class="o">=</span><span class="n">offsamps_square_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;b-&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span> <span class="s2">&quot;k:&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux / e-/s&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Time / days&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">541300</span><span class="p">,</span> <span class="mi">541600</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">540</span><span class="p">,</span> <span class="mi">545</span><span class="p">)</span>
 
-plt.suptitle(&quot;A light curve from Kepler-10 with overplotted&quot; +
-             &quot; mean square transit model (top) and posterior predictive plot (bottom)&quot;)
-plt.show()
-</code></pre>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;A light curve from Kepler-10 with overplotted&quot;</span> <span class="o">+</span>
+             <span class="s2">&quot; mean square transit model (top) and posterior predictive plot (bottom)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+
 
 <p><img alt="png" src="../output_48_0.png" /></p>
 <p>From the posterior predictive plots, it seems that both models explain the data fairly well. The trapezium model seems like it follows the data a little closer, but I won't dismiss the square transit model just yet. To decide which model best describes the data, we can see which best predicts properties of the Kepler-10 system.</p>
 <h3 id="model-comparisons">Model comparisons</h3>
-<p>Now that we have the mean values for each parameter, we can start to infer information about the star-planet system the model describes. I'll use both models for this, and find out which model predicts the properties the system with the greatest accuracy.</p>
+<p>Now that we have the mean values for each parameter, we can start to infer information about the star-planet system the model describes. I'll use both models for this, and find out which model predicts the properties the system with the greatest accuracy. For the derivations on equations for the following calculations, check out <a href="https://arxiv.org/pdf/1711.06601.pdf">this paper</a>. For each property, I'll state the most accpeted values found <a href="https://en.wikipedia.org/wiki/Kepler-10">here</a>.</p>
 <p>The first property we can find is the ratio of the planet radius "Rp" and star radius "Rs". This is simply the square root of the mean flux drop:</p>
-<pre><code class="python">RpRs, RpRs_err = np.sqrt(df), dferr/(np.sqrt(df))
-RpRs_square, RpRs_square_err = np.sqrt(df_square), dferr_square/(np.sqrt(df_square))
+<div class="codehilite"><pre><span></span><code><span class="n">RpRs</span><span class="p">,</span> <span class="n">RpRs_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">dferr</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+<span class="n">RpRs_square</span><span class="p">,</span> <span class="n">RpRs_square_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df_square</span><span class="p">),</span> <span class="n">dferr_square</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df_square</span><span class="p">))</span>
 
-print(&quot;Planet to star radius ratio (trapezium transit model): {} \u00B1 {}&quot;.format(RpRs, RpRs_err))
-print(&quot;Planet to star radius ratio (square transit model): {} \u00B1 {}&quot;.format(
-       RpRs_square, RpRs_square_err))
-print(&quot;True planet to star radius ratio: {}&quot;.format(0.0127))
-</code></pre>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Planet to star radius ratio (trapezium transit model): </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">RpRs</span><span class="p">,</span> <span class="n">RpRs_err</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Planet to star radius ratio (square transit model): </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+       <span class="n">RpRs_square</span><span class="p">,</span> <span class="n">RpRs_square_err</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accepted planet to star radius ratio: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">0.0127</span><span class="p">))</span>
+</code></pre></div>
 
-<pre><code>Planet to star radius ratio (trapezium transit model): 0.01564003954363941 ± 0.00023679826904231388
-Planet to star radius ratio (square transit model): 0.015612073362269722 ± 0.00024114440285122598
-True planet to star radius ratio: 0.0127
-</code></pre>
-<p>Both models are in close agreement with eachother, and are quite close to the true value of the planet to star radius ratio (to within the same order of magnitude). We only used a handful of transits, and under one month of data, so the difference between predicted and true ratios here are acceptable. Sampling with the entire dataset instead of the shortened data I used does not improve this estimate.</p>
+
+<div class="codehilite"><pre><span></span><code><span class="err">Planet to star radius ratio (trapezium transit model): 0.01564003954363941 ± 0.00023679826904231388</span>
+<span class="err">Planet to star radius ratio (square transit model): 0.015612073362269722 ± 0.00024114440285122598</span>
+<span class="err">Accepted planet to star radius ratio: 0.0127</span>
+</code></pre></div>
+
+
+<p>Both models are in close agreement with each other, and are quite close to the accepted value of the planet to star radius ratio (to within the same order of magnitude). We only used a handful of transits, and under one month of data, so the difference between predicted and accepted ratios here are acceptable. Sampling with the entire dataset instead of the shortened data I used does not improve this estimate.</p>
 <p>Next, we can attempt to find incination angle "I", usually defined as the angle between the plane of a celestial body's orbit and the plane that is normal to the line of sight from Earth. This isn't quite possible for the square model, due to the total transit and flat transit times being equal. To account for this, I'll instead say the flat transit time is 99% of the total transit time, just to keep everything finite.</p>
-<pre><code class="python">tf_square, tferr_square = 0.99*tt_square, 0.99*tterr_square
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="n">tf_square</span><span class="p">,</span> <span class="n">tferr_square</span> <span class="o">=</span> <span class="mf">0.99</span><span class="o">*</span><span class="n">tt_square</span><span class="p">,</span> <span class="mf">0.99</span><span class="o">*</span><span class="n">tterr_square</span>
+</code></pre></div>
+
 
 <p>The calculations become pretty complex here, and error propagation becomes difficult. Instead, I'll approximate the errors, as we're mostly interested in the relative errors between the two models anyway. To begin, we start by approximating the semi-minor axis "b", and the normalised semi-major axis "aRs" as below: </p>
-<pre><code class="python">def semiminor(df,tt,tf):
-    # return semi-minor axis, given model parameters
-    numerator = (tt**2)*(1-np.sqrt(df))**2 - (tf**2)*(1+np.sqrt(df))**2
-    denominator = tt**2 - tf**2
-    return np.sqrt(numerator / denominator)
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">semiminor</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">tt</span><span class="p">,</span><span class="n">tf</span><span class="p">):</span>
+    <span class="c1"># return semi-minor axis, given model parameters</span>
+    <span class="n">numerator</span> <span class="o">=</span> <span class="p">(</span><span class="n">tt</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="p">(</span><span class="n">tf</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">denominator</span> <span class="o">=</span> <span class="n">tt</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">tf</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">numerator</span> <span class="o">/</span> <span class="n">denominator</span><span class="p">)</span>
 
-def normsemimajor(df,p,tt,tf):
-    # return normalised semi-major axis, given model parameters
-    numerator = 2*p*(df)**(1/4)
-    denominator = np.pi*np.sqrt(tt**2 - tf**2)
-    return numerator / denominator
+<span class="k">def</span> <span class="nf">normsemimajor</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">tt</span><span class="p">,</span><span class="n">tf</span><span class="p">):</span>
+    <span class="c1"># return normalised semi-major axis, given model parameters</span>
+    <span class="n">numerator</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">p</span><span class="o">*</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">denominator</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tt</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">tf</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">numerator</span> <span class="o">/</span> <span class="n">denominator</span>
 
-# semiminor for trapezium model
-b_trap = semiminor(df, tt, tf)
-b_trap_err = abs(semiminor(df + dferr, tt, tf) - b_trap)
+<span class="c1"># semiminor for trapezium model</span>
+<span class="n">b_trap</span> <span class="o">=</span> <span class="n">semiminor</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">tt</span><span class="p">,</span> <span class="n">tf</span><span class="p">)</span>
+<span class="n">b_trap_err</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">semiminor</span><span class="p">(</span><span class="n">df</span> <span class="o">+</span> <span class="n">dferr</span><span class="p">,</span> <span class="n">tt</span><span class="p">,</span> <span class="n">tf</span><span class="p">)</span> <span class="o">-</span> <span class="n">b_trap</span><span class="p">)</span>
 
-# semiminor for square model
-b_square = semiminor(df_square, tt_square, tf_square)
-b_square_err = abs(semiminor(df_square + dferr_square, tt_square, tf_square) - b_square)
+<span class="c1"># semiminor for square model</span>
+<span class="n">b_square</span> <span class="o">=</span> <span class="n">semiminor</span><span class="p">(</span><span class="n">df_square</span><span class="p">,</span> <span class="n">tt_square</span><span class="p">,</span> <span class="n">tf_square</span><span class="p">)</span>
+<span class="n">b_square_err</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">semiminor</span><span class="p">(</span><span class="n">df_square</span> <span class="o">+</span> <span class="n">dferr_square</span><span class="p">,</span> <span class="n">tt_square</span><span class="p">,</span> <span class="n">tf_square</span><span class="p">)</span> <span class="o">-</span> <span class="n">b_square</span><span class="p">)</span>
 
-# semimajor for trapezium model
-aRs_trap = normsemimajor(df, p, tt, tf)
-aRs_trap_err = abs(normsemimajor(df+dferr,p+perr,tt+tterr,tf+tferr) - aRs_trap)
+<span class="c1"># semimajor for trapezium model</span>
+<span class="n">aRs_trap</span> <span class="o">=</span> <span class="n">normsemimajor</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tt</span><span class="p">,</span> <span class="n">tf</span><span class="p">)</span>
+<span class="n">aRs_trap_err</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">normsemimajor</span><span class="p">(</span><span class="n">df</span><span class="o">+</span><span class="n">dferr</span><span class="p">,</span><span class="n">p</span><span class="o">+</span><span class="n">perr</span><span class="p">,</span><span class="n">tt</span><span class="o">+</span><span class="n">tterr</span><span class="p">,</span><span class="n">tf</span><span class="o">+</span><span class="n">tferr</span><span class="p">)</span> <span class="o">-</span> <span class="n">aRs_trap</span><span class="p">)</span>
 
-# semimajor for square model
-aRs_square = normsemimajor(df_square, p_square, tt_square, tf_square)
-aRs_square_err = abs(normsemimajor(df_square+dferr_square,p_square+perr_square,
-                               tt_square+tterr_square,tf_square+tferr_square) - aRs_square)
+<span class="c1"># semimajor for square model</span>
+<span class="n">aRs_square</span> <span class="o">=</span> <span class="n">normsemimajor</span><span class="p">(</span><span class="n">df_square</span><span class="p">,</span> <span class="n">p_square</span><span class="p">,</span> <span class="n">tt_square</span><span class="p">,</span> <span class="n">tf_square</span><span class="p">)</span>
+<span class="n">aRs_square_err</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">normsemimajor</span><span class="p">(</span><span class="n">df_square</span><span class="o">+</span><span class="n">dferr_square</span><span class="p">,</span><span class="n">p_square</span><span class="o">+</span><span class="n">perr_square</span><span class="p">,</span>
+                               <span class="n">tt_square</span><span class="o">+</span><span class="n">tterr_square</span><span class="p">,</span><span class="n">tf_square</span><span class="o">+</span><span class="n">tferr_square</span><span class="p">)</span> <span class="o">-</span> <span class="n">aRs_square</span><span class="p">)</span>
 
-print(&quot;Normalised semi-major axis (trapezium transit model): {} \u00B1 {}&quot;.format(aRs_trap,
-                                                                                  aRs_trap_err))
-print(&quot;Normalised semi-major axis (square transit model): {} \u00B1 {}&quot;.format(aRs_square,
-                                                                               aRs_square_err))
-print(&quot;True normalised semi-major axis: {}&quot;.format(3.40))
-</code></pre>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Normalised semi-major axis (trapezium transit model): </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aRs_trap</span><span class="p">,</span>
+                                                                                  <span class="n">aRs_trap_err</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Normalised semi-major axis (square transit model): </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">aRs_square</span><span class="p">,</span>
+                                                                               <span class="n">aRs_square_err</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accepted normalised semi-major axis: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">3.40</span><span class="p">))</span>
+</code></pre></div>
 
-<pre><code>Normalised semi-major axis (trapezium transit model): 3.11343439016216 ± 0.24897493968215692
-Normalised semi-major axis (square transit model): 3.38730776154764 ± 0.11671862724332449
-True normalised semi-major axis: 3.4
-</code></pre>
+
+<div class="codehilite"><pre><span></span><code><span class="err">Normalised semi-major axis (trapezium transit model): 3.11343439016216 ± 0.24897493968215692</span>
+<span class="err">Normalised semi-major axis (square transit model): 3.38730776154764 ± 0.11671862724332449</span>
+<span class="err">Accepted normalised semi-major axis: 3.4</span>
+</code></pre></div>
+
+
 <p>The ratio of semi-minor axis to normalised semi-major axis gives the cosine of the inclination angle of Kepler-10b. Therefore, the predictions of the inclination from both models are as follows:</p>
-<pre><code class="python">I_trap = np.arccos(b_trap/aRs_trap) * (180/np.pi)
-I_trap_err = abs(np.arccos((b_trap+b_trap_err)/(aRs_trap-aRs_trap_err)) * (180/np.pi) - I_trap)
+<div class="codehilite"><pre><span></span><code><span class="n">I_trap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">b_trap</span><span class="o">/</span><span class="n">aRs_trap</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="n">I_trap_err</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">((</span><span class="n">b_trap</span><span class="o">+</span><span class="n">b_trap_err</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">aRs_trap</span><span class="o">-</span><span class="n">aRs_trap_err</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="n">I_trap</span><span class="p">)</span>
 
-I_square = np.arccos(b_square/aRs_square) * (180/np.pi)
-I_square_err = abs(np.arccos((b_square+b_square_err)/(aRs_square-aRs_square_err)
-                            ) * (180/np.pi) - I_square)
+<span class="n">I_square</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">b_square</span><span class="o">/</span><span class="n">aRs_square</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="n">I_square_err</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">((</span><span class="n">b_square</span><span class="o">+</span><span class="n">b_square_err</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">aRs_square</span><span class="o">-</span><span class="n">aRs_square_err</span><span class="p">)</span>
+                            <span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">-</span> <span class="n">I_square</span><span class="p">)</span>
 
-print(&quot;Inclination angle (trapezium transit model): {} \u00B1 {} degrees&quot;.format(I_trap,I_trap_err))
-print(&quot;Inclination angle (square transit model): {} \u00B1 {} degrees&quot;.format(I_square,I_square_err))
-print(&quot;True inclination angle: {} degrees&quot;.format(84.4))
-</code></pre>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Inclination angle (trapezium transit model): </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> degrees&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">I_trap</span><span class="p">,</span><span class="n">I_trap_err</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Inclination angle (square transit model): </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> degrees&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">I_square</span><span class="p">,</span><span class="n">I_square_err</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accepted inclination angle: </span><span class="si">{}</span><span class="s2"> degrees&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">84.4</span><span class="p">))</span>
+</code></pre></div>
 
-<pre><code>Inclination angle (trapezium transit model): 81.68965145311803 ± 0.9307232291459115 degrees
-Inclination angle (square transit model): 83.21823835267094 ± 0.5963780613143967 degrees
-True inclination angle: 84.4 degrees
-</code></pre>
+
+<div class="codehilite"><pre><span></span><code><span class="err">Inclination angle (trapezium transit model): 81.68965145311803 ± 0.9307232291459115 degrees</span>
+<span class="err">Inclination angle (square transit model): 83.21823835267094 ± 0.5963780613143967 degrees</span>
+<span class="err">Accepted inclination angle: 84.4 degrees</span>
+</code></pre></div>
+
+
 <p>An inclination of 90 degrees means that the planet orbits parallel to the line of sight from Earth. Again, both models make a decent attempt estimating the inclination, however the square transit shape is a little more accurate, and has a smaller uncertainty. This might suggest the square transit model might actually be a little better for this data.</p>
 <p>Finally, we can attempt to predict the density of the star, Kepler-10. This makes the assumption that the radius of the star is much bigger than the radius of the planet. Since we measured the ratio of planet to star radii to be around 0.015, this assumption is pretty reasonable.</p>
 <p>The star density can be calculated using the semi-major and semi-minor axes, along with some other parameters from the models:</p>
-<pre><code class="python">def star_density(df,p,tt,aRs):
-    # return density of star given model parameters
-    G = 6.67408e-11
-    wt = tt*np.pi/p
-    # transform p from days to seconds
-    p *= 86400
-    numerator = 3*np.pi*aRs**3
-    denominator = G*p**2
-    return numerator / denominator
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">star_density</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">tt</span><span class="p">,</span><span class="n">aRs</span><span class="p">):</span>
+    <span class="c1"># return density of star given model parameters</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="mf">6.67408e-11</span>
+    <span class="n">wt</span> <span class="o">=</span> <span class="n">tt</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="n">p</span>
+    <span class="c1"># transform p from days to seconds</span>
+    <span class="n">p</span> <span class="o">*=</span> <span class="mi">86400</span>
+    <span class="n">numerator</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">aRs</span><span class="o">**</span><span class="mi">3</span>
+    <span class="n">denominator</span> <span class="o">=</span> <span class="n">G</span><span class="o">*</span><span class="n">p</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">numerator</span> <span class="o">/</span> <span class="n">denominator</span>
 
-# star density predicted by trapezium model
-stard_trap = star_density(df,p,tt,aRs_trap)
-stard_trap_err = abs(star_density(df+dferr,p-perr,tt-tterr,aRs_trap+aRs_trap_err) - stard_trap)
+<span class="c1"># star density predicted by trapezium model</span>
+<span class="n">stard_trap</span> <span class="o">=</span> <span class="n">star_density</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">tt</span><span class="p">,</span><span class="n">aRs_trap</span><span class="p">)</span>
+<span class="n">stard_trap_err</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">star_density</span><span class="p">(</span><span class="n">df</span><span class="o">+</span><span class="n">dferr</span><span class="p">,</span><span class="n">p</span><span class="o">-</span><span class="n">perr</span><span class="p">,</span><span class="n">tt</span><span class="o">-</span><span class="n">tterr</span><span class="p">,</span><span class="n">aRs_trap</span><span class="o">+</span><span class="n">aRs_trap_err</span><span class="p">)</span> <span class="o">-</span> <span class="n">stard_trap</span><span class="p">)</span>
 
-# star density predicted by square model
-stard_square = star_density(df_square,p_square,tt_square,aRs_square)
-stard_square_err = abs(star_density(df_square+dferr_square,p_square-perr_square,tt_square-tterr_square,
-                                    aRs_square+aRs_square_err) - stard_square)
+<span class="c1"># star density predicted by square model</span>
+<span class="n">stard_square</span> <span class="o">=</span> <span class="n">star_density</span><span class="p">(</span><span class="n">df_square</span><span class="p">,</span><span class="n">p_square</span><span class="p">,</span><span class="n">tt_square</span><span class="p">,</span><span class="n">aRs_square</span><span class="p">)</span>
+<span class="n">stard_square_err</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">star_density</span><span class="p">(</span><span class="n">df_square</span><span class="o">+</span><span class="n">dferr_square</span><span class="p">,</span><span class="n">p_square</span><span class="o">-</span><span class="n">perr_square</span><span class="p">,</span><span class="n">tt_square</span><span class="o">-</span><span class="n">tterr_square</span><span class="p">,</span>
+                                    <span class="n">aRs_square</span><span class="o">+</span><span class="n">aRs_square_err</span><span class="p">)</span> <span class="o">-</span> <span class="n">stard_square</span><span class="p">)</span>
 
-print(&quot;Star density (trapezium transit model): {} \u00B1 {} kg/m\u00b3&quot;.format(stard_trap,
-                                                                               stard_trap_err))
-print(&quot;Star density (square transit model): {} \u00B1 {} kg/m\u00b3&quot;.format(stard_square,
-                                                                            stard_square_err))
-print(&quot;True star density: {} kg/m\u00b3&quot;.format(1070))
-</code></pre>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Star density (trapezium transit model): </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> kg/m</span><span class="se">\u00b3</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stard_trap</span><span class="p">,</span>
+                                                                               <span class="n">stard_trap_err</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Star density (square transit model): </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> kg/m</span><span class="se">\u00b3</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stard_square</span><span class="p">,</span>
+                                                                            <span class="n">stard_square_err</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;True star density: </span><span class="si">{}</span><span class="s2"> kg/m</span><span class="se">\u00b3</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">1070</span><span class="p">))</span>
+</code></pre></div>
 
-<pre><code>Star density (trapezium transit model): 964.774196469593 ± 100.61863106968042 kg/m³
-Star density (square transit model): 1048.78853195487 ± 79.23816897368705 kg/m³
-True star density: 1070 kg/m³
-</code></pre>
+
+<div class="codehilite"><pre><span></span><code><span class="err">Star density (trapezium transit model): 964.774196469593 ± 100.61863106968042 kg/m³</span>
+<span class="err">Star density (square transit model): 1048.78853195487 ± 79.23816897368705 kg/m³</span>
+<span class="err">True star density: 1070 kg/m³</span>
+</code></pre></div>
+
+
 <p>This shows that not only does a square transit shape predict the density of the star remarkably well, it also has a slightly lower fractional uncertainty on it's estimate compared to the trapezium shaped transit. A reason for this may be that Kepler-10 is around the same size as the Sun, and Kepler-10b is actually larger than Earth, yet the planet is only infront of its star for only 3 hours. This means the planet has to be travelling fast, resulting in very steep slopes on the trapezium transit light curve. It seems involving the extra "tf" parameter only serves to complicate the model and add uncertainty when using a square wave is just as good, as is proven above.</p>
 <h2 id="modelling-with-ultranest">Modelling with UltraNest</h2>
 <p>If we want a more definitive way of determining which model better desribes the observed data, we'll need to find the Bayes factor, which requires the marginalised likelihoods for the trapezium and square transit shapes. We can do this using the "UltraNest" nested sampling package.</p>
 <h3 id="sampling-the-data_1">Sampling the data</h3>
 <p>This works in a simillar way to emcee, in fact we can use the same likelihood functions defined earlier, however we do have to create a new prior function. UltraNest samples from a unit hypercube parameter space, and so the prior function must transform the parameters back into their true space. The two functions below show how this is done using scipy's inverse error function "ndtri":</p>
-<pre><code class="python">def prior_transform(theta):
-    &quot;&quot;&quot;
-    Transforms parameters from a unit hypercube space to their true space 
-    for a trapezium transit model
-    &quot;&quot;&quot;
-    params = [0 for i in range(len(theta))]
-    for i in range(len(theta)):
-        if i == 0:
-            # uniform transform for f
-            params[i] = (priors[i][1]-priors[i][0])*theta[i] + priors[i][0]
-        else:
-            # normal transform for remaining parameters
-            params[i] = priors[i][0] + priors[i][1]*ndtri(theta[i])
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">prior_transform</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transforms parameters from a unit hypercube space to their true space </span>
+<span class="sd">    for a trapezium transit model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">))]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># uniform transform for f</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">priors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">priors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">priors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># normal transform for remaining parameters</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">priors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">priors</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">ndtri</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
-    return np.array(params)
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 
-def prior_transform_square(theta):
-    &quot;&quot;&quot;
-    Transforms parameters from a unit hypercube space to their true space
-    for a square transit model
-    &quot;&quot;&quot;
-    params = [0 for i in range(len(theta))]
-    for i in range(len(theta)):
-        if i == 0:
-            # uniform transform for f
-            params[i] = (priors_square[i][1]-priors_square[i][0]
-                        )*theta[i] + priors_square[i][0]
-        else:
-            # normal transform for remaining parameters
-            params[i] = priors_square[i][0] + priors_square[i][1]*ndtri(theta[i])
+<span class="k">def</span> <span class="nf">prior_transform_square</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Transforms parameters from a unit hypercube space to their true space</span>
+<span class="sd">    for a square transit model</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">))]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># uniform transform for f</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">priors_square</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">priors_square</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="p">)</span><span class="o">*</span><span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">priors_square</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># normal transform for remaining parameters</span>
+            <span class="n">params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">priors_square</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">priors_square</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">ndtri</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
 
-    return np.array(params)
-</code></pre>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+</code></pre></div>
+
 
 <p>We can now create a model for both the trapezium and square transit shapes. Since there are up to 6 parameters in a model, the UltraNest sampler may struggle to perform. To solve this, use a slice sampler as is shown below: </p>
-<pre><code class="python"># initialise samplers
-sampler = ultranest.ReactiveNestedSampler(['f', 'df','p','tt','tf','off'],
-                                          loglike, prior_transform)
-sampler_square = ultranest.ReactiveNestedSampler(['f', 'df','p','tt','off'],
-                                          loglike_square, prior_transform_square)
+<div class="codehilite"><pre><span></span><code><span class="c1"># initialise samplers</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">ultranest</span><span class="o">.</span><span class="n">ReactiveNestedSampler</span><span class="p">([</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;df&#39;</span><span class="p">,</span><span class="s1">&#39;p&#39;</span><span class="p">,</span><span class="s1">&#39;tt&#39;</span><span class="p">,</span><span class="s1">&#39;tf&#39;</span><span class="p">,</span><span class="s1">&#39;off&#39;</span><span class="p">],</span>
+                                          <span class="n">loglike</span><span class="p">,</span> <span class="n">prior_transform</span><span class="p">)</span>
+<span class="n">sampler_square</span> <span class="o">=</span> <span class="n">ultranest</span><span class="o">.</span><span class="n">ReactiveNestedSampler</span><span class="p">([</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;df&#39;</span><span class="p">,</span><span class="s1">&#39;p&#39;</span><span class="p">,</span><span class="s1">&#39;tt&#39;</span><span class="p">,</span><span class="s1">&#39;off&#39;</span><span class="p">],</span>
+                                          <span class="n">loglike_square</span><span class="p">,</span> <span class="n">prior_transform_square</span><span class="p">)</span>
 
-# use &quot;slice&quot; sampler, due to high dimensionality
-nsteps = 2*len(priors)
-sampler.stepsampler = stepsampler.RegionSliceSampler(nsteps=nsteps)
-sampler_square.stepsampler = stepsampler.RegionSliceSampler(nsteps=nsteps)
+<span class="c1"># use &quot;slice&quot; sampler, due to high dimensionality</span>
+<span class="n">nsteps</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="n">priors</span><span class="p">)</span>
+<span class="n">sampler</span><span class="o">.</span><span class="n">stepsampler</span> <span class="o">=</span> <span class="n">stepsampler</span><span class="o">.</span><span class="n">RegionSliceSampler</span><span class="p">(</span><span class="n">nsteps</span><span class="o">=</span><span class="n">nsteps</span><span class="p">)</span>
+<span class="n">sampler_square</span><span class="o">.</span><span class="n">stepsampler</span> <span class="o">=</span> <span class="n">stepsampler</span><span class="o">.</span><span class="n">RegionSliceSampler</span><span class="p">(</span><span class="n">nsteps</span><span class="o">=</span><span class="n">nsteps</span><span class="p">)</span>
 
-# define live points and stopping criterion
-nlive = 400
-stop = 0.5
+<span class="c1"># define live points and stopping criterion</span>
+<span class="n">nlive</span> <span class="o">=</span> <span class="mi">400</span>
+<span class="n">stop</span> <span class="o">=</span> <span class="mf">0.5</span>
 
-# run the samplers
-t0 = timer()
-results_trap = sampler.run(min_num_live_points=nlive)
-t1 = timer()
-results_square = sampler_square.run(min_num_live_points=nlive)
-t2 = timer()
+<span class="c1"># run the samplers</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+<span class="n">results_trap</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">min_num_live_points</span><span class="o">=</span><span class="n">nlive</span><span class="p">)</span>
+<span class="n">t1</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+<span class="n">results_square</span> <span class="o">=</span> <span class="n">sampler_square</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">min_num_live_points</span><span class="o">=</span><span class="n">nlive</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
 
-print('\n \n'+
-      'Time taken to sample trapezium shaped model with UltraNest: {} seconds'.format(t1-t0))
-print('Time taken to sample square shaped model with UltraNest: {} seconds'.format(t2-t1))
-</code></pre>
-
-<pre><code>[ultranest] Sampling 400 live points from prior ...
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span>
+      <span class="s1">&#39;Time taken to sample trapezium shaped model with UltraNest: </span><span class="si">{}</span><span class="s1"> seconds&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t1</span><span class="o">-</span><span class="n">t0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Time taken to sample square shaped model with UltraNest: </span><span class="si">{}</span><span class="s1"> seconds&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">))</span>
+</code></pre></div>
 
 
-
-VBox(children=(HTML(value=''), GridspecLayout(children=(HTML(value="&lt;div style='background-color:#6E6BF4;'&gt;&amp;nb…
-
-
-[ultranest] Explored until L=-3e+02  .17 [-273.5034..-273.5033]*| it/evals=2795/188281 eff=1.4876% N=400 
-[ultranest] Likelihood function evaluations: 188565
-[ultranest]   logZ = -275.8 +- 0.0255
-[ultranest] Effective samples strategy satisfied (ESS = 2007.1, need &gt;400)
-[ultranest] Posterior uncertainty strategy is satisfied (KL: 0.46+-0.06 nat, need &lt;0.50 nat)
-[ultranest] Evidency uncertainty strategy is satisfied (dlogz=0.07, need &lt;0.5)
-[ultranest]   logZ error budget: single: 0.04 bs:0.03 tail:0.01 total:0.03 required:&lt;0.50
-[ultranest] done iterating.
-[ultranest] Sampling 400 live points from prior ...
+<div class="codehilite"><pre><span></span><code><span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w"> </span><span class="n">Sampling</span><span class="w"> </span><span class="mi">400</span><span class="w"> </span><span class="n">live</span><span class="w"> </span><span class="n">points</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">prior</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
 
 
 
-VBox(children=(HTML(value=''), GridspecLayout(children=(HTML(value="&lt;div style='background-color:#6E6BF4;'&gt;&amp;nb…
+<span class="n">VBox</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="k">value</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">GridspecLayout</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="k">value</span><span class="o">=</span><span class="ss">&quot;&lt;div style=&#39;background-color:#6E6BF4;&#39;&gt;&amp;nb…</span>
 
 
-[ultranest] Explored until L=-3e+02  .21 [-273.4930..-273.4929]*| it/evals=2798/184875 eff=1.5167% N=400 
-[ultranest] Likelihood function evaluations: 184875
-[ultranest]   logZ = -275.8 +- 0.03241
-[ultranest] Effective samples strategy satisfied (ESS = 2008.9, need &gt;400)
-[ultranest] Posterior uncertainty strategy is satisfied (KL: 0.45+-0.11 nat, need &lt;0.50 nat)
-[ultranest] Evidency uncertainty strategy is satisfied (dlogz=0.06, need &lt;0.5)
-[ultranest]   logZ error budget: single: 0.04 bs:0.03 tail:0.01 total:0.03 required:&lt;0.50
-[ultranest] done iterating.
+<span class="ss">[ultranest] Explored until L=-3e+02  .17 [-273.5034..-273.5033]*| it/evals=2795/188281 eff=1.4876% N=400 </span>
+<span class="ss">[ultranest] Likelihood function evaluations: 188565</span>
+<span class="ss">[ultranest]   logZ = -275.8 +- 0.0255</span>
+<span class="ss">[ultranest] Effective samples strategy satisfied (ESS = 2007.1, need &gt;400)</span>
+<span class="ss">[ultranest] Posterior uncertainty strategy is satisfied (KL: 0.46+-0.06 nat, need &lt;0.50 nat)</span>
+<span class="ss">[ultranest] Evidency uncertainty strategy is satisfied (dlogz=0.07, need &lt;0.5)</span>
+<span class="ss">[ultranest]   logZ error budget: single: 0.04 bs:0.03 tail:0.01 total:0.03 required:&lt;0.50</span>
+<span class="ss">[ultranest] done iterating.</span>
+<span class="ss">[ultranest] Sampling 400 live points from prior ...</span>
 
 
-Time taken to sample trapezium shaped model with UltraNest: 45.595500469207764 seconds
-Time taken to sample square shaped model with UltraNest: 40.1266610622406 seconds
-</code></pre>
+
+<span class="ss">VBox(children=(HTML(value=&#39;&#39;), GridspecLayout(children=(HTML(value=&quot;</span><span class="o">&lt;</span><span class="n">div</span><span class="w"> </span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;background-color:#6E6BF4;&#39;</span><span class="o">&gt;&amp;</span><span class="n">nb</span><span class="err">…</span><span class="w"></span>
+
+
+<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w"> </span><span class="n">Explored</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">L</span><span class="o">=-</span><span class="mf">3e+02</span><span class="w">  </span><span class="mf">.21</span><span class="w"> </span><span class="o">[</span><span class="n">-273.4930..-273.4929</span><span class="o">]*|</span><span class="w"> </span><span class="n">it</span><span class="o">/</span><span class="n">evals</span><span class="o">=</span><span class="mi">2798</span><span class="o">/</span><span class="mi">184875</span><span class="w"> </span><span class="n">eff</span><span class="o">=</span><span class="mf">1.5167</span><span class="o">%</span><span class="w"> </span><span class="n">N</span><span class="o">=</span><span class="mi">400</span><span class="w"> </span>
+<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w"> </span><span class="n">Likelihood</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="nl">evaluations</span><span class="p">:</span><span class="w"> </span><span class="mi">184875</span><span class="w"></span>
+<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w">   </span><span class="n">logZ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mf">275.8</span><span class="w"> </span><span class="o">+-</span><span class="w"> </span><span class="mf">0.03241</span><span class="w"></span>
+<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w"> </span><span class="n">Effective</span><span class="w"> </span><span class="n">samples</span><span class="w"> </span><span class="n">strategy</span><span class="w"> </span><span class="n">satisfied</span><span class="w"> </span><span class="p">(</span><span class="n">ESS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2008.9</span><span class="p">,</span><span class="w"> </span><span class="n">need</span><span class="w"> </span><span class="o">&gt;</span><span class="mi">400</span><span class="p">)</span><span class="w"></span>
+<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w"> </span><span class="n">Posterior</span><span class="w"> </span><span class="n">uncertainty</span><span class="w"> </span><span class="n">strategy</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">satisfied</span><span class="w"> </span><span class="p">(</span><span class="nl">KL</span><span class="p">:</span><span class="w"> </span><span class="mf">0.45</span><span class="o">+-</span><span class="mf">0.11</span><span class="w"> </span><span class="n">nat</span><span class="p">,</span><span class="w"> </span><span class="n">need</span><span class="w"> </span><span class="o">&lt;</span><span class="mf">0.50</span><span class="w"> </span><span class="n">nat</span><span class="p">)</span><span class="w"></span>
+<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w"> </span><span class="n">Evidency</span><span class="w"> </span><span class="n">uncertainty</span><span class="w"> </span><span class="n">strategy</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">satisfied</span><span class="w"> </span><span class="p">(</span><span class="n">dlogz</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span><span class="w"> </span><span class="n">need</span><span class="w"> </span><span class="o">&lt;</span><span class="mf">0.5</span><span class="p">)</span><span class="w"></span>
+<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w">   </span><span class="n">logZ</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="nl">budget</span><span class="p">:</span><span class="w"> </span><span class="nl">single</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04</span><span class="w"> </span><span class="nl">bs</span><span class="p">:</span><span class="mf">0.03</span><span class="w"> </span><span class="nl">tail</span><span class="p">:</span><span class="mf">0.01</span><span class="w"> </span><span class="nl">total</span><span class="p">:</span><span class="mf">0.03</span><span class="w"> </span><span class="nl">required</span><span class="p">:</span><span class="o">&lt;</span><span class="mf">0.50</span><span class="w"></span>
+<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w"> </span><span class="n">done</span><span class="w"> </span><span class="n">iterating</span><span class="p">.</span><span class="w"></span>
+
+
+<span class="nc">Time</span><span class="w"> </span><span class="n">taken</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">sample</span><span class="w"> </span><span class="n">trapezium</span><span class="w"> </span><span class="n">shaped</span><span class="w"> </span><span class="n">model</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="nl">UltraNest</span><span class="p">:</span><span class="w"> </span><span class="mf">45.595500469207764</span><span class="w"> </span><span class="n">seconds</span><span class="w"></span>
+<span class="nc">Time</span><span class="w"> </span><span class="n">taken</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">sample</span><span class="w"> </span><span class="nf">square</span><span class="w"> </span><span class="n">shaped</span><span class="w"> </span><span class="n">model</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="nl">UltraNest</span><span class="p">:</span><span class="w"> </span><span class="mf">40.1266610622406</span><span class="w"> </span><span class="n">seconds</span><span class="w"></span>
+</code></pre></div>
+
+
 <h3 id="results_1">Results</h3>
 <p>To retrieve the traces from a nested sampler, you must resample according the some weights which are produced during the sampling. I'll only do this for the trapezium model for now, just to keep the code from getting too cluttered:</p>
-<pre><code class="python">samples_points_trap = np.array(results_trap[&quot;weighted_samples&quot;][&quot;points&quot;])
-weights_trap = np.array(results_trap[&quot;weighted_samples&quot;][&quot;weights&quot;])
+<div class="codehilite"><pre><span></span><code><span class="n">samples_points_trap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results_trap</span><span class="p">[</span><span class="s2">&quot;weighted_samples&quot;</span><span class="p">][</span><span class="s2">&quot;points&quot;</span><span class="p">])</span>
+<span class="n">weights_trap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">results_trap</span><span class="p">[</span><span class="s2">&quot;weighted_samples&quot;</span><span class="p">][</span><span class="s2">&quot;weights&quot;</span><span class="p">])</span>
 
-resample_trap = np.random.rand(len(weights_trap)) &lt; weights_trap/max(weights_trap)
+<span class="n">resample_trap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">weights_trap</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">weights_trap</span><span class="o">/</span><span class="nb">max</span><span class="p">(</span><span class="n">weights_trap</span><span class="p">)</span>
 
-samples_trap_ultra = samples_points_trap[resample_trap, :]
-</code></pre>
+<span class="n">samples_trap_ultra</span> <span class="o">=</span> <span class="n">samples_points_trap</span><span class="p">[</span><span class="n">resample_trap</span><span class="p">,</span> <span class="p">:]</span>
+</code></pre></div>
 
-<p>The mean parameter values and their errors can be found easily, remembering to unaugment f and df:</p>
-<pre><code class="python"># parameter means and errors for trapezium transit
-f_trap_ultra, ferr_trap_ultra = np.mean(unaug_f(samples_trap_ultra[:,0])
-                                       ), np.std(unaug_f(samples_trap_ultra[:,0]))
-df_trap_ultra, dferr_trap_ultra = np.mean(unaug_df(samples_trap_ultra[:,1],f_trap_ultra)
-                                         ), np.std(unaug_df(samples_trap_ultra[:,1],f_trap_ultra))
-p_trap_ultra, perr_trap_ultra = np.mean(samples_trap_ultra[:,2]
-                                       ), np.std(samples_trap_ultra[:,2])
-tt_trap_ultra, tterr_trap_ultra = np.mean(samples_trap_ultra[:,3]
-                                         ), np.std(samples_trap_ultra[:,3])
-tf_trap_ultra, tferr_trap_ultra = np.mean(samples_trap_ultra[:,4]
-                                         ), np.std(samples_trap_ultra[:,4])
-off_trap_ultra, offerr_trap_ultra = np.mean(samples_trap_ultra[:,5]
-                                           ), np.std(samples_trap_ultra[:,5])
 
-print(&quot;Parameters describing a trapezium shaped transit model from UltraNest: \n \n&quot; + 
-      &quot;       unobstructed flux = {} \u00B1 {} e-/s \n&quot;.format(f_trap_ultra,ferr_trap_ultra) + 
-      &quot;fractional flux decrease = {} \u00B1 {} \n&quot;.format(df_trap_ultra,dferr_trap_ultra) +
-      &quot;                  period = {} \u00B1 {} days \n&quot;.format(p_trap_ultra,perr_trap_ultra) + 
-      &quot;      total transit time = {} \u00B1 {} days \n&quot;.format(tt_trap_ultra,tterr_trap_ultra) +
-      &quot;       flat transit time = {} \u00B1 {} days \n&quot;.format(tf_trap_ultra,tferr_trap_ultra) + 
-      &quot;                  offset = {} \u00B1 {} days \n&quot;.format(off_trap_ultra,offerr_trap_ultra))
-</code></pre>
+<p>The mean parameter values and their errors can be found easily:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># parameter means and errors for trapezium transit</span>
+<span class="n">f_trap_ultra</span><span class="p">,</span> <span class="n">ferr_trap_ultra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+                                       <span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">df_trap_ultra</span><span class="p">,</span> <span class="n">dferr_trap_ultra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+                                         <span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">p_trap_ultra</span><span class="p">,</span> <span class="n">perr_trap_ultra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span>
+                                       <span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">tt_trap_ultra</span><span class="p">,</span> <span class="n">tterr_trap_ultra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]</span>
+                                         <span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">tf_trap_ultra</span><span class="p">,</span> <span class="n">tferr_trap_ultra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]</span>
+                                         <span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">4</span><span class="p">])</span>
+<span class="n">off_trap_ultra</span><span class="p">,</span> <span class="n">offerr_trap_ultra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">5</span><span class="p">]</span>
+                                           <span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">5</span><span class="p">])</span>
 
-<pre><code>Parameters describing a trapezium shaped transit model from UltraNest:
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parameters describing a trapezium shaped transit model from UltraNest: </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> 
+      <span class="s2">&quot;       unobstructed flux = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> e-/s </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">f_trap_ultra</span><span class="p">,</span><span class="n">ferr_trap_ultra</span><span class="p">)</span> <span class="o">+</span> 
+      <span class="s2">&quot;fractional flux decrease = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">df_trap_ultra</span><span class="p">,</span><span class="n">dferr_trap_ultra</span><span class="p">)</span> <span class="o">+</span>
+      <span class="s2">&quot;                  period = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> days </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">p_trap_ultra</span><span class="p">,</span><span class="n">perr_trap_ultra</span><span class="p">)</span> <span class="o">+</span> 
+      <span class="s2">&quot;      total transit time = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> days </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tt_trap_ultra</span><span class="p">,</span><span class="n">tterr_trap_ultra</span><span class="p">)</span> <span class="o">+</span>
+      <span class="s2">&quot;       flat transit time = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> days </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">tf_trap_ultra</span><span class="p">,</span><span class="n">tferr_trap_ultra</span><span class="p">)</span> <span class="o">+</span> 
+      <span class="s2">&quot;                  offset = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> days </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">off_trap_ultra</span><span class="p">,</span><span class="n">offerr_trap_ultra</span><span class="p">))</span>
+</code></pre></div>
 
-       unobstructed flux = 541506.0367278325 ± 38.07219702378676 e-/s 
-fractional flux decrease = 0.0002456676060063817 ± 3.5643330145173593e-06 
-                  period = 0.8376992378349714 ± 0.007805962818414923 days 
-      total transit time = 0.14467439301959553 ± 0.010237468121439578 days 
-       flat transit time = 0.14315067160042744 ± 0.009933449672703609 days 
-                  offset = 0.15020443219136784 ± 0.0008319592417544441 days
-</code></pre>
+
+<div class="codehilite"><pre><span></span><code><span class="k">Parameters</span> <span class="n">describing</span> <span class="n">a</span> <span class="n">trapezium</span> <span class="n">shaped</span> <span class="n">transit</span> <span class="n">model</span> <span class="k">from</span> <span class="n">UltraNest</span><span class="p">:</span>
+
+       <span class="n">unobstructed</span> <span class="n">flux</span> <span class="o">=</span> <span class="mi">541506</span><span class="p">.</span><span class="mi">0367278325</span> <span class="err">±</span> <span class="mi">38</span><span class="p">.</span><span class="mi">07219702378676</span> <span class="n">e</span><span class="o">-/</span><span class="n">s</span> 
+<span class="n">fractional</span> <span class="n">flux</span> <span class="n">decrease</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0002456676060063817</span> <span class="err">±</span> <span class="mi">3</span><span class="p">.</span><span class="mi">5643330145173593</span><span class="n">e</span><span class="o">-</span><span class="mi">06</span> 
+                  <span class="k">period</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8376992378349714</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">007805962818414923</span> <span class="n">days</span> 
+      <span class="n">total</span> <span class="n">transit</span> <span class="k">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">14467439301959553</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">010237468121439578</span> <span class="n">days</span> 
+       <span class="n">flat</span> <span class="n">transit</span> <span class="k">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">14315067160042744</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">009933449672703609</span> <span class="n">days</span> 
+                  <span class="k">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">15020443219136784</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0008319592417544441</span> <span class="n">days</span>
+</code></pre></div>
+
+
 <h3 id="plotting-the-posterior_1">Plotting the posterior</h3>
 <p>We can make the same posterior plots as with emcee, for the sake of comparison. The samples for the posterior predictive plot can be collected as follows:</p>
-<pre><code class="python">nfits = 400
+<div class="codehilite"><pre><span></span><code><span class="n">nfits</span> <span class="o">=</span> <span class="mi">400</span>
 
-# samples for trapezium transit posterior predictive plot
-fsamps_trap_ultra = np.random.choice(unaug_f(samples_trap_ultra[:,0]),nfits)
-dfsamps_trap_ultra = np.random.choice(unaug_df(samples_trap_ultra[:,1],f_trap_ultra),nfits)
-psamps_trap_ultra = np.random.choice(samples_trap_ultra[:,2],nfits)
-ttsamps_trap_ultra = np.random.choice(samples_trap_ultra[:,3],nfits)
-tfsamps_trap_ultra = np.random.choice(samples_trap_ultra[:,4],nfits)
-offsamps_trap_ultra = np.random.choice(samples_trap_ultra[:,5],nfits)
-</code></pre>
+<span class="c1"># samples for trapezium transit posterior predictive plot</span>
+<span class="n">fsamps_trap_ultra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">nfits</span><span class="p">)</span>
+<span class="n">dfsamps_trap_ultra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">nfits</span><span class="p">)</span>
+<span class="n">psamps_trap_ultra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">2</span><span class="p">],</span><span class="n">nfits</span><span class="p">)</span>
+<span class="n">ttsamps_trap_ultra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">3</span><span class="p">],</span><span class="n">nfits</span><span class="p">)</span>
+<span class="n">tfsamps_trap_ultra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">4</span><span class="p">],</span><span class="n">nfits</span><span class="p">)</span>
+<span class="n">offsamps_trap_ultra</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_trap_ultra</span><span class="p">[:,</span><span class="mi">5</span><span class="p">],</span><span class="n">nfits</span><span class="p">)</span>
+</code></pre></div>
+
 
 <p>Below are three plots. The first two plots show the mean posterior plot and the posteroir predictive plot respectively, produced by UltraNest. The third shows the posterior predictive plot from UltraNest, with the posterior predictive plot from emcee overplotted:</p>
-<pre><code class="python">fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(15,10))
+<div class="codehilite"><pre><span></span><code><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
 
-# mean plot
-ax1.plot(time, flux, &quot;k:&quot;, linewidth=3)
-x = np.linspace(min(time), max(time), 1500)
-y = transit(x,f_trap_ultra,df_trap_ultra,p_trap_ultra,
-            tt_trap_ultra,tf_trap_ultra,off_trap_ultra)
-ax1.plot(x, y, &quot;b-&quot;, alpha=0.8)
-ax1.set_ylabel(&quot;Flux / e-/s&quot;)
-ax1.set_title(&quot;UltraNest mean posterior plot&quot;)
+<span class="c1"># mean plot</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span> <span class="s2">&quot;k:&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">time</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">time</span><span class="p">),</span> <span class="mi">1500</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">transit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">f_trap_ultra</span><span class="p">,</span><span class="n">df_trap_ultra</span><span class="p">,</span><span class="n">p_trap_ultra</span><span class="p">,</span>
+            <span class="n">tt_trap_ultra</span><span class="p">,</span><span class="n">tf_trap_ultra</span><span class="p">,</span><span class="n">off_trap_ultra</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;b-&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux / e-/s&quot;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;UltraNest mean posterior plot&quot;</span><span class="p">)</span>
 
-# posterior predictive plot
-for i in range(n_fits):
-    y = transit(x, fsamps_trap_ultra[i], dfsamps_trap_ultra[i], psamps_trap_ultra[i],
-                ttsamps_trap_ultra[i], tfsamps_trap_ultra[i], offsamps_trap_ultra[i])
-    ax2.plot(x, y, &quot;b-&quot;, alpha=0.01, linewidth=5)
-ax2.plot(time, flux, &quot;k:&quot;, linewidth=3)
-ax2.set_ylabel(&quot;Flux / e-/s&quot;)
-ax2.set_title(&quot;UltraNest posterior predictive plot&quot;)
-ax2.set_ylim(541300, 541600)
-ax2.set_xlim(540, 545)
+<span class="c1"># posterior predictive plot</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_fits</span><span class="p">):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">transit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fsamps_trap_ultra</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dfsamps_trap_ultra</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">psamps_trap_ultra</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">ttsamps_trap_ultra</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tfsamps_trap_ultra</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">offsamps_trap_ultra</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;b-&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span> <span class="s2">&quot;k:&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Flux / e-/s&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;UltraNest posterior predictive plot&quot;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">541300</span><span class="p">,</span> <span class="mi">541600</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">540</span><span class="p">,</span> <span class="mi">545</span><span class="p">)</span>
 
-# emcee and UltraNest overlapping posterior predictive plot
-for i in range(n_fits):
-    y_ultra = transit(x, fsamps_trap_ultra[i], dfsamps_trap_ultra[i], psamps_trap_ultra[i],
-                ttsamps_trap_ultra[i], tfsamps_trap_ultra[i], offsamps_trap_ultra[i])
-    y_emcee = transit(x, fsamps_trap_emcee[i], dfsamps_trap_emcee[i], psamps_trap_emcee[i],
-                ttsamps_trap_emcee[i], tfsamps_trap_emcee[i], offsamps_trap_emcee[i])
-    ax3.plot(x, y_ultra, 'b-', alpha=0.008, linewidth=5,
-             label='UltraNest' if i == 0 else '')
-    ax3.plot(x, y_emcee, 'r-', alpha=0.008, linewidth=5,
-            label='emcee' if i == 0 else '')
-ax3.plot(time, flux, 'k:', linewidth=3)
-ax3.set_ylabel('Flux / e-/s')
-ax3.set_xlabel('Time / days')
-ax3.set_title('emcee (red) and UltraNest (blue) overlayed posterior predictive plots')
-ax3.set_ylim(541300, 541600)
-ax3.set_xlim(540, 545)
+<span class="c1"># emcee and UltraNest overlapping posterior predictive plot</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_fits</span><span class="p">):</span>
+    <span class="n">y_ultra</span> <span class="o">=</span> <span class="n">transit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fsamps_trap_ultra</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dfsamps_trap_ultra</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">psamps_trap_ultra</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">ttsamps_trap_ultra</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tfsamps_trap_ultra</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">offsamps_trap_ultra</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">y_emcee</span> <span class="o">=</span> <span class="n">transit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fsamps_trap_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dfsamps_trap_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">psamps_trap_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                <span class="n">ttsamps_trap_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">tfsamps_trap_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">offsamps_trap_emcee</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_ultra</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.008</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="s1">&#39;UltraNest&#39;</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_emcee</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.008</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s1">&#39;emcee&#39;</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">flux</span><span class="p">,</span> <span class="s1">&#39;k:&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Flux / e-/s&#39;</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Time / days&#39;</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;emcee (red) and UltraNest (blue) overlayed posterior predictive plots&#39;</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">541300</span><span class="p">,</span> <span class="mi">541600</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">540</span><span class="p">,</span> <span class="mi">545</span><span class="p">)</span>
 
-leg = ax3.legend(loc='lower right')
-for lh in leg.legendHandles: 
-    lh.set_alpha(0.8)
+<span class="n">leg</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">lh</span> <span class="ow">in</span> <span class="n">leg</span><span class="o">.</span><span class="n">legendHandles</span><span class="p">:</span> 
+    <span class="n">lh</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.8</span><span class="p">)</span>
 
-plt.suptitle('A light curve from Kepler-10 with overplotted' +
-             ' mean trapezium transit model (top) and posterior predictive plot (bottom)')
-plt.show()
-</code></pre>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;A light curve from Kepler-10 with overplotted&#39;</span> <span class="o">+</span>
+             <span class="s1">&#39; mean trapezium transit model (top) and posterior predictive plot (bottom)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+
 
 <p><img alt="png" src="../output_78_0.png" /></p>
-<p>It seems from this that the two models are very simillar, however since the low density regious are mostly blue, UltraNest may produce a greater uncertainty than emcee.</p>
 <h3 id="model-comparisons_1">Model comparisons</h3>
 <p>Instead of going through all the same inclination angle and star density calculations, I'll instead use the logs of the marginalised likelihoods to compare the models. These can be easily collected from the sampler results: </p>
-<pre><code class="python">logZ_trap, logZerr_trap = results_trap['logz'], results_trap['logzerr']        
-logZ_square, logZerr_square = results_square['logz'], results_square['logzerr']
+<div class="codehilite"><pre><span></span><code><span class="n">logZ_trap</span><span class="p">,</span> <span class="n">logZerr_trap</span> <span class="o">=</span> <span class="n">results_trap</span><span class="p">[</span><span class="s1">&#39;logz&#39;</span><span class="p">],</span> <span class="n">results_trap</span><span class="p">[</span><span class="s1">&#39;logzerr&#39;</span><span class="p">]</span>        
+<span class="n">logZ_square</span><span class="p">,</span> <span class="n">logZerr_square</span> <span class="o">=</span> <span class="n">results_square</span><span class="p">[</span><span class="s1">&#39;logz&#39;</span><span class="p">],</span> <span class="n">results_square</span><span class="p">[</span><span class="s1">&#39;logzerr&#39;</span><span class="p">]</span>
 
-print(&quot;Marginalised likelihood for trapezium transit model: {} ± {}&quot;.format(logZ_trap, logZerr_trap))
-print(&quot;Marginalised likelihood for square transit model: {} ± {}&quot;.format(logZ_square, logZerr_square))
-</code></pre>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Marginalised likelihood for trapezium transit model: </span><span class="si">{}</span><span class="s2"> ± </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logZ_trap</span><span class="p">,</span> <span class="n">logZerr_trap</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Marginalised likelihood for square transit model: </span><span class="si">{}</span><span class="s2"> ± </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logZ_square</span><span class="p">,</span> <span class="n">logZerr_square</span><span class="p">))</span>
+</code></pre></div>
 
-<pre><code>Marginalised likelihood for trapezium transit model: -275.82725389875935 ± 0.03821787065493758
-Marginalised likelihood for square transit model: -275.8168531966252 ± 0.06290063669114569
-</code></pre>
+
+<div class="codehilite"><pre><span></span><code><span class="err">Marginalised likelihood for trapezium transit model: -275.82725389875935 ± 0.03821787065493758</span>
+<span class="err">Marginalised likelihood for square transit model: -275.8168531966252 ± 0.06290063669114569</span>
+</code></pre></div>
+
+
 <p>Using these marginal likelihoods, we can find the Bayes factor. This is the defined as the ratio of the marginal likelihoods. If the Bayes factor is larger than one, it means that the trapezium model is more likely to produce the observed data.</p>
-<pre><code class="python">K = np.exp(logZ_trap - logZ_square)
-print(&quot;Bayes factor: {}&quot;.format(K))
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logZ_trap</span> <span class="o">-</span> <span class="n">logZ_square</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bayes factor: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">K</span><span class="p">))</span>
+</code></pre></div>
 
-<pre><code>Bayes factor: 0.9896531981395177
-</code></pre>
+
+<div class="codehilite"><pre><span></span><code><span class="err">Bayes factor: 0.9896531981395177</span>
+</code></pre></div>
+
+
 <p>This result tells us that the square transit model is only slightly more likely to produce the observed light curve, as we first predicted earlier with emcee.</p>
 <p>In reality, the transit model makes a lot more sense than a square transit shape. However, since there were only around 4 or 5 data points per transit, their shape was likely misrepresented. If instead we used a data set of a planet with a longer transit time, or took flux measurements more frequently, then the trapezium transit shape may become prefered.</p>
                 
@@ -1394,6 +1422,8 @@ print(&quot;Bayes factor: {}&quot;.format(K))
           }, typeof search !== "undefined" && search)
         })
       </script>
+      
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
       
     
   </body>

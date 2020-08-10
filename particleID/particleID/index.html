@@ -1,0 +1,908 @@
+
+
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="shortcut icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-5.5.0">
+    
+    
+      
+        <title>Particle Identification in Proton-Proton Collisions with PyStan - Demonstrations of MCMC and Nested Samplers in Physics</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.b5d04df8.min.css">
+      
+      
+    
+    
+    
+      
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700%7CRoboto+Mono&display=fallback">
+        <style>body,input{font-family:"Roboto",-apple-system,BlinkMacSystemFont,Helvetica,Arial,sans-serif}code,kbd,pre{font-family:"Roboto Mono",SFMono-Regular,Consolas,Menlo,monospace}</style>
+      
+    
+    
+    
+    
+      
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#using-pystan-to-identify-particles-produced-in-proton-proton-collisions" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <header class="md-header" data-md-component="header">
+  <nav class="md-header-nav md-grid" aria-label="Header">
+    <a href="../.." title="Demonstrations of MCMC and Nested Samplers in Physics" class="md-header-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers in Physics">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    <label class="md-header-nav__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2z"/></svg>
+    </label>
+    <div class="md-header-nav__title" data-md-component="header-title">
+      
+        <div class="md-header-nav__ellipsis">
+          <span class="md-header-nav__topic md-ellipsis">
+            Demonstrations of MCMC and Nested Samplers in Physics
+          </span>
+          <span class="md-header-nav__topic md-ellipsis">
+            
+              Particle Identification in Proton-Proton Collisions with PyStan
+            
+          </span>
+        </div>
+      
+    </div>
+    
+      <label class="md-header-nav__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+      </label>
+      
+<div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" data-md-state="active">
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0116 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 019.5 16 6.5 6.5 0 013 9.5 6.5 6.5 0 019.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </label>
+      <button type="reset" class="md-search__icon md-icon" aria-label="Clear" data-md-component="search-reset" tabindex="-1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+      </button>
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+        
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              <div class="md-sidebar md-sidebar--primary" data-md-component="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Demonstrations of MCMC and Nested Samplers in Physics" class="md-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers in Physics">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
+
+    </a>
+    Demonstrations of MCMC and Nested Samplers in Physics
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../.." title="Introduction" class="md-nav__link">
+      Introduction
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../PyMC3_GRS/PyMC3_GRS/" title="Gamma-Ray Spectroscopy with PyMC3 and dynesty" class="md-nav__link">
+      Gamma-Ray Spectroscopy with PyMC3 and dynesty
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../LightCurve/LightCurve/" title="Exoplanet Light Curve Analysis with emcee and UltraNest" class="md-nav__link">
+      Exoplanet Light Curve Analysis with emcee and UltraNest
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../Sunspots2/Sunspots2/" title="Solar Cycle Analysis with Zeus and Nestle" class="md-nav__link">
+      Solar Cycle Analysis with Zeus and Nestle
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../gravwaves/gravwaves/" title="Gravitational Wave Parameter Estimation with bilby" class="md-nav__link">
+      Gravitational Wave Parameter Estimation with bilby
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+  
+
+
+  <li class="md-nav__item md-nav__item--active">
+    
+    <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+    
+      
+    
+    
+      <label class="md-nav__link md-nav__link--active" for="__toc">
+        Particle Identification in Proton-Proton Collisions with PyStan
+        <span class="md-nav__icon md-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
+        </span>
+      </label>
+    
+    <a href="./" title="Particle Identification in Proton-Proton Collisions with PyStan" class="md-nav__link md-nav__link--active">
+      Particle Identification in Proton-Proton Collisions with PyStan
+    </a>
+    
+      
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#useful-imports" class="md-nav__link">
+    Useful imports
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#viewing-the-data" class="md-nav__link">
+    Viewing the data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-model" class="md-nav__link">
+    The model
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelling-with-pystan" class="md-nav__link">
+    Modelling with PyStan
+  </a>
+  
+    <nav class="md-nav" aria-label="Modelling with PyStan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sampling-the-data" class="md-nav__link">
+    Sampling the data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results" class="md-nav__link">
+    Results
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plotting-the-posterior" class="md-nav__link">
+    Plotting the posterior
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+    
+  </li>
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+      </span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#useful-imports" class="md-nav__link">
+    Useful imports
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#viewing-the-data" class="md-nav__link">
+    Viewing the data
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-model" class="md-nav__link">
+    The model
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelling-with-pystan" class="md-nav__link">
+    Modelling with PyStan
+  </a>
+  
+    <nav class="md-nav" aria-label="Modelling with PyStan">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sampling-the-data" class="md-nav__link">
+    Sampling the data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results" class="md-nav__link">
+    Results
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plotting-the-posterior" class="md-nav__link">
+    Plotting the posterior
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content">
+            <article class="md-content__inner md-typeset">
+              
+                
+                
+                  
+                
+                
+                <h1 id="using-pystan-to-identify-particles-produced-in-proton-proton-collisions">Using PyStan to identify particles produced in proton-proton collisions</h1>
+<p>The Large Hadron Collider (LHC) is a particle accelerator that is capable of producing proton beams at near light-speed. Two of these beams are targeted at eachother, so that very high-energy protons collide head-on. This collision creates many new particles, most of which are known hadrons or mesons. However, some of the created particles are heavy bosons such as the W boson, and the Higgs boson.</p>
+<p>These bosons have a very short lifetime, limited by the <a href="https://en.wikipedia.org/wiki/Uncertainty_principle">uncertainty principle</a>, and so they decay long before they can reach the particle detectors. The only way to identify the existance of these particles is to infer their presence from their decay products.</p>
+<p>In the following example, I'll use "PyStan" to identify particles created in proton-proton collisions at LHC.</p>
+<h2 id="useful-imports">Useful imports</h2>
+<div class="codehilite"><pre><span></span><code><span class="c1"># numpy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># pandas</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># scipy</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">ndtri</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gaussian_kde</span>
+
+<span class="c1"># plotting</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">corner</span>
+
+<span class="c1"># sampler</span>
+<span class="kn">import</span> <span class="nn">pystan</span>
+
+<span class="c1"># misc</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+</code></pre></div>
+
+
+<h2 id="viewing-the-data">Viewing the data</h2>
+<p>First, I'll use pandas to load the data. The data set is made up of 1.1 million collisions, each with 28 different attributes. The first 21 attributes are "low-level", and are only really useful for calculating the last 7 attributes. The last 7 attributes describe the <a href="https://en.wikipedia.org/wiki/Invariant_mass">invariant mass</a> for different processes.</p>
+<p>I'll explain further what these processes are later on, but for now I'll start by loading in the data. Since the data set is so large at 1.1 million data points, I decided to randomly sample 10000 of them, just to save some processing time.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># load data</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;HIGGS.csv&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="c1"># select only last 7 attributes</span>
+<span class="n">df_reduce</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">-</span><span class="mi">7</span><span class="p">:]]</span>
+<span class="c1"># randomly choose 10000 data points</span>
+<span class="n">nrows</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">df_reduce</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">nrows</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">2020</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>For a particle A, which decays via the process <script type="math/tex">A \rightarrow B + C</script> into particles B and C, the invariant mass squared</p>
+<p>
+<script type="math/tex; mode=display"> m_A^2 = m_{B+C}^2 = (E_B + E_C)^2 - |(\vec{p}_B + \vec{p}_C)|^2 </script>
+</p>
+<p>is a Lorentz invariant quantity, meaning it is the same in all reference frames. This means that in the zero-momentum frame of reference, the invariant mass is just given by the mass of the particle A, <script type="math/tex">m_A</script>.</p>
+<p>The data set is made up of 10000 collisions, in any of which particle A may have been produced. Particle A's subsequent decay results in a a peak around <script type="math/tex">m_A</script>, and therefore by finding the centre of the peak the invariant mass of the particle can be found. Mass is typically used to identify particles since a particle's mass is unique. </p>
+<p>There are three attributes in particular that are of interest for us. The first is the invariant mass of the process <script type="math/tex">W \rightarrow l \nu</script> that describes a W boson decay into a lepton neutrino pair. The peak invariant mass <script type="math/tex">m_{l\nu}</script> of this distribution should be at the W boson mass <script type="math/tex">m_W</script>.
+The second attribute is the invariant mass for the process <script type="math/tex">t \rightarrow W b</script> that describes a top quark decaying into a W boson and a bottom quark. The invariant mass <script type="math/tex">m_{Wb}</script> should peak at the mass of the top quark <script type="math/tex">m_t</script>.
+Finally, the third attribute is the invariant mass for the process <script type="math/tex">h_0 \rightarrow b \bar{b}</script> of a Higgs decay into a bottom-antibottom meson. The invariant mass <script type="math/tex">m_{b\bar{b}}</script> should peak at the mass of the Higgs boson <script type="math/tex">m_{h_0}</script>.</p>
+<p>Since we have the three invariant mass distributions, we can use them to measure the masses of the W boson, top quark, and Higgs boson. This is done by plotting a histogram of the invariant mass distributions, since the y-axis gives an idea of the relative frequency of each collision having a certain invariant mass:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">hist_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">22</span><span class="p">])</span> <span class="c1"># invariant mass for m_lv</span>
+<span class="n">hist_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">25</span><span class="p">])</span> <span class="c1"># invariant mass for m_Wb</span>
+<span class="n">hist_h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">26</span><span class="p">])</span> <span class="c1"># invariant mass for m_bb</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span><span class="n">ax2</span><span class="p">,</span><span class="n">ax3</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
+
+<span class="n">bins</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="c1"># histogram predicting W boson mass</span>
+<span class="n">n_w</span><span class="p">,</span><span class="n">bins_w</span><span class="p">,</span><span class="n">patches_w</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">hist_w</span><span class="p">,</span><span class="n">bins</span><span class="p">)</span>
+<span class="c1"># histogram predicting top quark mass</span>
+<span class="n">n_t</span><span class="p">,</span><span class="n">bins_t</span><span class="p">,</span><span class="n">patches_t</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">hist_t</span><span class="p">,</span><span class="n">bins</span><span class="p">)</span>
+<span class="c1"># histogram predicting Higgs boson mass</span>
+<span class="n">n_h</span><span class="p">,</span><span class="n">bins_h</span><span class="p">,</span><span class="n">patches_h</span> <span class="o">=</span> <span class="n">ax3</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">hist_h</span><span class="p">,</span><span class="n">bins</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency density&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Invariant mass $m_</span><span class="si">{lv}</span><span class="s1">$ of W decay to lepton neutrino pair&#39;</span><span class="p">)</span>
+
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency density&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Invariant mass $m_</span><span class="si">{Wb}</span><span class="s1">$ of top quark decay to W bottom pair&#39;</span><span class="p">)</span>
+
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency density&#39;</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Invariant mass / GeV/c</span><span class="se">\u00b2</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Invariant mass $m_</span><span class="si">{bb}</span><span class="s1">$ of Higgs decay to bottom antibottom pair&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+
+
+<p><img alt="png" src="../output_9_0.png" /></p>
+<h2 id="the-model">The model</h2>
+<p>The peaks reach a sharp peak, after which they fall off with what looks like a <script type="math/tex">1/m^\alpha</script> relationship. To model this, I used a quadratic ascending limb, and a reciprocal quadratic decending limb. The model is implemented in Python with the following parameters:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">resonance</span><span class="p">(</span><span class="n">masses</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">m_in</span><span class="p">,</span> <span class="n">m_max</span><span class="p">,</span> <span class="n">m_fin</span><span class="p">,</span> <span class="n">t_1</span><span class="p">,</span> <span class="n">t_2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function to model a particle production frequency as a function of invariant mass</span>
+<span class="sd">    :param masses: array of invariant masses</span>
+<span class="sd">    :param h: amplitude of the peak</span>
+<span class="sd">    :param m_in: initial invariant mass, at which the peak begins</span>
+<span class="sd">    :param m_max: invariant mass with coresponding maximum frequency</span>
+<span class="sd">    :param m_fin: final invariant mass, at which the peak reaches background level</span>
+<span class="sd">    :param t_1: describes the ascending limb growth rate</span>
+<span class="sd">    :param t_2: describes the descending limb decay rate</span>
+<span class="sd">    :return: array of relative frequencies of invariant masses</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">masses</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">masses</span><span class="p">)</span>
+
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span> <span class="k">if</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="n">m_in</span> <span class="k">else</span> <span class="n">h</span><span class="o">*</span><span class="p">((</span><span class="n">m</span><span class="o">-</span><span class="n">m_in</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">m_max</span><span class="o">-</span><span class="n">m_in</span><span class="p">))</span><span class="o">**</span><span class="n">t_1</span> <span class="k">if</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="n">m_max</span>
+           <span class="k">else</span> <span class="n">h</span><span class="o">*</span><span class="p">((</span><span class="n">m</span><span class="o">-</span><span class="n">m_max</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">m_fin</span><span class="o">-</span><span class="n">m_max</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">t_2</span><span class="p">)</span> <span class="k">if</span> <span class="n">m</span> <span class="o">&lt;</span> <span class="n">m_fin</span> <span class="k">else</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">masses</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>To show what this model looks like, we can make some quick guesses of the parameters, just by looking at the peak in the <script type="math/tex">m_{l\nu}</script> distribution:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">400</span><span class="p">,</span><span class="mi">1400</span><span class="p">)</span>
+<span class="c1"># guess at each parameter</span>
+<span class="n">guess_y</span> <span class="o">=</span> <span class="n">resonance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">380</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">240</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_w</span><span class="p">,</span><span class="n">n_w</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">guess_y</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Example model&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">270</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Example peak model overplotted on $m_</span><span class="si">{lv}</span><span class="s1">$ data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Invariant mass / GeV/c</span><span class="se">\u00b2</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency density&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+
+
+<p><img alt="png" src="../output_14_0.png" /></p>
+<p>The model looks like it sufficiently describes the frequency peak. The parameter that we are primarily interested in is m_max, since it predicts the most frequent invariant mass in this range; which for this example should be equal to the mass of the W boson.</p>
+<h2 id="modelling-with-pystan">Modelling with PyStan</h2>
+<p>PyStan is a Python wrapper for a C++ based sampler "Stan". To use PyStan, we first have to write a code string in C++. This code string is split into 5 blocks: functions (optional), data, parameters, transformed parameters (optional), and model. </p>
+<p>The functions block contains user-defined functions, such as the model function defined above. The data block initialises variables such as the number of data points, the invariant masses, and their respective frequency densities. The parameters block initialises the parameters of the model. The transformed parameters block gives the expected value of the model, given the current parameters. Finally, the model block sets the priors and likelihood distrubutions.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">pystan_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">functions {{</span>
+<span class="s2">    real resonance(real x, real h, real m_in, real m_max,</span>
+<span class="s2">                   real m_fin, real t_1, real t_2)</span>
+
+<span class="s2">        if (x &lt; m_in) </span>
+<span class="s2">            return 0;</span>
+
+<span class="s2">        else if (x &lt; m_max &amp;&amp; t_1 &gt; 0) </span>
+<span class="s2">            return h*pow( (x-m_in)/(m_max-m_in), t_1 );</span>
+
+<span class="s2">        else if (x &lt; m_max &amp;&amp; t_1 &lt; 0) </span>
+<span class="s2">            return h*pow( (x-m_in)/(m_max-m_in), 0.1 );</span>
+
+<span class="s2">        else if (x &lt; m_fin) </span>
+<span class="s2">            return h*pow( (x-m_max)/(m_fin-m_max) + 1, -t_2 );</span>
+
+<span class="s2">        else </span>
+<span class="s2">            return 0;</span>
+
+
+<span class="s2">}}</span>
+
+<span class="s2">data {{</span>
+<span class="s2">    int&lt;lower=0&gt; N;      // number of data points</span>
+<span class="s2">    real y[N];           // frequency densities</span>
+<span class="s2">    real m[N];           // invariant masses</span>
+<span class="s2">}}</span>
+
+<span class="s2">parameters {{</span>
+<span class="s2">    // parameters of the model</span>
+<span class="s2">    real h;</span>
+<span class="s2">    real m_in;</span>
+<span class="s2">    real m_max;</span>
+<span class="s2">    real m_fin;</span>
+<span class="s2">    real&lt;lower=0&gt; t_1;</span>
+<span class="s2">    real&lt;lower=0&gt; t_2;</span>
+<span class="s2">    real sigma;</span>
+<span class="s2">}}</span>
+
+<span class="s2">transformed parameters {{</span>
+<span class="s2">    real theta[N];</span>
+<span class="s2">    // for each invariant mass m[j], expected y-value is found</span>
+<span class="s2">    for (j in 1:N) </span>
+<span class="s2">        theta[j] = resonance(m[j],h,m_in,m_max,m_fin,t_1,t_2);</span>
+
+<span class="s2">}}</span>
+
+<span class="s2">model {{</span>
+
+<span class="s2">    // normal priors</span>
+<span class="s2">    h ~ normal(</span><span class="si">{h_mu}</span><span class="s2">, </span><span class="si">{h_sig}</span><span class="s2">);</span>
+<span class="s2">    m_in ~ normal(</span><span class="si">{m_in_mu}</span><span class="s2">, </span><span class="si">{m_in_sig}</span><span class="s2">);</span>
+<span class="s2">    m_max ~ normal(</span><span class="si">{m_max_mu}</span><span class="s2">, </span><span class="si">{m_max_sig}</span><span class="s2">);</span>
+<span class="s2">    m_fin ~ normal(</span><span class="si">{m_fin_mu}</span><span class="s2">, </span><span class="si">{m_fin_sig}</span><span class="s2">);</span>
+<span class="s2">    t_1 ~ normal(</span><span class="si">{t_1_mu}</span><span class="s2">,</span><span class="si">{t_1_sig}</span><span class="s2">);</span>
+<span class="s2">    t_2 ~ normal(</span><span class="si">{t_2_mu}</span><span class="s2">, </span><span class="si">{t_2_sig}</span><span class="s2">);</span>
+
+<span class="s2">    // uniform parameters</span>
+<span class="s2">    sigma ~ uniform(-2, 2);</span>
+
+<span class="s2">    // normal likelihood</span>
+<span class="s2">    y ~ normal(theta,pow(10,sigma));</span>
+<span class="s2">}}</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+
+
+<p>In the above code string, there is an extra parameter "sigma". This parameter is used to model the noise of the data. Since this values is difficult to guess, the value of sigma is set to be uniform in log-space. This means that noise standard deviation has an equal probabillity of being between an order of magnitude of -2 and 2. This is used as an alternate to using a Poisson distribution. A comparison example between this likelihood and a Poisson likelihood can be found on this site <a href="https://mo-ghani.github.io/Sampling/PyMC3_GRS/PyMC3_GRS/#sampling-the-data-alternate-method">here</a>.</p>
+<p>Next, we need to pass information to the code string. This is done using a dictionary that contains the number of data points, frequency density, and invariant mass data points, and another dictionary that contains all the prior bounds for each parameter.</p>
+<p>I'll start using the <script type="math/tex">m_{lv}</script> distribution:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">data_w</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;N&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_w</span><span class="p">),</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">n_w</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">:</span> <span class="n">bins_w</span><span class="p">}</span>
+
+<span class="n">priors_w</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">priors_w</span><span class="p">[</span><span class="s1">&#39;h_mu&#39;</span><span class="p">],</span> <span class="n">priors_w</span><span class="p">[</span><span class="s1">&#39;h_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">380</span><span class="p">,</span> <span class="mi">10</span>
+<span class="n">priors_w</span><span class="p">[</span><span class="s1">&#39;m_in_mu&#39;</span><span class="p">],</span> <span class="n">priors_w</span><span class="p">[</span><span class="s1">&#39;m_in_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span>
+<span class="n">priors_w</span><span class="p">[</span><span class="s1">&#39;m_max_mu&#39;</span><span class="p">],</span> <span class="n">priors_w</span><span class="p">[</span><span class="s1">&#39;m_max_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">5</span>
+<span class="n">priors_w</span><span class="p">[</span><span class="s1">&#39;m_fin_mu&#39;</span><span class="p">],</span> <span class="n">priors_w</span><span class="p">[</span><span class="s1">&#39;m_fin_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">260</span><span class="p">,</span> <span class="mi">10</span>
+<span class="n">priors_w</span><span class="p">[</span><span class="s1">&#39;t_1_mu&#39;</span><span class="p">],</span> <span class="n">priors_w</span><span class="p">[</span><span class="s1">&#39;t_1_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span>
+<span class="n">priors_w</span><span class="p">[</span><span class="s1">&#39;t_2_mu&#39;</span><span class="p">],</span> <span class="n">priors_w</span><span class="p">[</span><span class="s1">&#39;t_2_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">2</span>
+</code></pre></div>
+
+
+<h3 id="sampling-the-data">Sampling the data</h3>
+<p>The code string must now be compiled using the priors dictionary defined above.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">time0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">model_w</span> <span class="o">=</span> <span class="n">pystan</span><span class="o">.</span><span class="n">StanModel</span><span class="p">(</span><span class="n">model_code</span><span class="o">=</span><span class="n">pystan_code</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">priors_w</span><span class="p">))</span>
+<span class="n">time1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Time taken to compile model: </span><span class="si">{}</span><span class="s2"> seconds&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time1</span><span class="o">-</span><span class="n">time0</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="codehilite"><pre><span></span><code><span class="n">INFO</span><span class="o">:</span><span class="n">pystan</span><span class="o">:</span><span class="n">COMPILING</span> <span class="n">THE</span> <span class="n">C</span><span class="o">++</span> <span class="n">CODE</span> <span class="n">FOR</span> <span class="n">MODEL</span> <span class="n">anon_model_32a27c4325414afa7499109a8951a53e</span> <span class="n">NOW</span><span class="o">.</span>
+
+
+<span class="n">Time</span> <span class="n">taken</span> <span class="n">to</span> <span class="n">compile</span> <span class="n">model</span><span class="o">:</span> <span class="mf">44.89909029006958</span> <span class="n">seconds</span>
+</code></pre></div>
+
+
+<p>The sampler is now ready to iterate through the data. I'll do this using 1000 samples and 1 chain:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">Nsamples</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">chains</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">time0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">fit_w</span> <span class="o">=</span> <span class="n">model_w</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data_w</span><span class="p">,</span> <span class="nb">iter</span><span class="o">=</span><span class="n">Nsamples</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="n">chains</span><span class="p">)</span>
+<span class="n">time1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Time taken to sample m_lv peak: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time1</span><span class="o">-</span><span class="n">time0</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; seconds&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="codehilite"><pre><span></span><code><span class="err">Time taken to sample m_lv peak: 1.9440805912017822 seconds</span>
+</code></pre></div>
+
+
+<p>The results can be extracted from the sampler using a dictionary as follows:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">la_w</span> <span class="o">=</span> <span class="n">fit_w</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">permuted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># posterior samples</span>
+<span class="n">samples_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">la_w</span><span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">],</span> <span class="n">la_w</span><span class="p">[</span><span class="s1">&#39;m_in&#39;</span><span class="p">],</span> <span class="n">la_w</span><span class="p">[</span><span class="s1">&#39;m_max&#39;</span><span class="p">],</span>
+                            <span class="n">la_w</span><span class="p">[</span><span class="s1">&#39;m_fin&#39;</span><span class="p">],</span> <span class="n">la_w</span><span class="p">[</span><span class="s1">&#39;t_1&#39;</span><span class="p">],</span> <span class="n">la_w</span><span class="p">[</span><span class="s1">&#39;t_2&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+
+
+<p>Now that we understand how the sampling process works, we can quickly do the exact same process for the other two peaks. First, make guesses for parameter values for each data set: </p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># data for </span>
+<span class="n">data_t</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;N&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_t</span><span class="p">),</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">n_t</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">:</span> <span class="n">bins_t</span><span class="p">}</span>
+
+<span class="n">data_h</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;N&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_h</span><span class="p">),</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">n_h</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">:</span> <span class="n">bins_h</span><span class="p">}</span>
+
+<span class="n">priors_t</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;h_mu&#39;</span><span class="p">],</span> <span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;h_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">110</span><span class="p">,</span> <span class="mi">5</span>
+<span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_in_mu&#39;</span><span class="p">],</span> <span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_in_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">5</span>
+<span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_max_mu&#39;</span><span class="p">],</span> <span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_max_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">170</span><span class="p">,</span> <span class="mi">2</span>
+<span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_fin_mu&#39;</span><span class="p">],</span> <span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_fin_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">400</span><span class="p">,</span> <span class="mi">10</span>
+<span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;t_1_mu&#39;</span><span class="p">],</span> <span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;t_1_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.1</span>
+<span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;t_2_mu&#39;</span><span class="p">],</span> <span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;t_2_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span>
+
+<span class="n">priors_h</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;h_mu&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;h_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">10</span>
+<span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;m_in_mu&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;m_in_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span>
+<span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;m_max_mu&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;m_max_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">5</span>
+<span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;m_fin_mu&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;m_fin_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">350</span><span class="p">,</span> <span class="mi">10</span>
+<span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;t_1_mu&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;t_1_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span>
+<span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;t_2_mu&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;t_2_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span>
+</code></pre></div>
+
+
+<p>Now we can sample both peaks in tandem in the exact way as before:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">model_t</span> <span class="o">=</span> <span class="n">pystan</span><span class="o">.</span><span class="n">StanModel</span><span class="p">(</span><span class="n">model_code</span><span class="o">=</span><span class="n">pystan_code</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">priors_t</span><span class="p">))</span>
+<span class="n">model_h</span> <span class="o">=</span> <span class="n">pystan</span><span class="o">.</span><span class="n">StanModel</span><span class="p">(</span><span class="n">model_code</span><span class="o">=</span><span class="n">pystan_code</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">**</span><span class="n">priors_h</span><span class="p">))</span>
+
+<span class="n">time0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">fit_t</span> <span class="o">=</span> <span class="n">model_w</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data_t</span><span class="p">,</span> <span class="nb">iter</span><span class="o">=</span><span class="n">Nsamples</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="n">chains</span><span class="p">)</span>
+<span class="n">time1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">fit_h</span> <span class="o">=</span> <span class="n">model_w</span><span class="o">.</span><span class="n">sampling</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">data_h</span><span class="p">,</span> <span class="nb">iter</span><span class="o">=</span><span class="n">Nsamples</span><span class="p">,</span> <span class="n">chains</span><span class="o">=</span><span class="n">chains</span><span class="p">)</span>
+<span class="n">time2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Time taken to sample m_Wb peak: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time1</span><span class="o">-</span><span class="n">time0</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; seconds&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Time taken to sample m_bb} peak: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time2</span><span class="o">-</span><span class="n">time1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; seconds&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="codehilite"><pre><span></span><code><span class="n">INFO</span><span class="o">:</span><span class="n">pystan</span><span class="o">:</span><span class="n">COMPILING</span> <span class="n">THE</span> <span class="n">C</span><span class="o">++</span> <span class="n">CODE</span> <span class="n">FOR</span> <span class="n">MODEL</span> <span class="n">anon_model_c8d0398ecec8d290f88238a962b61a3e</span> <span class="n">NOW</span><span class="o">.</span>
+<span class="n">INFO</span><span class="o">:</span><span class="n">pystan</span><span class="o">:</span><span class="n">COMPILING</span> <span class="n">THE</span> <span class="n">C</span><span class="o">++</span> <span class="n">CODE</span> <span class="n">FOR</span> <span class="n">MODEL</span> <span class="n">anon_model_fc7e337091261cd27b6faca01371228a</span> <span class="n">NOW</span><span class="o">.</span>
+
+<span class="n">Time</span> <span class="n">taken</span> <span class="n">to</span> <span class="n">sample</span> <span class="n">m_Wb</span> <span class="n">peak</span><span class="o">:</span> <span class="mf">0.8660006523132324</span> <span class="n">seconds</span>
+<span class="n">Time</span> <span class="n">taken</span> <span class="n">to</span> <span class="n">sample</span> <span class="n">m_bb</span> <span class="n">peak</span><span class="o">:</span> <span class="mf">1.7904999256134032</span> <span class="n">seconds</span>
+</code></pre></div>
+
+
+<p>Finally, the results can be collected again:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">la_t</span> <span class="o">=</span> <span class="n">fit_t</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">permuted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">la_h</span> <span class="o">=</span> <span class="n">fit_h</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">permuted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># posterior samples</span>
+<span class="n">samples_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">la_t</span><span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">],</span> <span class="n">la_t</span><span class="p">[</span><span class="s1">&#39;m_in&#39;</span><span class="p">],</span> <span class="n">la_t</span><span class="p">[</span><span class="s1">&#39;m_max&#39;</span><span class="p">],</span>
+                            <span class="n">la_t</span><span class="p">[</span><span class="s1">&#39;m_fin&#39;</span><span class="p">],</span> <span class="n">la_t</span><span class="p">[</span><span class="s1">&#39;t_1&#39;</span><span class="p">],</span> <span class="n">la_t</span><span class="p">[</span><span class="s1">&#39;t_2&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span>
+<span class="n">samples_h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">la_h</span><span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">],</span> <span class="n">la_h</span><span class="p">[</span><span class="s1">&#39;m_in&#39;</span><span class="p">],</span> <span class="n">la_h</span><span class="p">[</span><span class="s1">&#39;m_max&#39;</span><span class="p">],</span>
+                            <span class="n">la_h</span><span class="p">[</span><span class="s1">&#39;m_fin&#39;</span><span class="p">],</span> <span class="n">la_h</span><span class="p">[</span><span class="s1">&#39;t_1&#39;</span><span class="p">],</span> <span class="n">la_h</span><span class="p">[</span><span class="s1">&#39;t_2&#39;</span><span class="p">]))</span><span class="o">.</span><span class="n">T</span>
+</code></pre></div>
+
+
+<h3 id="results">Results</h3>
+<p>Now that all of the peaks have been sampled, we can check out the posterior samples returned by PyStan. We'll start by plotting a corner plot for the <script type="math/tex">m_{l\nu}</script> model, which shows the posterior distributions for each parameter, along with a contour plot describing how a parameter may vary with any other. This is done using "corner.py" and a Gaussian KDE function from scipy:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">plotposts</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">hist_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))]</span>
+    <span class="k">for</span> <span class="n">axidx</span><span class="p">,</span> <span class="n">samps</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">samples</span><span class="o">.</span><span class="n">T</span><span class="p">):</span>
+        <span class="n">kde</span> <span class="o">=</span> <span class="n">gaussian_kde</span><span class="p">(</span><span class="n">samps</span><span class="p">)</span>
+        <span class="n">xvals</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="n">axidx</span><span class="p">]</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span>
+        <span class="n">xvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">xvals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">xvals</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="n">axidx</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xvals</span><span class="p">,</span> <span class="n">kde</span><span class="p">(</span><span class="n">xvals</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;firebrick&#39;</span><span class="p">)</span>
+
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;h&#39;</span><span class="p">,</span> <span class="s1">&#39;m_in&#39;</span><span class="p">,</span> <span class="s1">&#39;m_max&#39;</span><span class="p">,</span> <span class="s1">&#39;m_fin&#39;</span><span class="p">,</span> <span class="s1">&#39;t_1&#39;</span><span class="p">,</span> <span class="s1">&#39;t_2&#39;</span><span class="p">]</span>
+<span class="n">plotposts</span><span class="p">(</span><span class="n">samples_w</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><img alt="png" src="../output_36_0.png" /></p>
+<p>we're interested in only the value of m_max for each model, since it describes the mass of the particle that created the peak. We can collect the means and standard deviation errors for each parameter, along with randomly sampling from the posteriors so that we can create a posterior predictive plot.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># mean and error of parameters for m_lv distribution</span>
+<span class="n">means_w</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_w</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+<span class="n">errors_w</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_w</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+
+<span class="c1"># mean and error of parameters for m_Wb distribution</span>
+<span class="n">means_t</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_t</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+<span class="n">errors_t</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_t</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+
+<span class="c1"># mean and error of parameters for m_bb distribution</span>
+<span class="n">means_h</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_h</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+<span class="n">errors_h</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_h</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+
+<span class="c1"># number of random samples from posteriors</span>
+<span class="n">nfits</span> <span class="o">=</span> <span class="mi">300</span>
+
+<span class="c1"># sample parameters for m_lv distribution</span>
+<span class="n">param_samples_w</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_w</span><span class="p">[:,</span><span class="n">i</span><span class="p">],</span><span class="n">nfits</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+<span class="n">post_samples_w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">param_samples_w</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+<span class="c1"># sample parameters for m_Wb distribution</span>
+<span class="n">param_samples_t</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_t</span><span class="p">[:,</span><span class="n">i</span><span class="p">],</span><span class="n">nfits</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+<span class="n">post_samples_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">param_samples_t</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+<span class="c1"># sample parameters for m_bb distribution</span>
+<span class="n">param_samples_h</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_h</span><span class="p">[:,</span><span class="n">i</span><span class="p">],</span><span class="n">nfits</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+<span class="n">post_samples_h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">param_samples_h</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mean Invariant Mass of m_lv peak: </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00b1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> GeV/c</span><span class="se">\u00b2</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">means_w</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">errors_w</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> 
+      <span class="s2">&quot;Mass of a W boson: 80.4 GeV/c</span><span class="se">\u00b2</span><span class="s2"> </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> 
+      <span class="s2">&quot;Mean Invariant Mass of m_Wb peak: </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00b1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> GeV/c</span><span class="se">\u00b2</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">means_t</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">errors_t</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> 
+      <span class="s2">&quot;Mass of top quark: 173 GeV/c</span><span class="se">\u00b2</span><span class="s2"> </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> 
+      <span class="s2">&quot;Mean Invariant Mass of m_bb peak: </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00b1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> GeV/c</span><span class="se">\u00b2</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">means_h</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">errors_h</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> 
+      <span class="s2">&quot;Mass of Higgs boson: 125 GeV/c</span><span class="se">\u00b2</span><span class="s2"> </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="codehilite"><pre><span></span><code><span class="n">Mean</span> <span class="n">Invariant</span> <span class="n">Mass</span> <span class="k">of</span> <span class="n">m_lv</span> <span class="n">peak</span><span class="p">:</span> <span class="mi">78</span><span class="p">.</span><span class="mi">8824875109673</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">14962446128127846</span> <span class="n">GeV</span><span class="o">/</span><span class="n">c²</span> 
+<span class="n">Mass</span> <span class="k">of</span> <span class="n">a</span> <span class="n">W</span> <span class="n">boson</span><span class="p">:</span> <span class="mi">80</span><span class="p">.</span><span class="mi">4</span> <span class="n">GeV</span><span class="o">/</span><span class="n">c²</span>
+
+<span class="n">Mean</span> <span class="n">Invariant</span> <span class="n">Mass</span> <span class="k">of</span> <span class="n">m_Wb</span> <span class="n">peak</span><span class="p">:</span> <span class="mi">170</span><span class="p">.</span><span class="mi">739515663670765</span> <span class="err">±</span> <span class="mi">2</span><span class="p">.</span><span class="mi">9494226571197104</span> <span class="n">GeV</span><span class="o">/</span><span class="n">c²</span> 
+<span class="n">Mass</span> <span class="k">of</span> <span class="n">top</span> <span class="n">quark</span><span class="p">:</span> <span class="mi">173</span> <span class="n">GeV</span><span class="o">/</span><span class="n">c²</span>
+
+<span class="n">Mean</span> <span class="n">Invariant</span> <span class="n">Mass</span> <span class="k">of</span> <span class="n">m_bb</span> <span class="n">peak</span><span class="p">:</span> <span class="mi">121</span><span class="p">.</span><span class="mi">08971310473981</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7304177489930841</span> <span class="n">GeV</span><span class="o">/</span><span class="n">c²</span> 
+<span class="n">Mass</span> <span class="k">of</span> <span class="n">Higgs</span> <span class="n">boson</span><span class="p">:</span> <span class="mi">125</span> <span class="n">GeV</span><span class="o">/</span><span class="n">c²</span>
+</code></pre></div>
+
+
+<p>The values for m_max make good estimates for the masses of the particles that caused the peaks. The predictions are systematically slightly lower than the true masses, which is likely due to the model I used being only a simplified approximation, instead of a more accurate model. The increased error on the estimate for the mass of the top quark is likely due to a much higher level of noise in the data.</p>
+<h3 id="plotting-the-posterior">Plotting the posterior</h3>
+<p>We can plot the posterior distributions for each peak to see the quality of the fit produced by the sampler. Below are plots for both the mean posterior (left) and the posterior predictive (right).</p>
+<div class="codehilite"><pre><span></span><code><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1400</span><span class="p">,</span><span class="mi">1400</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
+
+<span class="c1"># m_lv peak</span>
+<span class="c1"># mean posterior plot</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_w</span><span class="p">,</span><span class="n">n_w</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original data&#39;</span><span class="p">)</span>
+<span class="n">res_y</span> <span class="o">=</span> <span class="n">resonance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">means_w</span><span class="p">)</span> 
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">res_y</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Fitted model&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency density&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Mean posterior plots&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper right&#39;</span><span class="p">)</span>
+<span class="c1">#plot posterior predictive plot</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_w</span><span class="p">,</span><span class="n">n_w</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Posterior predictive plots&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nfits</span><span class="p">):</span>
+    <span class="n">res_y</span> <span class="o">=</span> <span class="n">resonance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">post_samples_w</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">res_y</span><span class="p">,</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
+
+<span class="c1"># m_Wb peak</span>
+<span class="c1"># mean posterior plot</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_t</span><span class="p">,</span><span class="n">n_t</span><span class="p">)</span>
+<span class="n">res_y</span> <span class="o">=</span> <span class="n">resonance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">means_t</span><span class="p">)</span> 
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">res_y</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span><span class="mi">400</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency density&#39;</span><span class="p">)</span>
+<span class="c1"># posterior predictive plot</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_t</span><span class="p">,</span><span class="n">n_t</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nfits</span><span class="p">):</span>
+    <span class="n">res_y</span> <span class="o">=</span> <span class="n">resonance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">post_samples_t</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">post_samples_t</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">res_y</span><span class="p">,</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span><span class="mi">400</span><span class="p">)</span>
+
+<span class="c1"># m_bb peak</span>
+<span class="c1"># mean posterior plot</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_h</span><span class="p">,</span><span class="n">n_h</span><span class="p">)</span>
+<span class="n">res_y</span> <span class="o">=</span> <span class="n">resonance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">means_h</span><span class="p">)</span> 
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">res_y</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency density&#39;</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Invariant mass GeV/c</span><span class="se">\u00b2</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="c1"># posterior predictive plot</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_h</span><span class="p">,</span><span class="n">n_h</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Invariant mass GeV/c</span><span class="se">\u00b2</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nfits</span><span class="p">):</span>
+    <span class="n">res_y</span> <span class="o">=</span> <span class="n">resonance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">post_samples_h</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">res_y</span><span class="p">,</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">300</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+
+
+<p><img alt="png" src="../output_43_0.png" /></p>
+                
+              
+              
+                
+
+
+              
+            </article>
+          </div>
+        </div>
+      </main>
+      
+        
+<footer class="md-footer">
+  
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
+        
+          <a href="../../gravwaves/gravwaves/" title="Gravitational Wave Parameter Estimation with bilby" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
+            </div>
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Previous
+                </span>
+                Gravitational Wave Parameter Estimation with bilby
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    </div>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+      </div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    
+      <script src="../../assets/javascripts/vendor.92ffa368.min.js"></script>
+      <script src="../../assets/javascripts/bundle.5123e3d4.min.js"></script><script id="__lang" type="application/json">{"clipboard.copy": "Copy to clipboard", "clipboard.copied": "Copied to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.result.placeholder": "Type to start searching", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents"}</script>
+      
+      <script>
+        app = initialize({
+          base: "../..",
+          features: [],
+          search: Object.assign({
+            worker: "../../assets/javascripts/worker/search.a68abb33.min.js"
+          }, typeof search !== "undefined" && search)
+        })
+      </script>
+      
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
+      
+    
+  </body>
+</html>

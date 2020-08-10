@@ -15,7 +15,7 @@
     
     
       
-        <title>Demonstrations of MCMC and Nested Samplers</title>
+        <title>Demonstrations of MCMC and Nested Samplers in Physics</title>
       
     
     
@@ -60,7 +60,7 @@
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="." title="Demonstrations of MCMC and Nested Samplers" class="md-header-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers">
+    <a href="." title="Demonstrations of MCMC and Nested Samplers in Physics" class="md-header-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers in Physics">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -73,7 +73,7 @@
       
         <div class="md-header-nav__ellipsis">
           <span class="md-header-nav__topic md-ellipsis">
-            Demonstrations of MCMC and Nested Samplers
+            Demonstrations of MCMC and Nested Samplers in Physics
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
@@ -134,13 +134,13 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="." title="Demonstrations of MCMC and Nested Samplers" class="md-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers">
+    <a href="." title="Demonstrations of MCMC and Nested Samplers in Physics" class="md-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers in Physics">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
-    Demonstrations of MCMC and Nested Samplers
+    Demonstrations of MCMC and Nested Samplers in Physics
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -184,6 +184,27 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-brief-introduction-to-bayesian-inference" class="md-nav__link">
+    A Brief Introduction to Bayesian Inference
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#markov-chain-monte-carlo" class="md-nav__link">
+    Markov Chain Monte Carlo
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nested-sampling" class="md-nav__link">
+    Nested Sampling
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#the-samplers" class="md-nav__link">
@@ -248,8 +269,20 @@
 
 
   <li class="md-nav__item">
-    <a href="gravwaves/gravwaves/" title="Gravitational Wave parameter estimation with bilby" class="md-nav__link">
-      Gravitational Wave parameter estimation with bilby
+    <a href="gravwaves/gravwaves/" title="Gravitational Wave Parameter Estimation with bilby" class="md-nav__link">
+      Gravitational Wave Parameter Estimation with bilby
+    </a>
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan" class="md-nav__link">
+      Particle Identification in Proton-Proton Collisions with PyStan
     </a>
   </li>
 
@@ -278,6 +311,27 @@
       Table of contents
     </label>
     <ul class="md-nav__list" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#a-brief-introduction-to-bayesian-inference" class="md-nav__link">
+    A Brief Introduction to Bayesian Inference
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#markov-chain-monte-carlo" class="md-nav__link">
+    Markov Chain Monte Carlo
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nested-sampling" class="md-nav__link">
+    Nested Sampling
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#the-samplers" class="md-nav__link">
@@ -311,9 +365,34 @@
                 
                 <h1 id="the-uses-of-mcmc-and-nested-sampling-algorithms">The Uses Of MCMC and Nested Sampling Algorithms</h1>
 <p>There are various off-the-shelf samplers that make use of MCMC and nested sampling algorithms in Python, freely available for the public to use. 
-The following webpage is a collection of demonstrations of how a handful of popular samplers can be used to analyse real world, open source data sets.</p>
+The following webpage is a collection of demonstrations of how a handful of popular samplers can be used to analyse real world, open source data sets. </p>
+<ul>
+<li>A github repository containing all the examples on this webpage can be found <a href="https://github.com/Mo-Ghani/Sampling">here</a></li>
+<li>A Docker container containing all the samplers used on this webpage can be found <a href="https://hub.docker.com/r/mattpitkin/samplers/tags">here</a> </li>
+</ul>
+<h2 id="a-brief-introduction-to-bayesian-inference">A Brief Introduction to Bayesian Inference</h2>
+<p>For any experiment, you might have some kind of belief on what the outcome should be. This belief can be tested by recording the results of the experiment, and finding the likelihood that your beliefs explain the observed data. Using this you can update your prior beliefs using <a href="https://en.wikipedia.org/wiki/Bayes%27_theorem#:~:text=In%20probability%20theory%20and%20statistics,be%20related%20to%20the%20event.">Bayes' rule</a>:</p>
+<p>
+<script type="math/tex; mode=display"> P(M|E) = \frac{P(E|M) P(M)}{P(E)} </script>
+</p>
+<p>Where <script type="math/tex">P(M)</script> is the <strong>prior</strong> probabillity belief of the model <script type="math/tex">M</script>, <script type="math/tex">P(E|M)</script> is the <strong>likelihood</strong> of observing evidence <script type="math/tex">E</script> given the model, <script type="math/tex">P(M|E)</script> is the <strong>posterior</strong> probabillity of the model given the evidence, and <script type="math/tex">P(E)</script> is the "marginalised likelihood" or the "evidence", which is the probabillity of observing the data set.</p>
+<p>Bayesian inference can be used in physics to fit models to observed data, given only a prior belief on the parameters of the model. This has uses from astronomy to particle physics.</p>
+<h2 id="markov-chain-monte-carlo">Markov Chain Monte Carlo</h2>
+<p>The marginal likelihood <script type="math/tex">P(E)</script> is impossible to calculate analytically, so instead a method called <a href="https://en.wikipedia.org/wiki/Markov_chain_Monte_Carlo">Markov chain Monte Carlo (MCMC)</a> is employed. An MCMC algorithm has two components: Monte Carlo techniques imply that samples are randomly generated, and Markov Chain implies that the next step of the algorithm depends only on the current step.</p>
+<p>The most popular MCMC algorithm is the <a href="https://en.wikipedia.org/wiki/Metropolis%E2%80%93Hastings_algorithm">MH algorithm</a>, which will completely ignore the <script type="math/tex">P(E)</script> term. Instead, on the <script type="math/tex">i</script>'th step of the algorithm, the sampler will randomly generate a proposal model <script type="math/tex">M^*</script> which may (or may not) do a better job at explaining the data than the current model <script type="math/tex">M^{i-1}</script>. The ratio of posteriors</p>
+<p>
+<script type="math/tex; mode=display"> r = \frac{P(E|M^*) P(M^*)}{P(E|M^{i-1}) P(M^{i-1})} = \frac{P(M^*|E)}{P(M^{i-1}|E)}</script>
+</p>
+<p>is then calculated, using the prior and likelihood distributions. This ratio describes which model is most likely to explain the data, and so the proposed model <script type="math/tex">M^*</script> will be accepted if this ratio is greater than 1. Otherwise, the accpetance probabillity is <script type="math/tex">P = r</script>.</p>
+<h2 id="nested-sampling">Nested Sampling</h2>
+<p><a href="https://en.wikipedia.org/wiki/Nested_sampling_algorithm">Nested sampling</a> algorithms are a variation on MCMC, which use numerical methods to calculate the marginal likelihood. The name "marginal likelihood" is literal, meaning that the evidence can be found as the integral of the likelihood with respect to the model (marginalising the model out). When models have tens or hundreds of parameters, this marginalisation becomes impossible. </p>
+<p>A very simple nested sampling algorithm essentially uses the trapezium rule to estimate the value of the marginalisation integral. This is especially useful for comparing models, since the marginalised likelihood is a metric for how well a model describes a data set. For two models <script type="math/tex">M_1</script> and <script type="math/tex">M_2</script>, the <a href="https://en.wikipedia.org/wiki/Bayes_factor">Bayes' factor</a></p>
+<p>
+<script type="math/tex; mode=display"> K = \frac{P(E|M_1)}{P(E|M_2)} </script>
+</p>
+<p>describes whether or not <script type="math/tex">M_1</script> is a more likely model than <script type="math/tex">M_2</script> given the evidence <script type="math/tex">E</script>.</p>
 <h2 id="the-samplers">The Samplers</h2>
-<p>The following samplers are used in one of the demonstrations on this site:</p>
+<p>The following samplers are used in demonstrations on this site:</p>
 <ul>
 <li><a href="https://docs.pymc.io/">PyMC3</a></li>
 <li><a href="https://dynesty.readthedocs.io/en/latest/">dynesty</a></li>
@@ -321,6 +400,7 @@ The following webpage is a collection of demonstrations of how a handful of popu
 <li><a href="https://johannesbuchner.github.io/UltraNest/index.html">UltraNest</a></li>
 <li><a href="https://zeus-mcmc.readthedocs.io/en/latest/index.html">Zeus</a></li>
 <li><a href="http://kylebarbary.com/nestle/">Nestle</a></li>
+<li><a href="https://pystan.readthedocs.io/en/latest/">PyStan</a></li>
 </ul>
 <h2 id="the-data">The Data</h2>
 <p>All the data used in these examples is open source, and publicly available on the following links:</p>
@@ -329,6 +409,7 @@ The following webpage is a collection of demonstrations of how a handful of popu
 <li><a href="https://www.nasa.gov/kepler/education/getlightcurves">Exoplanet light curve from Kepler-10</a></li>
 <li><a href="http://www.sidc.be/silso/datafiles">Average solar sunspot numbers since 1750</a></li>
 <li><a href="https://gwpy.github.io/docs/stable/api/gwpy.timeseries.TimeSeries.html">Gravitational wave signal from GW150914</a></li>
+<li><a href="https://archive.ics.uci.edu/ml/datasets/HIGGS">Particle invariant mass measurements from LHC</a></li>
 </ul>
                 
               
@@ -394,6 +475,8 @@ The following webpage is a collection of demonstrations of how a handful of popu
           }, typeof search !== "undefined" && search)
         })
       </script>
+      
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
       
     
   </body>

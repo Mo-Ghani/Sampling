@@ -15,7 +15,7 @@
     
     
       
-        <title>Gravitational Wave parameter estimation with bilby - Demonstrations of MCMC and Nested Samplers</title>
+        <title>Gravitational Wave Parameter Estimation with bilby - Demonstrations of MCMC and Nested Samplers in Physics</title>
       
     
     
@@ -60,7 +60,7 @@
     
       <header class="md-header" data-md-component="header">
   <nav class="md-header-nav md-grid" aria-label="Header">
-    <a href="../.." title="Demonstrations of MCMC and Nested Samplers" class="md-header-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers">
+    <a href="../.." title="Demonstrations of MCMC and Nested Samplers in Physics" class="md-header-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers in Physics">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
@@ -73,11 +73,11 @@
       
         <div class="md-header-nav__ellipsis">
           <span class="md-header-nav__topic md-ellipsis">
-            Demonstrations of MCMC and Nested Samplers
+            Demonstrations of MCMC and Nested Samplers in Physics
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Gravitational Wave parameter estimation with bilby
+              Gravitational Wave Parameter Estimation with bilby
             
           </span>
         </div>
@@ -134,13 +134,13 @@
                   <div class="md-sidebar__inner">
                     <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="../.." title="Demonstrations of MCMC and Nested Samplers" class="md-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers">
+    <a href="../.." title="Demonstrations of MCMC and Nested Samplers in Physics" class="md-nav__button md-logo" aria-label="Demonstrations of MCMC and Nested Samplers in Physics">
       
   
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 003-3 3 3 0 00-3-3 3 3 0 00-3 3 3 3 0 003 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54z"/></svg>
 
     </a>
-    Demonstrations of MCMC and Nested Samplers
+    Demonstrations of MCMC and Nested Samplers in Physics
   </label>
   
   <ul class="md-nav__list" data-md-scrollfix>
@@ -208,14 +208,14 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        Gravitational Wave parameter estimation with bilby
+        Gravitational Wave Parameter Estimation with bilby
         <span class="md-nav__icon md-icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
         </span>
       </label>
     
-    <a href="./" title="Gravitational Wave parameter estimation with bilby" class="md-nav__link md-nav__link--active">
-      Gravitational Wave parameter estimation with bilby
+    <a href="./" title="Gravitational Wave Parameter Estimation with bilby" class="md-nav__link md-nav__link--active">
+      Gravitational Wave Parameter Estimation with bilby
     </a>
     
       
@@ -286,6 +286,18 @@
   
 </nav>
     
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan" class="md-nav__link">
+      Particle Identification in Proton-Proton Collisions with PyStan
+    </a>
   </li>
 
     
@@ -380,264 +392,274 @@
                 
                 
                 <h1 id="using-bilby-with-dynesty-to-estimate-the-properties-of-the-first-ever-detected-gravitational-wave-signal">Using bilby with dynesty to estimate the properties of the first ever detected gravitational wave signal</h1>
-<p>Einstein's theory of General Relativity, 1916, predicted that space-time can act as a medium for "gravitational waves", which are ripples caused by extremely violent cosmic events, such as black holes or neutron stars colliding. It was predicted that these waves travel at the speed of light, and could carry information about the event that caused them, and even reveal the true nature of gravity. Einstein also predicted that the waves would be so small, that their presence would never be detected. However, almost 100 years later in 2015, LIGO detected the first gravitational wave signal "GW150914" using a 4km long interferometer. the arms of which only stretched by a thousandth the width of a proton. </p>
-<p>The event that caused the gravitational waves was a collision between two massive black holes. In this example, I'll use the gravitational wave analysis package "bilby" along with the sampler "dynesty" to find the mass of the two black holes that caused GW150914.</p>
+<p>Einstein's theory of General Relativity, 1916, predicted that space-time can act as a medium for "gravitational waves", which are ripples caused by extremely violent cosmic events, such as black holes or neutron stars colliding. It was predicted that these waves travel at the speed of light, and could carry information about the event that caused them, and even reveal the true nature of gravity. Einstein also predicted that the waves would be so small, that their presence would never be detected. However, almost 100 years later in 2015, <a href="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.061102">LIGO detected the first gravitational wave signal</a> "GW150914" using a 4km long interferometer. the arms of which only stretched by a thousandth the width of a proton. </p>
+<p>The event that caused the gravitational waves was a collision between two massive black holes. In this example, I'll use the gravitational wave analysis package <a href="https://lscsoft.docs.ligo.org/bilby/index.html">"bilby"</a> along with the sampler "dynesty" to find the mass of the two black holes that caused GW150914.</p>
 <h2 id="useful-imports">Useful imports</h2>
-<pre><code class="python"># numpy
-import numpy as np
+<div class="codehilite"><pre><span></span><code><span class="c1"># numpy</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-# pandas
-import pandas as pd
+<span class="c1"># pandas</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-# plotting
-import matplotlib.pyplot as plt
+<span class="c1"># plotting</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-# sampler
-import bilby
-from bilby.core.prior import Uniform
+<span class="c1"># sampler</span>
+<span class="kn">import</span> <span class="nn">bilby</span>
+<span class="kn">from</span> <span class="nn">bilby.core.prior</span> <span class="kn">import</span> <span class="n">Uniform</span>
 
-# misc
-from gwpy.timeseries import TimeSeries
-</code></pre>
+<span class="c1"># misc</span>
+<span class="kn">from</span> <span class="nn">gwpy.timeseries</span> <span class="kn">import</span> <span class="n">TimeSeries</span>
+</code></pre></div>
+
 
 <h2 id="viewing-the-data">Viewing the data</h2>
 <p>Bilby has in-built features that allow us to view the data that we'll be using. To do this, we have to set up interferometer objects that contain the data we'll be using. The data in question is made up of a strain dataset which contains the information of the waveform, and a Power Spectral Density (PSD) dataset which approximates the noise. </p>
 <p>We start by defining a directory for bilby to save results, and defining the source we want to analyse, and creating some empty interferometer objects to store the data:</p>
-<pre><code class="python">logger = bilby.core.utils.logger
-outdir = &quot;outdir&quot;
-# gravitational wave source
-label = &quot;GW150914&quot;  
+<div class="codehilite"><pre><span></span><code><span class="n">logger</span> <span class="o">=</span> <span class="n">bilby</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">logger</span>
+<span class="n">outdir</span> <span class="o">=</span> <span class="s2">&quot;outdir&quot;</span>
+<span class="c1"># gravitational wave source</span>
+<span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;GW150914&quot;</span>  
 
-H1 = bilby.gw.detector.get_empty_interferometer(&quot;H1&quot;)
-L1 = bilby.gw.detector.get_empty_interferometer(&quot;L1&quot;)
-</code></pre>
+<span class="n">H1</span> <span class="o">=</span> <span class="n">bilby</span><span class="o">.</span><span class="n">gw</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">get_empty_interferometer</span><span class="p">(</span><span class="s2">&quot;H1&quot;</span><span class="p">)</span>
+<span class="n">L1</span> <span class="o">=</span> <span class="n">bilby</span><span class="o">.</span><span class="n">gw</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">get_empty_interferometer</span><span class="p">(</span><span class="s2">&quot;L1&quot;</span><span class="p">)</span>
+</code></pre></div>
 
-<p>To obtain the data, a time range around the event has to be defined and passed to "gwpy", which will download the data for us.</p>
-<pre><code class="python">event_start_time = 1126259462.4    # event GPS time at which first GW discovered
-post_event = 2                     # time after event
-pre_event = 2                      # time before event
-duration = pre_event + post_event  # total time range containing event
-analysis_begin = event_start_time - pre_event  # GPS time at which to start analysis
-</code></pre>
+
+<p>To obtain the data, a time range around the event has to be defined and passed to <a href="https://gwpy.github.io/">"gwpy"</a>, which will download the data for us from <a href="https://www.gw-openscience.org/eventapi/html/GWTC-1-confident/GW150914/v3/">here</a>.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">event_start_time</span> <span class="o">=</span> <span class="mf">1126259462.4</span>    <span class="c1"># event GPS time at which first GW discovered</span>
+<span class="n">post_event</span> <span class="o">=</span> <span class="mi">2</span>                     <span class="c1"># time after event</span>
+<span class="n">pre_event</span> <span class="o">=</span> <span class="mi">2</span>                      <span class="c1"># time before event</span>
+<span class="n">duration</span> <span class="o">=</span> <span class="n">pre_event</span> <span class="o">+</span> <span class="n">post_event</span>  <span class="c1"># total time range containing event</span>
+<span class="n">analysis_begin</span> <span class="o">=</span> <span class="n">event_start_time</span> <span class="o">-</span> <span class="n">pre_event</span>  <span class="c1"># GPS time at which to start analysis</span>
+</code></pre></div>
+
 
 <p>Using these time settings, we can fetch the data we want to analyse. Once the data is downloaded, we can use in-built plot functions to visualise what our data will look like. The two plots below show the strain data for Hanford and Livingston detectors respectively.</p>
-<pre><code class="python">H1_data = TimeSeries.fetch_open_data(&quot;H1&quot;, analysis_begin, 
-                                     analysis_begin + duration,
-                                     sample_rate=4096, cache=True)
+<div class="codehilite"><pre><span></span><code><span class="n">H1_data</span> <span class="o">=</span> <span class="n">TimeSeries</span><span class="o">.</span><span class="n">fetch_open_data</span><span class="p">(</span><span class="s2">&quot;H1&quot;</span><span class="p">,</span> <span class="n">analysis_begin</span><span class="p">,</span> 
+                                     <span class="n">analysis_begin</span> <span class="o">+</span> <span class="n">duration</span><span class="p">,</span>
+                                     <span class="n">sample_rate</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-L1_data = TimeSeries.fetch_open_data(&quot;L1&quot;, analysis_begin, 
-                                     analysis_begin + duration,
-                                     sample_rate=4096, cache=True)
+<span class="n">L1_data</span> <span class="o">=</span> <span class="n">TimeSeries</span><span class="o">.</span><span class="n">fetch_open_data</span><span class="p">(</span><span class="s2">&quot;L1&quot;</span><span class="p">,</span> <span class="n">analysis_begin</span><span class="p">,</span> 
+                                     <span class="n">analysis_begin</span> <span class="o">+</span> <span class="n">duration</span><span class="p">,</span>
+                                     <span class="n">sample_rate</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-H1_data.plot()
-plt.savefig(&quot;H1_data&quot;)
-L1_data.plot()
-plt.savefig(&quot;L1_data&quot;)
-</code></pre>
+<span class="n">H1_data</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;H1_data&quot;</span><span class="p">)</span>
+<span class="n">L1_data</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;L1_data&quot;</span><span class="p">)</span>
+</code></pre></div>
+
 
 <p><img alt="" src="../H1_analysis.png" /></p>
 <p><img alt="" src="../L1_analysis.png" title="Title" /></p>
 <p>We can also check out the PSD data that we'll be using to estimate noise in the data. Again using gwpy, the data can be obtained as follows: </p>
-<pre><code class="python"># duration typically multiplied by 32 for psd
-psd_duration = duration * 32                
-psd_begin = analysis_start - psd_duration
+<div class="codehilite"><pre><span></span><code><span class="c1"># duration typically multiplied by 32 for psd</span>
+<span class="n">psd_duration</span> <span class="o">=</span> <span class="n">duration</span> <span class="o">*</span> <span class="mi">32</span>                
+<span class="n">psd_begin</span> <span class="o">=</span> <span class="n">analysis_start</span> <span class="o">-</span> <span class="n">psd_duration</span>
 
-# fetch data for psd
-H1psd = TimeSeries.fetch_open_data(
-    &quot;H1&quot;, psd_begin, psd_begin + psd_duration,
-    sample_rate=4096, cache=True)
-L1psd = TimeSeries.fetch_open_data(
-    &quot;L1&quot;, psd_begin, psd_begin + psd_duration,
-    sample_rate=4096, cache=True)
+<span class="c1"># fetch data for psd</span>
+<span class="n">H1psd</span> <span class="o">=</span> <span class="n">TimeSeries</span><span class="o">.</span><span class="n">fetch_open_data</span><span class="p">(</span>
+    <span class="s2">&quot;H1&quot;</span><span class="p">,</span> <span class="n">psd_begin</span><span class="p">,</span> <span class="n">psd_begin</span> <span class="o">+</span> <span class="n">psd_duration</span><span class="p">,</span>
+    <span class="n">sample_rate</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">L1psd</span> <span class="o">=</span> <span class="n">TimeSeries</span><span class="o">.</span><span class="n">fetch_open_data</span><span class="p">(</span>
+    <span class="s2">&quot;L1&quot;</span><span class="p">,</span> <span class="n">psd_begin</span><span class="p">,</span> <span class="n">psd_begin</span> <span class="o">+</span> <span class="n">psd_duration</span><span class="p">,</span>
+    <span class="n">sample_rate</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span> <span class="n">cache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-# set interferometers with psd data
-psd_alpha = 2 * H1.strain_data.roll_off / duration
-H1psd_data = H1psd.psd(fftlength=duration, overlap=0, window=(&quot;tukey&quot;, psd_alpha), method=&quot;median&quot;)
-L1psd_data = L1psd.psd(fftlength=duration, overlap=0, window=(&quot;tukey&quot;, psd_alpha), method=&quot;median&quot;)
-H1.power_spectral_density = bilby.gw.detector.PowerSpectralDensity(
-    frequency_array=H1psd_data.frequencies.value, psd_array=H1psd_data.value)
-L1.power_spectral_density = bilby.gw.detector.PowerSpectralDensity(
-    frequency_array=L1psd_data.frequencies.value, psd_array=L1psd_data.value)
-</code></pre>
+<span class="c1"># set interferometers with psd data</span>
+<span class="n">psd_alpha</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">H1</span><span class="o">.</span><span class="n">strain_data</span><span class="o">.</span><span class="n">roll_off</span> <span class="o">/</span> <span class="n">duration</span>
+<span class="n">H1psd_data</span> <span class="o">=</span> <span class="n">H1psd</span><span class="o">.</span><span class="n">psd</span><span class="p">(</span><span class="n">fftlength</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">overlap</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;tukey&quot;</span><span class="p">,</span> <span class="n">psd_alpha</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">)</span>
+<span class="n">L1psd_data</span> <span class="o">=</span> <span class="n">L1psd</span><span class="o">.</span><span class="n">psd</span><span class="p">(</span><span class="n">fftlength</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">overlap</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;tukey&quot;</span><span class="p">,</span> <span class="n">psd_alpha</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;median&quot;</span><span class="p">)</span>
+<span class="n">H1</span><span class="o">.</span><span class="n">power_spectral_density</span> <span class="o">=</span> <span class="n">bilby</span><span class="o">.</span><span class="n">gw</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">PowerSpectralDensity</span><span class="p">(</span>
+    <span class="n">frequency_array</span><span class="o">=</span><span class="n">H1psd_data</span><span class="o">.</span><span class="n">frequencies</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">psd_array</span><span class="o">=</span><span class="n">H1psd_data</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+<span class="n">L1</span><span class="o">.</span><span class="n">power_spectral_density</span> <span class="o">=</span> <span class="n">bilby</span><span class="o">.</span><span class="n">gw</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">PowerSpectralDensity</span><span class="p">(</span>
+    <span class="n">frequency_array</span><span class="o">=</span><span class="n">L1psd_data</span><span class="o">.</span><span class="n">frequencies</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">psd_array</span><span class="o">=</span><span class="n">L1psd_data</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+</code></pre></div>
+
 
 <p>Before plotting the PSD, its useful to set an upper frequency limit as higher frequencies aren't so useful. After limiting the frequency, we can plot the PSD data:</p>
-<pre><code class="python">H1.maximum_frequency = 1024
-L1.maximum_frequency = 1024
+<div class="codehilite"><pre><span></span><code><span class="n">H1</span><span class="o">.</span><span class="n">maximum_frequency</span> <span class="o">=</span> <span class="mi">1024</span>
+<span class="n">L1</span><span class="o">.</span><span class="n">maximum_frequency</span> <span class="o">=</span> <span class="mi">1024</span>
 
-plt.figure()
-idxs = H1.strain_data.frequency_mask
-a,b = list(H1.strain_data.frequency_array[idxs]),list(np.abs(H1.strain_data.frequency_domain_strain[idxs]))
-c,d = list(H1.power_spectral_density.frequency_array[idxs]),list(H1.power_spectral_density.asd_array[idxs])
-plt.plot(a,b)
-plt.plot(c,d)
-plt.yscale('log')
-plt.xscale('log')
-plt.xlabel(&quot;Frequency [Hz]&quot;)
-plt.ylabel(&quot;Strain [strain/$\sqrt{Hz}$]&quot;)
-plt.savefig(&quot;strainvfreq&quot;)
-</code></pre>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">idxs</span> <span class="o">=</span> <span class="n">H1</span><span class="o">.</span><span class="n">strain_data</span><span class="o">.</span><span class="n">frequency_mask</span>
+<span class="n">a</span><span class="p">,</span><span class="n">b</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">H1</span><span class="o">.</span><span class="n">strain_data</span><span class="o">.</span><span class="n">frequency_array</span><span class="p">[</span><span class="n">idxs</span><span class="p">]),</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">H1</span><span class="o">.</span><span class="n">strain_data</span><span class="o">.</span><span class="n">frequency_domain_strain</span><span class="p">[</span><span class="n">idxs</span><span class="p">]))</span>
+<span class="n">c</span><span class="p">,</span><span class="n">d</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">H1</span><span class="o">.</span><span class="n">power_spectral_density</span><span class="o">.</span><span class="n">frequency_array</span><span class="p">[</span><span class="n">idxs</span><span class="p">]),</span><span class="nb">list</span><span class="p">(</span><span class="n">H1</span><span class="o">.</span><span class="n">power_spectral_density</span><span class="o">.</span><span class="n">asd_array</span><span class="p">[</span><span class="n">idxs</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Frequency [Hz]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Strain [strain/$\sqrt</span><span class="si">{Hz}</span><span class="s2">$]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;strainvfreq&quot;</span><span class="p">)</span>
+</code></pre></div>
+
 
 <p><img alt="" src="../strainvfreq.png" /></p>
 <h2 id="setting-the-priors">Setting the priors</h2>
 <p>The model describing the black hole merger depends on 15 parameters. Running a sampler with this many parameters can take half a day to run. To save some time, I'll fix all but 4 parameters: the chirp mass, the mass ratio, the phase, and the geocent time.</p>
 <p>The chirp mass and mass ratio are two parameters wich depend on the mass of the two black holes that caused the gravitational waves. When these two parameters are derived, we can use them to calculate the masses of the black holes. Since we don't know much about the system parameters that we're allowing to vary, uniform priors are most appropriate:</p>
-<pre><code class="python">prior = bilby.core.prior.PriorDict()
-# uniform priors for variable parameters
-prior['chirp_mass'] = Uniform(name='chirp_mass', minimum=30.0,maximum=32.5)
-prior['mass_ratio'] = Uniform(name='mass_ratio', minimum=0.5, maximum=1)
-prior['phase'] = Uniform(name=&quot;phase&quot;, minimum=0, maximum=2*np.pi)
-prior['geocent_time'] = Uniform(name=&quot;geocent_time&quot;, minimum=event_start_time-0.1,
-                                maximum=event_start_time+0.1)
-# fixed values for all other parameters
-prior['a_1'] =  0.0     
-prior['a_2'] =  0.0
-prior['tilt_1'] =  0.0
-prior['tilt_2'] =  0.0
-prior['phi_12'] =  0.0
-prior['phi_jl'] =  0.0
-prior['dec'] =  -1.2232
-prior['ra'] =  2.19432
-prior['theta_jn'] =  1.89694
-prior['psi'] =  0.532268
-prior['luminosity_distance'] = 412.066
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="n">prior</span> <span class="o">=</span> <span class="n">bilby</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">PriorDict</span><span class="p">()</span>
+<span class="c1"># uniform priors for variable parameters</span>
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;chirp_mass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Uniform</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;chirp_mass&#39;</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span><span class="n">maximum</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)</span>
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;mass_ratio&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Uniform</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;mass_ratio&#39;</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;phase&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Uniform</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;phase&quot;</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;geocent_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Uniform</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;geocent_time&quot;</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="n">event_start_time</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span>
+                                <span class="n">maximum</span><span class="o">=</span><span class="n">event_start_time</span><span class="o">+</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="c1"># fixed values for all other parameters</span>
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;a_1&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="mf">0.0</span>     
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;a_2&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="mf">0.0</span>
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;tilt_1&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="mf">0.0</span>
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;tilt_2&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="mf">0.0</span>
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;phi_12&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="mf">0.0</span>
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;phi_jl&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="mf">0.0</span>
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="o">-</span><span class="mf">1.2232</span>
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="mf">2.19432</span>
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;theta_jn&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="mf">1.89694</span>
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;psi&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="mf">0.532268</span>
+<span class="n">prior</span><span class="p">[</span><span class="s1">&#39;luminosity_distance&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">412.066</span>
+</code></pre></div>
+
 
 <h2 id="setting-the-likelihood">Setting the likelihood</h2>
 <p>Bilby comes with in-built likelihood functions. To use them, first a waveform has to be generated using the properties of the data, like duration and sampling frequency. We also need to combine the interferometers into a list, so that both will be used at once when it comes to sampling.</p>
-<pre><code class="python">interferometers = [H1, L1]
+<div class="codehilite"><pre><span></span><code><span class="n">interferometers</span> <span class="o">=</span> <span class="p">[</span><span class="n">H1</span><span class="p">,</span> <span class="n">L1</span><span class="p">]</span>
 
-waveform_arguments = dict(waveform_approximant='IMRPhenomPv2',
-                          reference_frequency=50., minimum_frequency=20.)
+<span class="n">waveform_arguments</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">waveform_approximant</span><span class="o">=</span><span class="s1">&#39;IMRPhenomPv2&#39;</span><span class="p">,</span>
+                          <span class="n">reference_frequency</span><span class="o">=</span><span class="mf">50.</span><span class="p">,</span> <span class="n">minimum_frequency</span><span class="o">=</span><span class="mf">20.</span><span class="p">)</span>
 
-# set sampling frequency of data
-sampling_frequency = 2048.
+<span class="c1"># set sampling frequency of data</span>
+<span class="n">sampling_frequency</span> <span class="o">=</span> <span class="mf">2048.</span>
 
-# generate waveforms
-waveform_generator = bilby.gw.WaveformGenerator(
-    duration=duration, sampling_frequency=sampling_frequency,
-    frequency_domain_source_model=bilby.gw.source.lal_binary_black_hole,
-    parameter_conversion=bilby.gw.conversion.convert_to_lal_binary_black_hole_parameters,
-    waveform_arguments=waveform_arguments)
+<span class="c1"># generate waveforms</span>
+<span class="n">waveform_generator</span> <span class="o">=</span> <span class="n">bilby</span><span class="o">.</span><span class="n">gw</span><span class="o">.</span><span class="n">WaveformGenerator</span><span class="p">(</span>
+    <span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">sampling_frequency</span><span class="o">=</span><span class="n">sampling_frequency</span><span class="p">,</span>
+    <span class="n">frequency_domain_source_model</span><span class="o">=</span><span class="n">bilby</span><span class="o">.</span><span class="n">gw</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">lal_binary_black_hole</span><span class="p">,</span>
+    <span class="n">parameter_conversion</span><span class="o">=</span><span class="n">bilby</span><span class="o">.</span><span class="n">gw</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">convert_to_lal_binary_black_hole_parameters</span><span class="p">,</span>
+    <span class="n">waveform_arguments</span><span class="o">=</span><span class="n">waveform_arguments</span><span class="p">)</span>
 
-likelihood = bilby.gw.GravitationalWaveTransient(
-    interferometers=interferometers, waveform_generator=waveform_generator)
-</code></pre>
+<span class="n">likelihood</span> <span class="o">=</span> <span class="n">bilby</span><span class="o">.</span><span class="n">gw</span><span class="o">.</span><span class="n">GravitationalWaveTransient</span><span class="p">(</span>
+    <span class="n">interferometers</span><span class="o">=</span><span class="n">interferometers</span><span class="p">,</span> <span class="n">waveform_generator</span><span class="o">=</span><span class="n">waveform_generator</span><span class="p">)</span>
+</code></pre></div>
+
 
 <h2 id="sampling-the-data">Sampling the data</h2>
 <p>Now that the likelihood and prior functions are set up, the sampler can now be implemented to derive some of the properties of the binary black hole system. This process is intensive, and takes a long time (1 hour 15 minutes) to run on my machine. </p>
 <p>The sampler I chose to use is "dynesty", which uses nested sampling to estimate the model parameters. For a more in-depth work through of dynesty, you can read through an example of <a href="https://mo-ghani.github.io/Sampling/PyMC3_GRS/PyMC3_GRS/#modelling-with-dynesty">gamma-ray spectroscopy using dynesty</a> on this site.</p>
 <p>Using bilby, we can run the sampler. First, we have to set the number of live points, and the stopping criterion as hyperparameters. For neatness, I've removed the log that bilby outputs whilst running. Instead I'll just show the summary that is outputted by bilby once the sampler has finished iterating. This summary contains information on the log evidence, and the Bayes factor of the model.</p>
-<pre><code class="python">nlive = 1000          # live points
-stop = 0.1            # stopping criterion
-method = &quot;unif&quot;       # method of sampling
-sampler = &quot;dynesty&quot;   # sampler to use
+<div class="codehilite"><pre><span></span><code><span class="n">nlive</span> <span class="o">=</span> <span class="mi">1000</span>          <span class="c1"># live points</span>
+<span class="n">stop</span> <span class="o">=</span> <span class="mf">0.1</span>            <span class="c1"># stopping criterion</span>
+<span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;unif&quot;</span>       <span class="c1"># method of sampling</span>
+<span class="n">sampler</span> <span class="o">=</span> <span class="s2">&quot;dynesty&quot;</span>   <span class="c1"># sampler to use</span>
 
-result = bilby.run_sampler(
-    likelihood, prior, sampler=sampler, outdir=outdir, label=label,
-    conversion_function=bilby.gw.conversion.generate_all_bbh_parameters,
-    sample=method, nlive=nlive, dlogz=stop) 
-</code></pre>
+<span class="n">result</span> <span class="o">=</span> <span class="n">bilby</span><span class="o">.</span><span class="n">run_sampler</span><span class="p">(</span>
+    <span class="n">likelihood</span><span class="p">,</span> <span class="n">prior</span><span class="p">,</span> <span class="n">sampler</span><span class="o">=</span><span class="n">sampler</span><span class="p">,</span> <span class="n">outdir</span><span class="o">=</span><span class="n">outdir</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">,</span>
+    <span class="n">conversion_function</span><span class="o">=</span><span class="n">bilby</span><span class="o">.</span><span class="n">gw</span><span class="o">.</span><span class="n">conversion</span><span class="o">.</span><span class="n">generate_all_bbh_parameters</span><span class="p">,</span>
+    <span class="n">sample</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">nlive</span><span class="o">=</span><span class="n">nlive</span><span class="p">,</span> <span class="n">dlogz</span><span class="o">=</span><span class="n">stop</span><span class="p">)</span> 
+</code></pre></div>
 
-<pre><code class="python">16:23 bilby INFO    : Sampling time: 1:12:43.878674
-16:23 bilby INFO    : Summary of results:
-                      nsamples: 23105
-                      ln_noise_evidence: -8112.144
-                      ln_evidence: -8729.851 +/-  0.188
-                      ln_bayes_factor: -617.707 +/-  0.188
-</code></pre>
+
+<div class="codehilite"><pre><span></span><code><span class="mi">16</span><span class="p">:</span><span class="mi">23</span> <span class="n">bilby</span> <span class="n">INFO</span>    <span class="p">:</span> <span class="n">Sampling</span> <span class="n">time</span><span class="p">:</span> <span class="mi">1</span><span class="p">:</span><span class="mi">12</span><span class="p">:</span><span class="mf">43.878674</span>
+<span class="mi">16</span><span class="p">:</span><span class="mi">23</span> <span class="n">bilby</span> <span class="n">INFO</span>    <span class="p">:</span> <span class="n">Summary</span> <span class="n">of</span> <span class="n">results</span><span class="p">:</span>
+                      <span class="n">nsamples</span><span class="p">:</span> <span class="mi">23105</span>
+                      <span class="n">ln_noise_evidence</span><span class="p">:</span> <span class="o">-</span><span class="mf">8112.144</span>
+                      <span class="n">ln_evidence</span><span class="p">:</span> <span class="o">-</span><span class="mf">8729.851</span> <span class="o">+/-</span>  <span class="mf">0.188</span>
+                      <span class="n">ln_bayes_factor</span><span class="p">:</span> <span class="o">-</span><span class="mf">617.707</span> <span class="o">+/-</span>  <span class="mf">0.188</span>
+</code></pre></div>
+
 
 <h2 id="plotting-the-posterior">Plotting the posterior</h2>
 <p>Eventually, the sampling will be complete. Bilby creates a few useful plots of the posteriors, along with saving samples of the posteriors for us to further analyse. Lets start by plotting a corner plot, which nicely shows the posteriors for all the parameters, as well as contour plots showing how one parameter varies with any other.</p>
-<pre><code class="python">result.plot_corner()
-</code></pre>
+<div class="codehilite"><pre><span></span><code><span class="n">result</span><span class="o">.</span><span class="n">plot_corner</span><span class="p">()</span>
+</code></pre></div>
+
 
 <p><img alt="" src="../GWSampleDemo_corner.png" /></p>
 <p>We can also view the traces for each parameter, which bilby will save by default under the directory labeled as "outdir":</p>
 <p><img alt="" src="../GWSampleDemo_checkpoint_trace.png" /></p>
 <h2 id="estimating-the-black-hole-masses">Estimating the black hole masses</h2>
 <p>To estimate the black hole masses, we need to obtain the samples describing the posteriors of the data. This can be done quite easily as bilby returns the posterior samples. Alternatively, bilby also saves posterior samples to a text file, which can be loaded using pandas. I'll use the latter method, so I don't have to re-run the sampler.</p>
-<pre><code class="python"># load posterior samples into a pandas dataframe directly
-# posts = result.posterior
+<div class="codehilite"><pre><span></span><code><span class="c1"># load posterior samples into a pandas dataframe directly</span>
+<span class="c1"># posts = result.posterior</span>
 
-# alternatively, load posts using samples saved by bilby using pandas
-posts = pd.read_csv(&quot;GWSampleDemo_samples.dat&quot;, sep = &quot; &quot;)
-print(posts.head())
+<span class="c1"># alternatively, load posts using samples saved by bilby using pandas</span>
+<span class="n">posts</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;GWSampleDemo_samples.dat&quot;</span><span class="p">,</span> <span class="n">sep</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
 
-chirp_mass_samps = list(posts[&quot;chirp_mass&quot;])
-mass_ratio_samps = list(posts[&quot;mass_ratio&quot;])
-geocent_time_samps = list(posts[&quot;geocent_time&quot;])
-</code></pre>
+<span class="n">chirp_mass_samps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">posts</span><span class="p">[</span><span class="s2">&quot;chirp_mass&quot;</span><span class="p">])</span>
+<span class="n">mass_ratio_samps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">posts</span><span class="p">[</span><span class="s2">&quot;mass_ratio&quot;</span><span class="p">])</span>
+<span class="n">geocent_time_samps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">posts</span><span class="p">[</span><span class="s2">&quot;geocent_time&quot;</span><span class="p">])</span>
+</code></pre></div>
 
-<pre><code>   chirp_mass  mass_ratio     phase  geocent_time
-0   30.067428    0.519342  5.669147  1.126259e+09
-1   30.056653    0.510167  5.643203  1.126259e+09
-2   30.000122    0.520294  5.637245  1.126259e+09
-3   30.072352    0.515579  2.668268  1.126259e+09
-4   30.061333    0.519504  5.839349  1.126259e+09
-</code></pre>
+
 <p>Next, we can take the posterior samples and find their mean values:</p>
-<pre><code class="python">chirp_mass, chirp_mass_err = np.mean(chirp_mass_samps), np.std(chirp_mass_samps)
-mass_ratio, mass_ratio_err = np.mean(mass_ratio_samps), np.std(mass_ratio_samps)
-geocent_time, geocent_time_err = np.mean(geocent_time_samps), np.std(geocent_time_samps)
+<div class="codehilite"><pre><span></span><code><span class="n">chirp_mass</span><span class="p">,</span> <span class="n">chirp_mass_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chirp_mass_samps</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">chirp_mass_samps</span><span class="p">)</span>
+<span class="n">mass_ratio</span><span class="p">,</span> <span class="n">mass_ratio_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mass_ratio_samps</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">mass_ratio_samps</span><span class="p">)</span>
+<span class="n">geocent_time</span><span class="p">,</span> <span class="n">geocent_time_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">geocent_time_samps</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">geocent_time_samps</span><span class="p">)</span>
 
-print(&quot;Parameters describing the GW150914 signal: \n \n&quot; + 
-      &quot;  chirp mass = {}   \u00B1 {} \n&quot;.format(chirp_mass, chirp_mass_err) + 
-      &quot;  mass ratio = {} \u00B1 {} \n \n&quot;.format(mass_ratio, mass_ratio_err) + 
-      &quot;geocent time = {} \u00B1 {} \n&quot;.format(geocent_time, geocent_time_err) + 
-      &quot;True geocent time = 1126259462.4&quot;)
-</code></pre>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Parameters describing the GW150914 signal: </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> 
+      <span class="s2">&quot;  chirp mass = </span><span class="si">{}</span><span class="s2">   </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">chirp_mass</span><span class="p">,</span> <span class="n">chirp_mass_err</span><span class="p">)</span> <span class="o">+</span> 
+      <span class="s2">&quot;  mass ratio = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">mass_ratio</span><span class="p">,</span> <span class="n">mass_ratio_err</span><span class="p">)</span> <span class="o">+</span> 
+      <span class="s2">&quot;geocent time = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">geocent_time</span><span class="p">,</span> <span class="n">geocent_time_err</span><span class="p">)</span> <span class="o">+</span> 
+      <span class="s2">&quot;True geocent time = 1126259462.4&quot;</span><span class="p">)</span>
+</code></pre></div>
 
-<pre><code>Parameters describing the GW150914 signal:
 
-  chirp mass = 30.0257687994421   ± 0.026061576881674566 
-  mass ratio = 0.5025567739492637 ± 0.002563518022159185
+<div class="codehilite"><pre><span></span><code><span class="k">Parameters</span> <span class="n">describing</span> <span class="n">the</span> <span class="n">GW150914</span> <span class="n">signal</span><span class="p">:</span>
 
-geocent time = 1126259462.4044259 ± 0.0001356963097756189 
-True geocent time = 1126259462.4
-</code></pre>
+  <span class="n">chirp</span> <span class="n">mass</span> <span class="o">=</span> <span class="mi">28</span><span class="p">.</span><span class="mi">432363440275488</span>   <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">049549938503053295</span> 
+  <span class="n">mass</span> <span class="n">ratio</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7520294836733314</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">06062816795824152</span>
+
+<span class="n">geocent</span> <span class="k">time</span> <span class="o">=</span> <span class="mi">1126259462</span><span class="p">.</span><span class="mi">4128802</span> <span class="err">±</span> <span class="mi">7</span><span class="p">.</span><span class="mi">509222877728134</span><span class="n">e</span><span class="o">-</span><span class="mi">05</span> 
+<span class="k">True</span> <span class="n">geocent</span> <span class="k">time</span> <span class="o">=</span> <span class="mi">1126259462</span><span class="p">.</span><span class="mi">4</span>
+</code></pre></div>
+
+
 <p>The time of the event lines up quite nicely. Next, we can attempt to calculate the mass of each black hole, which is fairly straight forward now that we know the chirp mass and mass ratio. The following function will return the masses of the black holes, given the chirp mass, mass ratio, and their errors.</p>
-<pre><code class="python">def bbhMass(chirp,chirperr,ratio,ratioerr):
-    &quot;&quot;&quot;
-    Function that calculates black hole masses with errors
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">bbhMass</span><span class="p">(</span><span class="n">chirp</span><span class="p">,</span><span class="n">chirperr</span><span class="p">,</span><span class="n">ratio</span><span class="p">,</span><span class="n">ratioerr</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Function that calculates black hole masses with errors</span>
 
-    m1,m2 = larger black hole mass, smaller black hole mass 
-    chirp = (m1*m2)**(3/5) / (m1+m2)**(1/5)
-    ratio = m2/m1
-    &quot;&quot;&quot;
+<span class="sd">    m1,m2 = larger black hole mass, smaller black hole mass </span>
+<span class="sd">    chirp = (m1*m2)**(3/5) / (m1+m2)**(1/5)</span>
+<span class="sd">    ratio = m2/m1</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-    # use chirp mass and ratio to find primary black hole mass
-    m1 = chirp / (ratio**(3/5) * (1/(1+ratio))**(1/5))
-    m1err = (chirp + chirperr) / ((ratio-ratioerr)**(3/5) *
-                                  (1/(1+(ratio+ratioerr))**(1/5))) - m1
+    <span class="c1"># use chirp mass and ratio to find primary black hole mass</span>
+    <span class="n">m1</span> <span class="o">=</span> <span class="n">chirp</span> <span class="o">/</span> <span class="p">(</span><span class="n">ratio</span><span class="o">**</span><span class="p">(</span><span class="mi">3</span><span class="o">/</span><span class="mi">5</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">ratio</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">5</span><span class="p">))</span>
+    <span class="n">m1err</span> <span class="o">=</span> <span class="p">(</span><span class="n">chirp</span> <span class="o">+</span> <span class="n">chirperr</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="n">ratio</span><span class="o">-</span><span class="n">ratioerr</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mi">3</span><span class="o">/</span><span class="mi">5</span><span class="p">)</span> <span class="o">*</span>
+                                  <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="n">ratio</span><span class="o">+</span><span class="n">ratioerr</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">5</span><span class="p">)))</span> <span class="o">-</span> <span class="n">m1</span>
 
-    # use primary black hole mass and ratio to find secondary black hole mass
-    m2 = m1*ratio
-    m2err = (m1+m1err)*(ratio+ratioerr) - m2
+    <span class="c1"># use primary black hole mass and ratio to find secondary black hole mass</span>
+    <span class="n">m2</span> <span class="o">=</span> <span class="n">m1</span><span class="o">*</span><span class="n">ratio</span>
+    <span class="n">m2err</span> <span class="o">=</span> <span class="p">(</span><span class="n">m1</span><span class="o">+</span><span class="n">m1err</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">ratio</span><span class="o">+</span><span class="n">ratioerr</span><span class="p">)</span> <span class="o">-</span> <span class="n">m2</span>
 
-    return (m1,m1err),(m2,m2err)
+    <span class="k">return</span> <span class="p">(</span><span class="n">m1</span><span class="p">,</span><span class="n">m1err</span><span class="p">),(</span><span class="n">m2</span><span class="p">,</span><span class="n">m2err</span><span class="p">)</span>
 
-(m1,m1err), (m2,m2err) = bbhMass(chirp_mass,chirp_mass_err,
-                                 mass_ratio,mass_ratio_err)
+<span class="p">(</span><span class="n">m1</span><span class="p">,</span><span class="n">m1err</span><span class="p">),</span> <span class="p">(</span><span class="n">m2</span><span class="p">,</span><span class="n">m2err</span><span class="p">)</span> <span class="o">=</span> <span class="n">bbhMass</span><span class="p">(</span><span class="n">chirp_mass</span><span class="p">,</span><span class="n">chirp_mass_err</span><span class="p">,</span>
+                                 <span class="n">mass_ratio</span><span class="p">,</span><span class="n">mass_ratio_err</span><span class="p">)</span>
 
-print(&quot;Black hole masses (in solar masses): \n \n&quot; + 
-      &quot;   largest black hole = {} \u00B1 {} \n&quot;.format(m1, m1err) + 
-      &quot;  smallest black hole = {} \u00B1 {} \n \n&quot;.format(m2, m2err) +
-      &quot;True black hole masses (in solar masses): \n \n&quot; + 
-      &quot;   largest black hole = {}\n&quot;.format(36.2) + 
-      &quot;  smallest black hole = {}&quot;.format(29.1))
-</code></pre>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Black hole masses (in solar masses): </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> 
+      <span class="s2">&quot;   largest black hole = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m1err</span><span class="p">)</span> <span class="o">+</span> 
+      <span class="s2">&quot;  smallest black hole = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m2</span><span class="p">,</span> <span class="n">m2err</span><span class="p">)</span> <span class="o">+</span>
+      <span class="s2">&quot;True black hole masses (in solar masses): </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> 
+      <span class="s2">&quot;   largest black hole = </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">36.2</span><span class="p">)</span> <span class="o">+</span> 
+      <span class="s2">&quot;  smallest black hole = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">29.1</span><span class="p">))</span>
+</code></pre></div>
 
-<pre><code>Black hole masses (in solar masses):
 
-   largest black hole = 49.22086431380112 ± 0.21096506288449035 
-  smallest black hole = 24.73627878053833 ± 0.23274130689466332
+<div class="codehilite"><pre><span></span><code><span class="n">Black</span> <span class="n">hole</span> <span class="n">masses</span> <span class="p">(</span><span class="k">in</span> <span class="n">solar</span> <span class="n">masses</span><span class="p">):</span>
 
-True black hole masses (in solar masses):
+   <span class="n">largest</span> <span class="n">black</span> <span class="n">hole</span> <span class="o">=</span> <span class="mi">37</span><span class="p">.</span><span class="mi">73812541182669</span> <span class="err">±</span> <span class="mi">2</span><span class="p">.</span><span class="mi">2926680096744576</span> 
+  <span class="n">smallest</span> <span class="n">black</span> <span class="n">hole</span> <span class="o">=</span> <span class="mi">28</span><span class="p">.</span><span class="mi">38018296825545</span> <span class="err">±</span> <span class="mi">4</span><span class="p">.</span><span class="mi">151147606610291</span>
 
-   largest black hole = 36.2
-  smallest black hole = 29.1
-</code></pre>
-<p>We can see our estimations aren't so good here. This is because I simplified the model earlier, by fixing 11 of the 15 parameters. Given this, and the fact that we only have a percentage error of 15% on the smaller black hole, the deviations are acceptable.</p>
+<span class="k">True</span> <span class="n">black</span> <span class="n">hole</span> <span class="n">masses</span> <span class="p">(</span><span class="k">in</span> <span class="n">solar</span> <span class="n">masses</span><span class="p">):</span>
+
+   <span class="n">largest</span> <span class="n">black</span> <span class="n">hole</span> <span class="o">=</span> <span class="mi">36</span><span class="p">.</span><span class="mi">2</span>
+  <span class="n">smallest</span> <span class="n">black</span> <span class="n">hole</span> <span class="o">=</span> <span class="mi">29</span><span class="p">.</span><span class="mi">1</span>
+</code></pre></div>
+
+
+<p>Our estimates here are within one standard deviation error of the accpeted black hole masses. This is a good result given that we only used 4 of 15 parameters. However allowing the other 11 parameters to vary would certainly reduce the error on our estimate, at the cost of 15 hours processing time.</p>
                 
               
               
@@ -671,6 +693,20 @@ True black hole masses (in solar masses):
           </a>
         
         
+          <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Particle Identification in Proton-Proton Collisions with PyStan
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
+        
       </nav>
     </div>
   
@@ -702,6 +738,8 @@ True black hole masses (in solar masses):
           }, typeof search !== "undefined" && search)
         })
       </script>
+      
+        <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML"></script>
       
     
   </body>
