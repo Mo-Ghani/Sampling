@@ -355,6 +355,18 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../TheOnlineMCMC/TheOnlineMCMC/" title="Zero Installation Sampling with The Online MCMC" class="md-nav__link">
+      Zero Installation Sampling with The Online MCMC
+    </a>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -532,10 +544,9 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">emcee version: 3.0.2</span>
-<span class="err">UltraNest version: 2.2.2</span>
+<div class="highlight"><pre><span></span><code>emcee version: 3.0.2
+UltraNest version: 2.2.2
 </code></pre></div>
-
 
 <h2 id="viewing-the-data">Viewing the data</h2>
 <p>Light curve models can vary from simple square shaped transits, to extremely complicated transits involving limb-darkening and other effects. To decide which model is most appropriate, we need to first see the data we will be using.</p>
@@ -811,10 +822,9 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">time taken to sample a trapezium transit model with emcee: 22.782975673675537 seconds</span>
-<span class="err">time taken to sample a square transit model with emcee: 19.97200083732605 seconds</span>
+<div class="highlight"><pre><span></span><code>time taken to sample a trapezium transit model with emcee: 22.782975673675537 seconds
+time taken to sample a square transit model with emcee: 19.97200083732605 seconds
 </code></pre></div>
-
 
 <p>The burn-in points can be removed before collecting the chains as follows:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">samples_trapez</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">chain</span><span class="p">[:,</span> <span class="n">Nburn</span><span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">ndims</span><span class="p">))</span>
@@ -857,16 +867,15 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="k">Parameters</span> <span class="n">describing</span> <span class="n">a</span> <span class="n">trapezium</span> <span class="n">shaped</span> <span class="n">transit</span> <span class="n">model</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code>Parameters describing a trapezium shaped transit model:
 
-       <span class="n">unobstructed</span> <span class="n">flux</span> <span class="o">=</span> <span class="mi">541508</span><span class="p">.</span><span class="mi">1852844431</span> <span class="err">±</span> <span class="mi">36</span><span class="p">.</span><span class="mi">9344420907229</span> <span class="n">e</span><span class="o">-/</span><span class="n">s</span> 
-<span class="n">fractional</span> <span class="n">flux</span> <span class="n">decrease</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">00024461083692660444</span> <span class="err">±</span> <span class="mi">3</span><span class="p">.</span><span class="mi">7035342916871527</span><span class="n">e</span><span class="o">-</span><span class="mi">06</span> 
-                  <span class="k">period</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8370801841354675</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">008002462715920132</span> <span class="n">days</span> 
-      <span class="n">total</span> <span class="n">transit</span> <span class="k">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">14446313515960185</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">010012520942390852</span> <span class="n">days</span> 
-       <span class="n">flat</span> <span class="n">transit</span> <span class="k">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">14221868661500203</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">010486564635702324</span> <span class="n">days</span> 
-                  <span class="k">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1501856219851231</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">000792190343252601</span> <span class="n">days</span>
+       unobstructed flux = 541508.1852844431 ± 36.9344420907229 e-/s 
+fractional flux decrease = 0.00024461083692660444 ± 3.7035342916871527e-06 
+                  period = 0.8370801841354675 ± 0.008002462715920132 days 
+      total transit time = 0.14446313515960185 ± 0.010012520942390852 days 
+       flat transit time = 0.14221868661500203 ± 0.010486564635702324 days 
+                  offset = 0.1501856219851231 ± 0.000792190343252601 days
 </code></pre></div>
-
 
 <p>The same can be done for the square transit model:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">f_square</span><span class="p">,</span> <span class="n">ferr_square</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_square</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
@@ -886,15 +895,14 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="k">Parameters</span> <span class="n">describing</span> <span class="n">a</span> <span class="n">square</span> <span class="n">shaped</span> <span class="n">transit</span> <span class="n">model</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code>Parameters describing a square shaped transit model:
 
-       <span class="n">unobstructed</span> <span class="n">flux</span> <span class="o">=</span> <span class="mi">541509</span><span class="p">.</span><span class="mi">5710077788</span> <span class="err">±</span> <span class="mi">38</span><span class="p">.</span><span class="mi">29278598182498</span> <span class="n">e</span><span class="o">-/</span><span class="n">s</span> 
-<span class="n">fractional</span> <span class="n">flux</span> <span class="n">decrease</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">00024373683466889182</span> <span class="err">±</span> <span class="mi">3</span><span class="p">.</span><span class="mi">7647641082140636</span><span class="n">e</span><span class="o">-</span><span class="mi">06</span> 
-                  <span class="k">period</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8372673158389097</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">008000578546054328</span> <span class="n">days</span> 
-      <span class="n">total</span> <span class="n">transit</span> <span class="k">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">14409081829513087</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">010074301386211069</span> <span class="n">days</span> 
-                  <span class="k">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">1501740077644908</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">00081315394152917</span> <span class="n">days</span>
+       unobstructed flux = 541509.5710077788 ± 38.29278598182498 e-/s 
+fractional flux decrease = 0.00024373683466889182 ± 3.7647641082140636e-06 
+                  period = 0.8372673158389097 ± 0.008000578546054328 days 
+      total transit time = 0.14409081829513087 ± 0.010074301386211069 days 
+                  offset = 0.1501740077644908 ± 0.00081315394152917 days
 </code></pre></div>
-
 
 <p>The period in both cases is around 20 hours. This is unique to one body in the Kepler-10 system: Our model describes the transits of Kepler-10b.</p>
 <h3 id="plotting-the-posterior">Plotting the posterior</h3>
@@ -987,11 +995,10 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">Planet to star radius ratio (trapezium transit model): 0.01564003954363941 ± 0.00023679826904231388</span>
-<span class="err">Planet to star radius ratio (square transit model): 0.015612073362269722 ± 0.00024114440285122598</span>
-<span class="err">Accepted planet to star radius ratio: 0.0127</span>
+<div class="highlight"><pre><span></span><code>Planet to star radius ratio (trapezium transit model): 0.01564003954363941 ± 0.00023679826904231388
+Planet to star radius ratio (square transit model): 0.015612073362269722 ± 0.00024114440285122598
+Accepted planet to star radius ratio: 0.0127
 </code></pre></div>
-
 
 <p>Both models are in close agreement with each other, and are quite close to the accepted value of the planet to star radius ratio (to within the same order of magnitude). We only used a handful of transits, and under one month of data, so the difference between predicted and accepted ratios here are acceptable. Sampling with the entire dataset instead of the shortened data I used does not improve this estimate.</p>
 <p>Next, we can attempt to find incination angle "I", usually defined as the angle between the plane of a celestial body's orbit and the plane that is normal to the line of sight from Earth. This isn't quite possible for the square model, due to the total transit and flat transit times being equal. To account for this, I'll instead say the flat transit time is 99% of the total transit time, just to keep everything finite.</p>
@@ -1037,11 +1044,10 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">Normalised semi-major axis (trapezium transit model): 3.11343439016216 ± 0.24897493968215692</span>
-<span class="err">Normalised semi-major axis (square transit model): 3.38730776154764 ± 0.11671862724332449</span>
-<span class="err">Accepted normalised semi-major axis: 3.4</span>
+<div class="highlight"><pre><span></span><code>Normalised semi-major axis (trapezium transit model): 3.11343439016216 ± 0.24897493968215692
+Normalised semi-major axis (square transit model): 3.38730776154764 ± 0.11671862724332449
+Accepted normalised semi-major axis: 3.4
 </code></pre></div>
-
 
 <p>The ratio of semi-minor axis to normalised semi-major axis gives the cosine of the inclination angle of Kepler-10b. Therefore, the predictions of the inclination from both models are as follows:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">I_trap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">b_trap</span><span class="o">/</span><span class="n">aRs_trap</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">180</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
@@ -1057,11 +1063,10 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">Inclination angle (trapezium transit model): 81.68965145311803 ± 0.9307232291459115 degrees</span>
-<span class="err">Inclination angle (square transit model): 83.21823835267094 ± 0.5963780613143967 degrees</span>
-<span class="err">Accepted inclination angle: 84.4 degrees</span>
+<div class="highlight"><pre><span></span><code>Inclination angle (trapezium transit model): 81.68965145311803 ± 0.9307232291459115 degrees
+Inclination angle (square transit model): 83.21823835267094 ± 0.5963780613143967 degrees
+Accepted inclination angle: 84.4 degrees
 </code></pre></div>
-
 
 <p>An inclination of 90 degrees means that the planet orbits parallel to the line of sight from Earth. Again, both models make a decent attempt estimating the inclination, however the square transit shape is a little more accurate, and has a smaller uncertainty. This might suggest the square transit model might actually be a little better for this data.</p>
 <p>Finally, we can attempt to predict the density of the star, Kepler-10. This makes the assumption that the radius of the star is much bigger than the radius of the planet. Since we measured the ratio of planet to star radii to be around 0.015, this assumption is pretty reasonable.</p>
@@ -1093,11 +1098,10 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">Star density (trapezium transit model): 964.774196469593 ± 100.61863106968042 kg/m³</span>
-<span class="err">Star density (square transit model): 1048.78853195487 ± 79.23816897368705 kg/m³</span>
-<span class="err">True star density: 1070 kg/m³</span>
+<div class="highlight"><pre><span></span><code>Star density (trapezium transit model): 964.774196469593 ± 100.61863106968042 kg/m³
+Star density (square transit model): 1048.78853195487 ± 79.23816897368705 kg/m³
+True star density: 1070 kg/m³
 </code></pre></div>
-
 
 <p>This shows that not only does a square transit shape predict the density of the star remarkably well, it also has a slightly lower fractional uncertainty on it's estimate compared to the trapezium shaped transit. A reason for this may be that Kepler-10 is around the same size as the Sun, and Kepler-10b is actually larger than Earth, yet the planet is only infront of its star for only 3 hours. This means the planet has to be travelling fast, resulting in very steep slopes on the trapezium transit light curve. It seems involving the extra "tf" parameter only serves to complicate the model and add uncertainty when using a square wave is just as good, as is proven above.</p>
 <h2 id="modelling-with-ultranest">Modelling with UltraNest</h2>
@@ -1168,42 +1172,41 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w"> </span><span class="n">Sampling</span><span class="w"> </span><span class="mi">400</span><span class="w"> </span><span class="n">live</span><span class="w"> </span><span class="n">points</span><span class="w"> </span><span class="k">from</span><span class="w"> </span><span class="k">prior</span><span class="w"> </span><span class="p">...</span><span class="w"></span>
+<div class="highlight"><pre><span></span><code>[ultranest] Sampling 400 live points from prior ...
 
 
 
-<span class="n">VBox</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="k">value</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">GridspecLayout</span><span class="p">(</span><span class="n">children</span><span class="o">=</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="k">value</span><span class="o">=</span><span class="ss">&quot;&lt;div style=&#39;background-color:#6E6BF4;&#39;&gt;&amp;nb…</span>
+VBox(children=(HTML(value=&#39;&#39;), GridspecLayout(children=(HTML(value=&quot;&lt;div style=&#39;background-color:#6E6BF4;&#39;&gt;&amp;nb…
 
 
-<span class="ss">[ultranest] Explored until L=-3e+02  .17 [-273.5034..-273.5033]*| it/evals=2795/188281 eff=1.4876% N=400 </span>
-<span class="ss">[ultranest] Likelihood function evaluations: 188565</span>
-<span class="ss">[ultranest]   logZ = -275.8 +- 0.0255</span>
-<span class="ss">[ultranest] Effective samples strategy satisfied (ESS = 2007.1, need &gt;400)</span>
-<span class="ss">[ultranest] Posterior uncertainty strategy is satisfied (KL: 0.46+-0.06 nat, need &lt;0.50 nat)</span>
-<span class="ss">[ultranest] Evidency uncertainty strategy is satisfied (dlogz=0.07, need &lt;0.5)</span>
-<span class="ss">[ultranest]   logZ error budget: single: 0.04 bs:0.03 tail:0.01 total:0.03 required:&lt;0.50</span>
-<span class="ss">[ultranest] done iterating.</span>
-<span class="ss">[ultranest] Sampling 400 live points from prior ...</span>
+[ultranest] Explored until L=-3e+02  .17 [-273.5034..-273.5033]*| it/evals=2795/188281 eff=1.4876% N=400 
+[ultranest] Likelihood function evaluations: 188565
+[ultranest]   logZ = -275.8 +- 0.0255
+[ultranest] Effective samples strategy satisfied (ESS = 2007.1, need &gt;400)
+[ultranest] Posterior uncertainty strategy is satisfied (KL: 0.46+-0.06 nat, need &lt;0.50 nat)
+[ultranest] Evidency uncertainty strategy is satisfied (dlogz=0.07, need &lt;0.5)
+[ultranest]   logZ error budget: single: 0.04 bs:0.03 tail:0.01 total:0.03 required:&lt;0.50
+[ultranest] done iterating.
+[ultranest] Sampling 400 live points from prior ...
 
 
 
-<span class="ss">VBox(children=(HTML(value=&#39;&#39;), GridspecLayout(children=(HTML(value=&quot;</span><span class="o">&lt;</span><span class="n">div</span><span class="w"> </span><span class="n">style</span><span class="o">=</span><span class="s1">&#39;background-color:#6E6BF4;&#39;</span><span class="o">&gt;&amp;</span><span class="n">nb</span><span class="err">…</span><span class="w"></span>
+VBox(children=(HTML(value=&#39;&#39;), GridspecLayout(children=(HTML(value=&quot;&lt;div style=&#39;background-color:#6E6BF4;&#39;&gt;&amp;nb…
 
 
-<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w"> </span><span class="n">Explored</span><span class="w"> </span><span class="n">until</span><span class="w"> </span><span class="n">L</span><span class="o">=-</span><span class="mf">3e+02</span><span class="w">  </span><span class="mf">.21</span><span class="w"> </span><span class="o">[</span><span class="n">-273.4930..-273.4929</span><span class="o">]*|</span><span class="w"> </span><span class="n">it</span><span class="o">/</span><span class="n">evals</span><span class="o">=</span><span class="mi">2798</span><span class="o">/</span><span class="mi">184875</span><span class="w"> </span><span class="n">eff</span><span class="o">=</span><span class="mf">1.5167</span><span class="o">%</span><span class="w"> </span><span class="n">N</span><span class="o">=</span><span class="mi">400</span><span class="w"> </span>
-<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w"> </span><span class="n">Likelihood</span><span class="w"> </span><span class="k">function</span><span class="w"> </span><span class="nl">evaluations</span><span class="p">:</span><span class="w"> </span><span class="mi">184875</span><span class="w"></span>
-<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w">   </span><span class="n">logZ</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mf">275.8</span><span class="w"> </span><span class="o">+-</span><span class="w"> </span><span class="mf">0.03241</span><span class="w"></span>
-<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w"> </span><span class="n">Effective</span><span class="w"> </span><span class="n">samples</span><span class="w"> </span><span class="n">strategy</span><span class="w"> </span><span class="n">satisfied</span><span class="w"> </span><span class="p">(</span><span class="n">ESS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2008.9</span><span class="p">,</span><span class="w"> </span><span class="n">need</span><span class="w"> </span><span class="o">&gt;</span><span class="mi">400</span><span class="p">)</span><span class="w"></span>
-<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w"> </span><span class="n">Posterior</span><span class="w"> </span><span class="n">uncertainty</span><span class="w"> </span><span class="n">strategy</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">satisfied</span><span class="w"> </span><span class="p">(</span><span class="nl">KL</span><span class="p">:</span><span class="w"> </span><span class="mf">0.45</span><span class="o">+-</span><span class="mf">0.11</span><span class="w"> </span><span class="n">nat</span><span class="p">,</span><span class="w"> </span><span class="n">need</span><span class="w"> </span><span class="o">&lt;</span><span class="mf">0.50</span><span class="w"> </span><span class="n">nat</span><span class="p">)</span><span class="w"></span>
-<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w"> </span><span class="n">Evidency</span><span class="w"> </span><span class="n">uncertainty</span><span class="w"> </span><span class="n">strategy</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">satisfied</span><span class="w"> </span><span class="p">(</span><span class="n">dlogz</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span><span class="w"> </span><span class="n">need</span><span class="w"> </span><span class="o">&lt;</span><span class="mf">0.5</span><span class="p">)</span><span class="w"></span>
-<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w">   </span><span class="n">logZ</span><span class="w"> </span><span class="n">error</span><span class="w"> </span><span class="nl">budget</span><span class="p">:</span><span class="w"> </span><span class="nl">single</span><span class="p">:</span><span class="w"> </span><span class="mf">0.04</span><span class="w"> </span><span class="nl">bs</span><span class="p">:</span><span class="mf">0.03</span><span class="w"> </span><span class="nl">tail</span><span class="p">:</span><span class="mf">0.01</span><span class="w"> </span><span class="nl">total</span><span class="p">:</span><span class="mf">0.03</span><span class="w"> </span><span class="nl">required</span><span class="p">:</span><span class="o">&lt;</span><span class="mf">0.50</span><span class="w"></span>
-<span class="o">[</span><span class="n">ultranest</span><span class="o">]</span><span class="w"> </span><span class="n">done</span><span class="w"> </span><span class="n">iterating</span><span class="p">.</span><span class="w"></span>
+[ultranest] Explored until L=-3e+02  .21 [-273.4930..-273.4929]*| it/evals=2798/184875 eff=1.5167% N=400 
+[ultranest] Likelihood function evaluations: 184875
+[ultranest]   logZ = -275.8 +- 0.03241
+[ultranest] Effective samples strategy satisfied (ESS = 2008.9, need &gt;400)
+[ultranest] Posterior uncertainty strategy is satisfied (KL: 0.45+-0.11 nat, need &lt;0.50 nat)
+[ultranest] Evidency uncertainty strategy is satisfied (dlogz=0.06, need &lt;0.5)
+[ultranest]   logZ error budget: single: 0.04 bs:0.03 tail:0.01 total:0.03 required:&lt;0.50
+[ultranest] done iterating.
 
 
-<span class="nc">Time</span><span class="w"> </span><span class="n">taken</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">sample</span><span class="w"> </span><span class="n">trapezium</span><span class="w"> </span><span class="n">shaped</span><span class="w"> </span><span class="n">model</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="nl">UltraNest</span><span class="p">:</span><span class="w"> </span><span class="mf">45.595500469207764</span><span class="w"> </span><span class="n">seconds</span><span class="w"></span>
-<span class="nc">Time</span><span class="w"> </span><span class="n">taken</span><span class="w"> </span><span class="k">to</span><span class="w"> </span><span class="n">sample</span><span class="w"> </span><span class="nf">square</span><span class="w"> </span><span class="n">shaped</span><span class="w"> </span><span class="n">model</span><span class="w"> </span><span class="k">with</span><span class="w"> </span><span class="nl">UltraNest</span><span class="p">:</span><span class="w"> </span><span class="mf">40.1266610622406</span><span class="w"> </span><span class="n">seconds</span><span class="w"></span>
+Time taken to sample trapezium shaped model with UltraNest: 45.595500469207764 seconds
+Time taken to sample square shaped model with UltraNest: 40.1266610622406 seconds
 </code></pre></div>
-
 
 <h3 id="results_1">Results</h3>
 <p>To retrieve the traces from a nested sampler, you must resample according the some weights which are produced during the sampling. I'll only do this for the trapezium model for now, just to keep the code from getting too cluttered:</p>
@@ -1241,16 +1244,15 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="k">Parameters</span> <span class="n">describing</span> <span class="n">a</span> <span class="n">trapezium</span> <span class="n">shaped</span> <span class="n">transit</span> <span class="n">model</span> <span class="k">from</span> <span class="n">UltraNest</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code>Parameters describing a trapezium shaped transit model from UltraNest:
 
-       <span class="n">unobstructed</span> <span class="n">flux</span> <span class="o">=</span> <span class="mi">541506</span><span class="p">.</span><span class="mi">0367278325</span> <span class="err">±</span> <span class="mi">38</span><span class="p">.</span><span class="mi">07219702378676</span> <span class="n">e</span><span class="o">-/</span><span class="n">s</span> 
-<span class="n">fractional</span> <span class="n">flux</span> <span class="n">decrease</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0002456676060063817</span> <span class="err">±</span> <span class="mi">3</span><span class="p">.</span><span class="mi">5643330145173593</span><span class="n">e</span><span class="o">-</span><span class="mi">06</span> 
-                  <span class="k">period</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">8376992378349714</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">007805962818414923</span> <span class="n">days</span> 
-      <span class="n">total</span> <span class="n">transit</span> <span class="k">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">14467439301959553</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">010237468121439578</span> <span class="n">days</span> 
-       <span class="n">flat</span> <span class="n">transit</span> <span class="k">time</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">14315067160042744</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">009933449672703609</span> <span class="n">days</span> 
-                  <span class="k">offset</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">15020443219136784</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">0008319592417544441</span> <span class="n">days</span>
+       unobstructed flux = 541506.0367278325 ± 38.07219702378676 e-/s 
+fractional flux decrease = 0.0002456676060063817 ± 3.5643330145173593e-06 
+                  period = 0.8376992378349714 ± 0.007805962818414923 days 
+      total transit time = 0.14467439301959553 ± 0.010237468121439578 days 
+       flat transit time = 0.14315067160042744 ± 0.009933449672703609 days 
+                  offset = 0.15020443219136784 ± 0.0008319592417544441 days
 </code></pre></div>
-
 
 <h3 id="plotting-the-posterior_1">Plotting the posterior</h3>
 <p>We can make the same posterior plots as with emcee, for the sake of comparison. The samples for the posterior predictive plot can be collected as follows:</p>
@@ -1327,10 +1329,9 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">Marginalised likelihood for trapezium transit model: -275.82725389875935 ± 0.03821787065493758</span>
-<span class="err">Marginalised likelihood for square transit model: -275.8168531966252 ± 0.06290063669114569</span>
+<div class="highlight"><pre><span></span><code>Marginalised likelihood for trapezium transit model: -275.82725389875935 ± 0.03821787065493758
+Marginalised likelihood for square transit model: -275.8168531966252 ± 0.06290063669114569
 </code></pre></div>
-
 
 <p>Using these marginal likelihoods, we can find the Bayes factor. This is the defined as the ratio of the marginal likelihoods. If the Bayes factor is larger than one, it means that the trapezium model is more likely to produce the observed data.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logZ_trap</span> <span class="o">-</span> <span class="n">logZ_square</span><span class="p">)</span>
@@ -1338,9 +1339,8 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">Bayes factor: 0.9896531981395177</span>
+<div class="highlight"><pre><span></span><code>Bayes factor: 0.9896531981395177
 </code></pre></div>
-
 
 <p>This result tells us that the square transit model is only slightly more likely to produce the observed light curve, as we first predicted earlier with emcee.</p>
 <p>In reality, the transit model makes a lot more sense than a square transit shape. However, since there were only around 4 or 5 data points per transit, their shape was likely misrepresented. If instead we used a data set of a planet with a longer transit time, or took flux measurements more frequently, then the trapezium transit shape may become prefered.</p>

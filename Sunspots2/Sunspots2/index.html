@@ -355,6 +355,18 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../TheOnlineMCMC/TheOnlineMCMC/" title="Zero Installation Sampling with The Online MCMC" class="md-nav__link">
+      Zero Installation Sampling with The Online MCMC
+    </a>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -534,10 +546,9 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">Zeus version: 1.0.7</span>
-<span class="err">Nestle version: 0.2.0</span>
+<div class="highlight"><pre><span></span><code>Zeus version: 1.0.7
+Nestle version: 0.2.0
 </code></pre></div>
-
 
 <h2 id="viewing-the-data">Viewing the data</h2>
 <p>Using Pandas, we can load the .csv file containing the average sunspot number over 24 solar cycles, since the 1750s. First I will plot the entire dataset to decide which cycles are of interest, however before plotting I'll first take the square root of the sunspot number. This is just to decrease the variance in the peak height, which will make everything a little easier when it comes to making a model that can predict the height of the next peak.</p>
@@ -740,12 +751,11 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="n">Initialising</span> <span class="n">ensemble</span> <span class="k">of</span> <span class="mi">100</span> <span class="n">walkers</span><span class="p">...</span>
-<span class="n">Sampling</span> <span class="n">progress</span> <span class="p">:</span> <span class="mi">100</span><span class="o">%|</span><span class="err">██████████</span><span class="o">|</span> <span class="mi">1000</span><span class="o">/</span><span class="mi">1000</span> <span class="p">[</span><span class="mi">01</span><span class="p">:</span><span class="mi">16</span><span class="o">&lt;</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span> <span class="mi">13</span><span class="p">.</span><span class="mi">13</span><span class="n">it</span><span class="o">/</span><span class="n">s</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code>Initialising ensemble of 100 walkers...
+Sampling progress : 100%|██████████| 1000/1000 [01:16&lt;00:00, 13.13it/s]
 
-<span class="k">Time</span> <span class="n">taken</span> <span class="k">to</span> <span class="n">sample</span> <span class="k">first</span> <span class="n">peak</span> <span class="k">with</span> <span class="n">Zeus</span><span class="p">:</span> <span class="mi">76</span><span class="p">.</span><span class="mi">26689600944519</span> <span class="n">seconds</span>
+Time taken to sample first peak with Zeus: 76.26689600944519 seconds
 </code></pre></div>
-
 
 <h3 id="results">Results</h3>
 <p>Collecting the samples after the sampling is equally simple, remembering to discard the burn-in samples at the start of the chain. We can create a corner plot, which shows the posteriors of each parameter along with contour plots describing how one parameter varies with any other:</p>
@@ -784,16 +794,15 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="k">Parameters</span> <span class="n">describing</span> <span class="n">the</span> <span class="n">square</span> <span class="n">root</span> <span class="n">SSN</span> <span class="k">cycle</span> <span class="n">starting</span> <span class="mi">1923</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code>Parameters describing the square root SSN cycle starting 1923:
 
-   <span class="k">c</span> <span class="o">=</span> <span class="mi">11</span><span class="p">.</span><span class="mi">23419227189279</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5155512374811139</span> <span class="n">square</span> <span class="n">root</span> <span class="n">counts</span>
-  <span class="n">a1</span> <span class="o">=</span> <span class="mi">2</span><span class="p">.</span><span class="mi">046091218734536</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5511917043187438</span> 
-  <span class="n">a2</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span><span class="mi">3175512464689283</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">2551941095539496</span> 
-  <span class="n">t0</span> <span class="o">=</span> <span class="mi">1923</span><span class="p">.</span><span class="mi">4364606185572</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">3683613113062203</span> <span class="n">years</span>
-<span class="n">tmax</span> <span class="o">=</span> <span class="mi">1927</span><span class="p">.</span><span class="mi">5745437571138</span>  <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">6532168763478214</span> <span class="n">years</span>
-  <span class="n">t1</span> <span class="o">=</span> <span class="mi">1935</span><span class="p">.</span><span class="mi">0535923941627</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">30717761056370796</span> <span class="n">years</span>
+   c = 11.23419227189279 ± 0.5155512374811139 square root counts
+  a1 = 2.046091218734536 ± 0.5511917043187438 
+  a2 = 1.3175512464689283 ± 0.2551941095539496 
+  t0 = 1923.4364606185572 ± 0.3683613113062203 years
+tmax = 1927.5745437571138  ± 0.6532168763478214 years
+  t1 = 1935.0535923941627 ± 0.30717761056370796 years
 </code></pre></div>
-
 
 <h3 id="plotting-the-posterior">Plotting the posterior</h3>
 <p>Below I'll show two plots. The left plot will show the model produced using the mean parameters for the first peak. The right plot will show a posterior predictive plot, where the darker the colour of the plot, the higher the probabillty of the model passing through that region.</p>
@@ -954,12 +963,11 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="n">Initialising</span> <span class="n">ensemble</span> <span class="k">of</span> <span class="mi">100</span> <span class="n">walkers</span><span class="p">...</span>
-<span class="n">Sampling</span> <span class="n">progress</span> <span class="p">:</span> <span class="mi">100</span><span class="o">%|</span><span class="err">██████████</span><span class="o">|</span> <span class="mi">1000</span><span class="o">/</span><span class="mi">1000</span> <span class="p">[</span><span class="mi">01</span><span class="p">:</span><span class="mi">19</span><span class="o">&lt;</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span> <span class="mi">12</span><span class="p">.</span><span class="mi">56</span><span class="n">it</span><span class="o">/</span><span class="n">s</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code>Initialising ensemble of 100 walkers...
+Sampling progress : 100%|██████████| 1000/1000 [01:19&lt;00:00, 12.56it/s]
 
-<span class="k">Time</span> <span class="n">taken</span> <span class="k">to</span> <span class="n">sample</span> <span class="n">predict</span> <span class="k">function</span> <span class="k">with</span> <span class="n">Zeus</span><span class="p">:</span> <span class="mi">79</span><span class="p">.</span><span class="mi">66238069534302</span> <span class="n">seconds</span>
+Time taken to sample predict function with Zeus: 79.66238069534302 seconds
 </code></pre></div>
-
 
 <h3 id="predictions">Predictions</h3>
 <p>Out of curiosity, we can check the corner plot for the prediction model. Since the prediction model has every parameter interacting with eachother, we can expect a load of covariance between parameters.</p>
@@ -1109,9 +1117,8 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">Time taken to sample second solar cycle with Nestle: 18.891968965530396 seconds</span>
+<div class="highlight"><pre><span></span><code>Time taken to sample second solar cycle with Nestle: 18.891968965530396 seconds
 </code></pre></div>
-
 
 <p>We'll now try the sampling again, but this time we'll use the parameters from the first solar cycle (found using Zeus), and sample the parameters of the prediction model. Start by guessing at the parameters for the prediction model:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1"># reuse our guesses from Zeus</span>
@@ -1173,9 +1180,8 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">Time taken to sample prediction model with Nestle: 13.779999017715454 seconds</span>
+<div class="highlight"><pre><span></span><code>Time taken to sample prediction model with Nestle: 13.779999017715454 seconds
 </code></pre></div>
-
 
 <h3 id="results_1">Results</h3>
 <p>Next, we find the log of the marginalised evidence provided by Nestle. This can be done as follows, using the information gain to estimate the error:</p>
@@ -1190,10 +1196,9 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">log(Z) from sampling the solar cycle = -266.75746256813557 ± 0.07494693736170717</span>
-<span class="err">log(Z) from predicting the solar cycle = -266.81473144676227 ± 0.07314472974917986</span>
+<div class="highlight"><pre><span></span><code>log(Z) from sampling the solar cycle = -266.75746256813557 ± 0.07494693736170717
+log(Z) from predicting the solar cycle = -266.81473144676227 ± 0.07314472974917986
 </code></pre></div>
-
 
 <p>The Bayes factor is a metric that describes how much more likely a model is to produce an observed data set. It's defined as the ratios between the marginalised evidences of the two models:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logZ_predict</span> <span class="o">-</span> <span class="n">logZ_sample</span><span class="p">)</span>
@@ -1201,9 +1206,8 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">Bayes factor: 0.9443401223523545</span>
+<div class="highlight"><pre><span></span><code>Bayes factor: 0.9443401223523545
 </code></pre></div>
-
 
 <p>This tells us that sampling via the prediction method rather than just sampling the peak doesn't come at a cost to the quality of the model. Since the methods produce simillar results, lets collect the samples from the prediction method to use for visualising our results. Since Nestle uses nested sampling, we have to resample with weights to obtain the posteriors.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">weights</span> <span class="o">=</span> <span class="n">results_predict</span><span class="o">.</span><span class="n">weights</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">results_predict</span><span class="o">.</span><span class="n">weights</span><span class="p">)</span>

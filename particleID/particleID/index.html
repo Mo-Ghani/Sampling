@@ -300,10 +300,70 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#modelling-with-dnest4" class="md-nav__link">
+    Modelling with DNest4
+  </a>
+  
+    <nav class="md-nav" aria-label="Modelling with DNest4">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-model_1" class="md-nav__link">
+    The model
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sampling-the-data_1" class="md-nav__link">
+    Sampling the data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results_1" class="md-nav__link">
+    Results
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plotting-the-posterior_1" class="md-nav__link">
+    Plotting the posterior
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-comparisons" class="md-nav__link">
+    Model comparisons
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
     
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../TheOnlineMCMC/TheOnlineMCMC/" title="Zero Installation Sampling with The Online MCMC" class="md-nav__link">
+      Zero Installation Sampling with The Online MCMC
+    </a>
   </li>
 
     
@@ -387,6 +447,54 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#modelling-with-dnest4" class="md-nav__link">
+    Modelling with DNest4
+  </a>
+  
+    <nav class="md-nav" aria-label="Modelling with DNest4">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-model_1" class="md-nav__link">
+    The model
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sampling-the-data_1" class="md-nav__link">
+    Sampling the data
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#results_1" class="md-nav__link">
+    Results
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plotting-the-posterior_1" class="md-nav__link">
+    Plotting the posterior
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#model-comparisons" class="md-nav__link">
+    Model comparisons
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -424,11 +532,20 @@
 
 <span class="c1"># sampler</span>
 <span class="kn">import</span> <span class="nn">pystan</span>
+<span class="kn">from</span> <span class="nn">dnest4</span> <span class="kn">import</span> <span class="n">randh</span><span class="p">,</span> <span class="n">wrap</span>
+<span class="kn">import</span> <span class="nn">dnest4</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PyStan version: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pystan</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DNest4 version: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dnest4</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
 <span class="c1"># misc</span>
 <span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
 </code></pre></div>
 
+
+<div class="highlight"><pre><span></span><code>PyStan version: 2.19.1.1
+DNest4 version: 0.2.4
+</code></pre></div>
 
 <h2 id="viewing-the-data">Viewing the data</h2>
 <p>First, I'll use pandas to load the data. The data set is made up of 1.1 million collisions, each with 28 different attributes. The first 21 attributes are "low-level", and are only really useful for calculating the last 7 attributes. The last 7 attributes describe the <a href="https://en.wikipedia.org/wiki/Invariant_mass">invariant mass</a> for different processes.</p>
@@ -484,7 +601,7 @@ Finally, the third attribute is the invariant mass for the process <script type=
 <p><img alt="png" src="../output_9_0.png" /></p>
 <h2 id="the-model">The model</h2>
 <p>The peaks reach a sharp peak, after which they fall off with what looks like a <script type="math/tex">1/m^\alpha</script> relationship. To model this, I used a quadratic ascending limb, and a reciprocal quadratic decending limb. The model is implemented in Python with the following parameters:</p>
-<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">resonance</span><span class="p">(</span><span class="n">masses</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">m_in</span><span class="p">,</span> <span class="n">m_max</span><span class="p">,</span> <span class="n">m_fin</span><span class="p">,</span> <span class="n">t_1</span><span class="p">,</span> <span class="n">t_2</span><span class="p">):</span>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">polynom</span><span class="p">(</span><span class="n">masses</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">m_in</span><span class="p">,</span> <span class="n">m_max</span><span class="p">,</span> <span class="n">m_fin</span><span class="p">,</span> <span class="n">t_1</span><span class="p">,</span> <span class="n">t_2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to model a particle production frequency as a function of invariant mass</span>
 <span class="sd">    :param masses: array of invariant masses</span>
@@ -508,7 +625,7 @@ Finally, the third attribute is the invariant mass for the process <script type=
 <p>To show what this model looks like, we can make some quick guesses of the parameters, just by looking at the peak in the <script type="math/tex">m_{l\nu}</script> distribution:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">400</span><span class="p">,</span><span class="mi">1400</span><span class="p">)</span>
 <span class="c1"># guess at each parameter</span>
-<span class="n">guess_y</span> <span class="o">=</span> <span class="n">resonance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">380</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">240</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span> 
+<span class="n">guess_y</span> <span class="o">=</span> <span class="n">polynom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">380</span><span class="p">,</span> <span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">240</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span> 
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_w</span><span class="p">,</span><span class="n">n_w</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original data&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">guess_y</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Example model&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">270</span><span class="p">)</span>
@@ -529,7 +646,7 @@ Finally, the third attribute is the invariant mass for the process <script type=
 <p>The functions block contains user-defined functions, such as the model function defined above. The data block initialises variables such as the number of data points, the invariant masses, and their respective frequency densities. The parameters block initialises the parameters of the model. The transformed parameters block gives the expected value of the model, given the current parameters. Finally, the model block sets the priors and likelihood distrubutions.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">pystan_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">functions {{</span>
-<span class="s2">    real resonance(real x, real h, real m_in, real m_max,</span>
+<span class="s2">    real polynom(real x, real h, real m_in, real m_max,</span>
 <span class="s2">                   real m_fin, real t_1, real t_2)</span>
 
 <span class="s2">        if (x &lt; m_in) </span>
@@ -571,7 +688,7 @@ Finally, the third attribute is the invariant mass for the process <script type=
 <span class="s2">    real theta[N];</span>
 <span class="s2">    // for each invariant mass m[j], expected y-value is found</span>
 <span class="s2">    for (j in 1:N) </span>
-<span class="s2">        theta[j] = resonance(m[j],h,m_in,m_max,m_fin,t_1,t_2);</span>
+<span class="s2">        theta[j] = polynom(m[j],h,m_in,m_max,m_fin,t_1,t_2);</span>
 
 <span class="s2">}}</span>
 
@@ -620,12 +737,11 @@ Finally, the third attribute is the invariant mass for the process <script type=
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="n">INFO</span><span class="o">:</span><span class="n">pystan</span><span class="o">:</span><span class="n">COMPILING</span> <span class="n">THE</span> <span class="n">C</span><span class="o">++</span> <span class="n">CODE</span> <span class="n">FOR</span> <span class="n">MODEL</span> <span class="n">anon_model_32a27c4325414afa7499109a8951a53e</span> <span class="n">NOW</span><span class="o">.</span>
+<div class="highlight"><pre><span></span><code>INFO:pystan:COMPILING THE C++ CODE FOR MODEL anon_model_32a27c4325414afa7499109a8951a53e NOW.
 
 
-<span class="n">Time</span> <span class="n">taken</span> <span class="n">to</span> <span class="n">compile</span> <span class="n">model</span><span class="o">:</span> <span class="mf">44.89909029006958</span> <span class="n">seconds</span>
+Time taken to compile model: 44.89909029006958 seconds
 </code></pre></div>
-
 
 <p>The sampler is now ready to iterate through the data. I'll do this using 1000 samples and 1 chain:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">Nsamples</span> <span class="o">=</span> <span class="mi">1000</span>
@@ -639,9 +755,8 @@ Finally, the third attribute is the invariant mass for the process <script type=
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">Time taken to sample m_lv peak: 1.9440805912017822 seconds</span>
+<div class="highlight"><pre><span></span><code>Time taken to sample m_lv peak: 1.9440805912017822 seconds
 </code></pre></div>
-
 
 <p>The results can be extracted from the sampler using a dictionary as follows:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">la_w</span> <span class="o">=</span> <span class="n">fit_w</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">permuted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -690,13 +805,12 @@ Finally, the third attribute is the invariant mass for the process <script type=
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="n">INFO</span><span class="o">:</span><span class="n">pystan</span><span class="o">:</span><span class="n">COMPILING</span> <span class="n">THE</span> <span class="n">C</span><span class="o">++</span> <span class="n">CODE</span> <span class="n">FOR</span> <span class="n">MODEL</span> <span class="n">anon_model_c8d0398ecec8d290f88238a962b61a3e</span> <span class="n">NOW</span><span class="o">.</span>
-<span class="n">INFO</span><span class="o">:</span><span class="n">pystan</span><span class="o">:</span><span class="n">COMPILING</span> <span class="n">THE</span> <span class="n">C</span><span class="o">++</span> <span class="n">CODE</span> <span class="n">FOR</span> <span class="n">MODEL</span> <span class="n">anon_model_fc7e337091261cd27b6faca01371228a</span> <span class="n">NOW</span><span class="o">.</span>
+<div class="highlight"><pre><span></span><code>INFO:pystan:COMPILING THE C++ CODE FOR MODEL anon_model_c8d0398ecec8d290f88238a962b61a3e NOW.
+INFO:pystan:COMPILING THE C++ CODE FOR MODEL anon_model_fc7e337091261cd27b6faca01371228a NOW.
 
-<span class="n">Time</span> <span class="n">taken</span> <span class="n">to</span> <span class="n">sample</span> <span class="n">m_Wb</span> <span class="n">peak</span><span class="o">:</span> <span class="mf">0.8660006523132324</span> <span class="n">seconds</span>
-<span class="n">Time</span> <span class="n">taken</span> <span class="n">to</span> <span class="n">sample</span> <span class="n">m_bb</span> <span class="n">peak</span><span class="o">:</span> <span class="mf">1.7904999256134032</span> <span class="n">seconds</span>
+Time taken to sample m_Wb peak: 0.8660006523132324 seconds
+Time taken to sample m_bb peak: 1.7904999256134032 seconds
 </code></pre></div>
-
 
 <p>Finally, the results can be collected again:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">la_t</span> <span class="o">=</span> <span class="n">fit_t</span><span class="o">.</span><span class="n">extract</span><span class="p">(</span><span class="n">permuted</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -726,7 +840,7 @@ Finally, the third attribute is the invariant mass for the process <script type=
 
 
 <p><img alt="png" src="../output_36_0.png" /></p>
-<p>we're interested in only the value of m_max for each model, since it describes the mass of the particle that created the peak. We can collect the means and standard deviation errors for each parameter, along with randomly sampling from the posteriors so that we can create a posterior predictive plot.</p>
+<p>We're interested in only the value of m_max for each model, since it describes the mass of the particle that created the peak. We can collect the means and standard deviation errors for each parameter, along with randomly sampling from the posteriors so that we can create a posterior predictive plot.</p>
 <div class="codehilite"><pre><span></span><code><span class="c1"># mean and error of parameters for m_lv distribution</span>
 <span class="n">means_w</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_w</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
 <span class="n">errors_w</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_w</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
@@ -766,16 +880,15 @@ Finally, the third attribute is the invariant mass for the process <script type=
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="n">Mean</span> <span class="n">Invariant</span> <span class="n">Mass</span> <span class="k">of</span> <span class="n">m_lv</span> <span class="n">peak</span><span class="p">:</span> <span class="mi">78</span><span class="p">.</span><span class="mi">8824875109673</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">14962446128127846</span> <span class="n">GeV</span><span class="o">/</span><span class="n">c²</span> 
-<span class="n">Mass</span> <span class="k">of</span> <span class="n">a</span> <span class="n">W</span> <span class="n">boson</span><span class="p">:</span> <span class="mi">80</span><span class="p">.</span><span class="mi">4</span> <span class="n">GeV</span><span class="o">/</span><span class="n">c²</span>
+<div class="highlight"><pre><span></span><code>Mean Invariant Mass of m_lv peak: 78.8824875109673 ± 0.14962446128127846 GeV/c² 
+Mass of a W boson: 80.4 GeV/c²
 
-<span class="n">Mean</span> <span class="n">Invariant</span> <span class="n">Mass</span> <span class="k">of</span> <span class="n">m_Wb</span> <span class="n">peak</span><span class="p">:</span> <span class="mi">170</span><span class="p">.</span><span class="mi">739515663670765</span> <span class="err">±</span> <span class="mi">2</span><span class="p">.</span><span class="mi">9494226571197104</span> <span class="n">GeV</span><span class="o">/</span><span class="n">c²</span> 
-<span class="n">Mass</span> <span class="k">of</span> <span class="n">top</span> <span class="n">quark</span><span class="p">:</span> <span class="mi">173</span> <span class="n">GeV</span><span class="o">/</span><span class="n">c²</span>
+Mean Invariant Mass of m_Wb peak: 170.739515663670765 ± 2.9494226571197104 GeV/c² 
+Mass of top quark: 173 GeV/c²
 
-<span class="n">Mean</span> <span class="n">Invariant</span> <span class="n">Mass</span> <span class="k">of</span> <span class="n">m_bb</span> <span class="n">peak</span><span class="p">:</span> <span class="mi">121</span><span class="p">.</span><span class="mi">08971310473981</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7304177489930841</span> <span class="n">GeV</span><span class="o">/</span><span class="n">c²</span> 
-<span class="n">Mass</span> <span class="k">of</span> <span class="n">Higgs</span> <span class="n">boson</span><span class="p">:</span> <span class="mi">125</span> <span class="n">GeV</span><span class="o">/</span><span class="n">c²</span>
+Mean Invariant Mass of m_bb peak: 121.08971310473981 ± 0.7304177489930841 GeV/c² 
+Mass of Higgs boson: 125 GeV/c²
 </code></pre></div>
-
 
 <p>The values for m_max make good estimates for the masses of the particles that caused the peaks. The predictions are systematically slightly lower than the true masses, which is likely due to the model I used being only a simplified approximation, instead of a more accurate model. The increased error on the estimate for the mass of the top quark is likely due to a much higher level of noise in the data.</p>
 <h3 id="plotting-the-posterior">Plotting the posterior</h3>
@@ -786,7 +899,7 @@ Finally, the third attribute is the invariant mass for the process <script type=
 <span class="c1"># m_lv peak</span>
 <span class="c1"># mean posterior plot</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_w</span><span class="p">,</span><span class="n">n_w</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original data&#39;</span><span class="p">)</span>
-<span class="n">res_y</span> <span class="o">=</span> <span class="n">resonance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">means_w</span><span class="p">)</span> 
+<span class="n">res_y</span> <span class="o">=</span> <span class="n">polynom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">means_w</span><span class="p">)</span> 
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">res_y</span><span class="p">,</span><span class="n">label</span><span class="o">=</span><span class="s1">&#39;Fitted model&#39;</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency density&#39;</span><span class="p">)</span>
@@ -796,21 +909,21 @@ Finally, the third attribute is the invariant mass for the process <script type=
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_w</span><span class="p">,</span><span class="n">n_w</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Posterior predictive plots&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nfits</span><span class="p">):</span>
-    <span class="n">res_y</span> <span class="o">=</span> <span class="n">resonance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">post_samples_w</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">res_y</span> <span class="o">=</span> <span class="n">polynom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">post_samples_w</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
     <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">res_y</span><span class="p">,</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
 
 <span class="c1"># m_Wb peak</span>
 <span class="c1"># mean posterior plot</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_t</span><span class="p">,</span><span class="n">n_t</span><span class="p">)</span>
-<span class="n">res_y</span> <span class="o">=</span> <span class="n">resonance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">means_t</span><span class="p">)</span> 
+<span class="n">res_y</span> <span class="o">=</span> <span class="n">polynom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">means_t</span><span class="p">)</span> 
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">res_y</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span><span class="mi">400</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency density&#39;</span><span class="p">)</span>
 <span class="c1"># posterior predictive plot</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_t</span><span class="p">,</span><span class="n">n_t</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nfits</span><span class="p">):</span>
-    <span class="n">res_y</span> <span class="o">=</span> <span class="n">resonance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">post_samples_t</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">res_y</span> <span class="o">=</span> <span class="n">polynom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">post_samples_t</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">post_samples_t</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">res_y</span><span class="p">,</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span><span class="mi">400</span><span class="p">)</span>
@@ -818,7 +931,7 @@ Finally, the third attribute is the invariant mass for the process <script type=
 <span class="c1"># m_bb peak</span>
 <span class="c1"># mean posterior plot</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_h</span><span class="p">,</span><span class="n">n_h</span><span class="p">)</span>
-<span class="n">res_y</span> <span class="o">=</span> <span class="n">resonance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">means_h</span><span class="p">)</span> 
+<span class="n">res_y</span> <span class="o">=</span> <span class="n">polynom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">means_h</span><span class="p">)</span> 
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">res_y</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">300</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency density&#39;</span><span class="p">)</span>
@@ -827,7 +940,7 @@ Finally, the third attribute is the invariant mass for the process <script type=
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_h</span><span class="p">,</span><span class="n">n_h</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Invariant mass GeV/c</span><span class="se">\u00b2</span><span class="s1">&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nfits</span><span class="p">):</span>
-    <span class="n">res_y</span> <span class="o">=</span> <span class="n">resonance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">post_samples_h</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">res_y</span> <span class="o">=</span> <span class="n">polynom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">post_samples_h</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
     <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">res_y</span><span class="p">,</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
 <span class="n">axs</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">300</span><span class="p">)</span>
 
@@ -836,6 +949,363 @@ Finally, the third attribute is the invariant mass for the process <script type=
 
 
 <p><img alt="png" src="../output_43_0.png" /></p>
+<h2 id="modelling-with-dnest4">Modelling with DNest4</h2>
+<p>In an attempt to improve on the previous model, I came up with a modification on the <a href="https://en.wikipedia.org/wiki/Crystal_Ball_function">Crystal Ball Function</a>. To evaluate whether or not this new model explains the data better than the previous model, I'll use a nested sampler <a href="https://github.com/eggplantbren/DNest4">"Dnest4"</a>, so that I can calculate the Bayes' factor of the models. DNest4 is a sampler that uses <a href="https://arxiv.org/pdf/1606.03757.pdf">diffuse nested sampling</a>, which is a variation on typical nested sampling that works well when variables have strong dependancies on each other.</p>
+<h3 id="the-model_1">The model</h3>
+<p>The new model is a little more complex than the previous model, but has the same number of parameters. The function is made of three pieces: an exponential ascending limb, a Gaussian centre, and an exponential descending limb. The function is implemented as follows:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">EGE</span><span class="p">(</span><span class="n">masses</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">a_L</span><span class="p">,</span> <span class="n">a_H</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    EGE - Exp-Gaussian-Exp</span>
+<span class="sd">    Function to describe an invariant mass frequency peak</span>
+<span class="sd">    :param N: amplitude of the peak</span>
+<span class="sd">    :param mu: mean of Gaussian core</span>
+<span class="sd">    :param sig: standard deviation of Gaussian core</span>
+<span class="sd">    :param a_L: decay constant of lower limb</span>
+<span class="sd">    :param a_R: decay constant of higher limb</span>
+<span class="sd">    :param b: lowest frequency limit</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">freq</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">masses</span><span class="p">:</span>
+
+        <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">m</span><span class="o">-</span><span class="n">mu</span><span class="p">)</span><span class="o">/</span><span class="n">sig</span>
+
+        <span class="k">if</span> <span class="n">step</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="n">a_L</span><span class="p">:</span>
+        <span class="c1"># lower exponential limb</span>
+            <span class="n">freq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">a_L</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">a_L</span><span class="o">*</span><span class="n">step</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">step</span> <span class="o">&lt;=</span> <span class="n">a_H</span><span class="p">:</span>
+        <span class="c1"># Gaussian core</span>
+            <span class="n">freq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">step</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># higher exponential limb</span>
+            <span class="n">freq</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">a_H</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">a_H</span><span class="o">*</span><span class="n">step</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">freq</span>
+</code></pre></div>
+
+
+<p>I'll attempt to fit both models to the <script type="math/tex">m_{bb}</script> data, since the exponential model doesn't suit the convex ascending limb on the <script type="math/tex">m_{Wb}</script> peak. Below is a plot of the <script type="math/tex">m_{bb}</script> with an overplotted example EGE model, with guesses for the parameters:</p>
+<p><img alt="png" src="../example.png" /></p>
+<h3 id="sampling-the-data_1">Sampling the data</h3>
+<p>First, I'll create a list containing the values stored in the "priors_h" dictionary from the PyStan example. This will be useful when defining functions for the sampler.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">class_priors</span> <span class="o">=</span> <span class="p">[(</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;h_mu&#39;</span><span class="p">],</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;h_sig&#39;</span><span class="p">]),(</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_in_mu&#39;</span><span class="p">],</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_in_sig&#39;</span><span class="p">]),</span>
+                <span class="p">(</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_max_mu&#39;</span><span class="p">],</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_max_sig&#39;</span><span class="p">]),(</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_fin_mu&#39;</span><span class="p">],</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_fin_sig&#39;</span><span class="p">]),</span>
+                <span class="p">(</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;t_1_mu&#39;</span><span class="p">],</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;t_1_sig&#39;</span><span class="p">]),(</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;t_2_mu&#39;</span><span class="p">],</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;t_2_sig&#39;</span><span class="p">])]</span>
+</code></pre></div>
+
+
+<p>DNest4 requires the user to set up a class containing the prior, likelihood, and evolution methods. The following shows the class I used for the "polynom" model:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">DNest4Model</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for usage with DNest4 for fitting &quot;polynom&quot; model to an invariant mass peak</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># DNest4 doesn&#39;t require the class to have any &quot;self&quot; attributes</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">from_prior</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sample each parameter from prior distributions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;h_mu&#39;</span><span class="p">],</span> <span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;h_sig&#39;</span><span class="p">])</span>
+        <span class="n">m_in</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_in_mu&#39;</span><span class="p">],</span> <span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_in_sig&#39;</span><span class="p">])</span>
+        <span class="n">m_max</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_max_mu&#39;</span><span class="p">],</span> <span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_max_sig&#39;</span><span class="p">])</span>
+        <span class="n">m_fin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_fin_mu&#39;</span><span class="p">],</span> <span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;m_fin_sig&#39;</span><span class="p">])</span>
+        <span class="n">t_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;t_1_mu&#39;</span><span class="p">],</span> <span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;t_1_sig&#39;</span><span class="p">])</span>
+        <span class="n">t_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;t_2_mu&#39;</span><span class="p">],</span> <span class="n">priors_t</span><span class="p">[</span><span class="s1">&#39;t_2_sig&#39;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">h</span><span class="p">,</span> <span class="n">m_in</span><span class="p">,</span> <span class="n">m_max</span><span class="p">,</span> <span class="n">m_fin</span><span class="p">,</span> <span class="n">t_1</span><span class="p">,</span> <span class="n">t_2</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">perturb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Peturbs a parameter to a new proposal parameter</span>
+<span class="sd">    This is done in place, and to only one parameter at a time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># log of the Metropolis-Hastings ratio</span>
+        <span class="n">logH</span> <span class="o">=</span> <span class="mf">0.0</span>  
+
+        <span class="c1"># choose random parameter</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+
+        <span class="c1"># update logH for chosen parameter</span>
+        <span class="n">logH</span> <span class="o">-=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">((</span><span class="n">theta</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">-</span> <span class="n">class_priors</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">class_priors</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="c1"># scale parameter</span>
+        <span class="n">theta</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">1.</span> <span class="o">*</span> <span class="n">randh</span><span class="p">()</span>
+
+        <span class="c1"># update logH to original value</span>
+        <span class="n">logH</span> <span class="o">+=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">((</span><span class="n">theta</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">-</span> <span class="n">class_priors</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">class_priors</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="k">return</span> <span class="n">logH</span>
+
+    <span class="k">def</span> <span class="nf">log_likelihood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Poisson likelihood</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># frequency and invariant mass lists</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">data_dnest4</span><span class="p">[</span><span class="s1">&#39;n_t&#39;</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">data_dnest4</span><span class="p">[</span><span class="s1">&#39;bins_t&#39;</span><span class="p">]</span>
+
+        <span class="c1"># expected value</span>
+        <span class="n">lmbda</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">polynom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">theta</span><span class="p">))</span>
+
+    <span class="c1"># terms in a poisson likelihood</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">gammaln</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lmbda</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">lmbda</span><span class="p">)</span> <span class="o">-</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</code></pre></div>
+
+
+<p>After the class of the model has been defined, we can now set up the hyper-parameters for the sampling process. DNest4 is slightly different to popular nested samplers in that it uses a maximum number of levels and steps, rather than a stopping criterion. These can all be set when creating the sampler object:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># create sampler object using model class</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">DNest4Model</span><span class="p">()</span>
+<span class="n">sampler_1</span> <span class="o">=</span> <span class="n">dnest4</span><span class="o">.</span><span class="n">DNest4Sampler</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">dnest4</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">CSVBackend</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">))</span>
+
+<span class="c1"># pass hyper-parameters to </span>
+<span class="n">gen_1</span> <span class="o">=</span> <span class="n">sampler_1</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">max_num_levels</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">new_level_interval</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                     <span class="n">num_per_step</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">thread_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">num_particles</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># perform the sampling process</span>
+<span class="n">time0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">gen_1</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="n">time1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Time taken to sample with DNest4 and the polynom model: </span><span class="si">{}</span><span class="s2"> seconds </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time1</span><span class="o">-</span><span class="n">time0</span><span class="p">))</span>
+
+<span class="n">logZ_pol</span><span class="p">,</span> <span class="n">info_1</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">dnest4</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="highlight"><pre><span></span><code>Time taken to sample with DNest4 and the polynom model: 2415.3539073467255 seconds
+
+log(Z) = -834.5583551721998
+Information = 9.38512971091302 nats.
+Effective sample size = 248.86838013413347
+</code></pre></div>
+
+<p>Next, we'll run through the same process with the new "EGE" model. We need to come up with some new parameter priors for the model. I'll be using normal priors for the amplitude, mean, and baseline parameters. The function is very sensitive to small changes in the other parameters, so I'll use uniform priors for them:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">priors_h</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;N_mu&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;N_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">10</span>
+<span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;mu_mu&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;mu_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">5</span>
+<span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;sig_min&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;sig_max&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span>
+<span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;a_L_min&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;a_L_max&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.04</span>
+<span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;a_H_min&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;a_H_max&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span>
+<span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;b_mu&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;b_sig&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span>
+
+<span class="n">class_priors</span> <span class="o">=</span> <span class="p">[(</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;N_mu&#39;</span><span class="p">],</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;N_sig&#39;</span><span class="p">]),(</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;mu_mu&#39;</span><span class="p">],</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;mu_sig&#39;</span><span class="p">]),</span>
+                <span class="p">(</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;sig_min&#39;</span><span class="p">],</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;sig_max&#39;</span><span class="p">]),(</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;a_L_min&#39;</span><span class="p">],</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;a_L_max&#39;</span><span class="p">]),</span>
+                <span class="p">(</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;a_H_min&#39;</span><span class="p">],</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;a_H_max&#39;</span><span class="p">]),(</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;b_mu&#39;</span><span class="p">],</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;b_sig&#39;</span><span class="p">])]</span>
+</code></pre></div>
+
+
+<p>The modelling process is identical to the "polynom" example shown above. The only differences are in the class methods. The following shows the new class for the "EGE" model:</p>
+<div class="codehilite"><pre><span></span><code><span class="k">class</span> <span class="nc">DNest4Model</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for usage with DNest4 for fitting &quot;EGE&quot; model to an invariant mass peak</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># DNest4 doesn&#39;t require the class to have any &quot;self&quot; attributes</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">from_prior</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sample each parameter from prior distributions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;N_mu&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;N_sig&#39;</span><span class="p">])</span>
+        <span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;mu_mu&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;mu_sig&#39;</span><span class="p">])</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;sig_min&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;sig_max&#39;</span><span class="p">])</span>
+        <span class="n">a_L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;a_L_min&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;a_L_max&#39;</span><span class="p">])</span>
+        <span class="n">a_H</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;a_H_min&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;a_H_max&#39;</span><span class="p">])</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;b_mu&#39;</span><span class="p">],</span> <span class="n">priors_h</span><span class="p">[</span><span class="s1">&#39;b_sig&#39;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">N</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">a_L</span><span class="p">,</span> <span class="n">a_H</span><span class="p">,</span> <span class="n">b</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">perturb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+     <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Peturbs a parameter to a new proposal parameter</span>
+<span class="sd">    This is done in place, and to only one parameter at a time</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># log of the Metropolis-Hastings ratio</span>
+        <span class="n">logH</span> <span class="o">=</span> <span class="mf">0.0</span>  
+
+        <span class="c1"># choose random parameter</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+
+        <span class="c1"># update logH for chosen parameter (normal priors only)</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">]:</span>
+            <span class="n">logH</span> <span class="o">-=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">((</span><span class="n">theta</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">-</span> <span class="n">class_priors</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">class_priors</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+
+        <span class="c1"># scale parameter</span>
+        <span class="n">theta</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">1.</span> <span class="o">*</span> <span class="n">randh</span><span class="p">()</span>
+
+        <span class="c1"># update logH to original value</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">5</span><span class="p">]:</span>
+            <span class="c1"># update H for normal priors</span>
+            <span class="n">logH</span> <span class="o">+=</span> <span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">((</span><span class="n">theta</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">-</span> <span class="n">class_priors</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">class_priors</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># wrap uniform priors to their prior range</span>
+            <span class="n">theta</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">wrap</span><span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="n">p</span><span class="p">],</span> <span class="n">class_priors</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">class_priors</span><span class="p">[</span><span class="n">p</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">logH</span>
+
+    <span class="k">def</span> <span class="nf">log_likelihood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Poisson likelihood</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+    <span class="c1"># frequency and invariant mass lists</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">data_dnest4</span><span class="p">[</span><span class="s1">&#39;n_h&#39;</span><span class="p">]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">data_dnest4</span><span class="p">[</span><span class="s1">&#39;bins_h&#39;</span><span class="p">]</span>
+
+    <span class="c1"># expected value</span>
+        <span class="n">lmbda</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">EGE</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">*</span><span class="n">theta</span><span class="p">))</span>
+
+    <span class="c1"># terms in a poisson likelihood</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">gammaln</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">lmbda</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">lmbda</span><span class="p">)</span> <span class="o">-</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+</code></pre></div>
+
+
+<p>Now sampling using the same code as before, we can fit the "EGE" model to the data. Before this, it's important to note that DNest4 returns posterior samples in the current directory by saving ".txt" files. These files will be overwritten if they're not renamed or moved to a different directory, so make sure to do either of those things before running this next step:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1"># create sampler object using model class</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">DNest4Model</span><span class="p">()</span>
+<span class="n">sampler_2</span> <span class="o">=</span> <span class="n">dnest4</span><span class="o">.</span><span class="n">DNest4Sampler</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">dnest4</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">CSVBackend</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot; &quot;</span><span class="p">))</span>
+
+<span class="c1"># pass hyper-parameters to </span>
+<span class="n">gen_2</span> <span class="o">=</span> <span class="n">sampler_2</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">max_num_levels</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">num_steps</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">new_level_interval</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span>
+                     <span class="n">num_per_step</span><span class="o">=</span><span class="mi">10000</span><span class="p">,</span> <span class="n">thread_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">num_particles</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">lam</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="c1"># perform the sampling process</span>
+<span class="n">time0</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">gen_2</span><span class="p">):</span>
+    <span class="k">pass</span>
+<span class="n">time1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Time taken to sample with DNest4 and the EGE model: </span><span class="si">{}</span><span class="s2"> seconds </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time1</span><span class="o">-</span><span class="n">time0</span><span class="p">))</span>
+
+<span class="n">logZ_EGE</span><span class="p">,</span> <span class="n">info_2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">dnest4</span><span class="o">.</span><span class="n">postprocess</span><span class="p">(</span><span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="highlight"><pre><span></span><code>Time taken to run &#39;DNest4&#39; is 5569.005742549896 seconds
+
+log(Z) = -838.6092109374224
+Information = 13.492648493564161 nats.
+Effective sample size = 247.0799673512741
+</code></pre></div>
+
+<h3 id="results_1">Results</h3>
+<p>The results of both sampling processes have been saved to ".txt" files. These can be read using numpy's "loadtxt" function:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">samples_pol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;simplemodel/posterior_sample.txt&#39;</span><span class="p">)</span>
+<span class="n">samples_EGE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;newmodel/posterior_sample.txt&#39;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p>We can check which model predicts the invariant mass of the Higgs boson to the highest accuracy:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">means_pol</span><span class="p">,</span> <span class="n">errs_pol</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="n">means_EGE</span><span class="p">,</span> <span class="n">errs_EGE</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">):</span>
+
+    <span class="c1"># means and errors of polynom model</span>
+    <span class="n">means_pol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_pol</span><span class="p">[:,</span><span class="n">i</span><span class="p">]))</span>
+    <span class="n">errs_pol</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_pol</span><span class="p">[:,</span><span class="n">i</span><span class="p">]))</span>
+
+    <span class="c1"># means and errors of EGE model</span>
+    <span class="n">means_EGE</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_EGE</span><span class="p">[:,</span><span class="n">i</span><span class="p">]))</span>
+    <span class="n">errs_EGE</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_EGE</span><span class="p">[:,</span><span class="n">i</span><span class="p">]))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Mean invariant masses of $m_</span><span class="si">{bb}</span><span class="s1">$ distribution: </span><span class="se">\n</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> 
+      <span class="s1">&#39;          EGE model: </span><span class="si">{}</span><span class="s1"> </span><span class="se">\u00b1</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> GeV/c</span><span class="se">\u00b2</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">means_EGE</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">errs_EGE</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> 
+      <span class="s1">&#39;      polynom model: </span><span class="si">{}</span><span class="s1"> </span><span class="se">\u00b1</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> GeV/c</span><span class="se">\u00b2</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">means_pol</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">errs_pol</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> 
+      <span class="s1">&#39;Mass of the Higgs boson: </span><span class="si">{}</span><span class="s1"> GeV/c</span><span class="se">\u00b2</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mi">125</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="highlight"><pre><span></span><code>Mean invariant masses of $m_{bb}$ distribution:
+
+          EGE model: 121.01404746778172 ± 0.815657973799681 GeV/c² 
+      polynom model: 120.37903225806451 ± 0.8288423907093776 GeV/c²
+
+Mass of the Higgs boson: 125 GeV/c²
+</code></pre></div>
+
+<p>The EGE model is slightly better at predicting the Higgs boson mass, however both have simillar errors on their estimates.</p>
+<h3 id="plotting-the-posterior_1">Plotting the posterior</h3>
+<p>Using the "plotposts" function from before, we can create a corner plot for the EGE model.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">,</span> <span class="s1">&#39;mu&#39;</span><span class="p">,</span> <span class="s1">&#39;sig&#39;</span><span class="p">,</span> <span class="s1">&#39;a_L&#39;</span><span class="p">,</span> <span class="s1">&#39;a_H&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
+<span class="n">plotposts</span><span class="p">(</span><span class="n">samples_EGE</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span>
+</code></pre></div>
+
+
+<p><img alt="png" src="../corner2.png" /></p>
+<p>This plot shows strong correlations between the exponential growth/decay parameters and the standard deviation. Next I'll use the posterior samples to plot the posteriors over the data. Below are two plots: the first shows the mean posterior plots of both the "EGE" and "polynom" models overplotted onto the <script type="math/tex">m_{bb}</script> data. The second plot shows the posterior predictive plots of the "polynom" and "EGE" models.</p>
+<div class="codehilite"><pre><span></span><code><span class="n">nfits</span> <span class="o">=</span> <span class="mi">150</span>
+
+<span class="c1"># collect random sets of parameters of polynom model</span>
+<span class="n">param_samples_pol</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_res</span><span class="p">[:,</span><span class="n">i</span><span class="p">],</span><span class="n">nfits</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+<span class="n">post_samples_pol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">param_samples_pol</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+<span class="c1"># collect random sets of parameters of EGE model</span>
+<span class="n">param_samples_EGE</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">samples_EGE</span><span class="p">[:,</span><span class="n">i</span><span class="p">],</span><span class="n">nfits</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
+<span class="n">post_samples_EGE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">param_samples_EGE</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+
+
+<span class="c1"># begin plotting</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># mean posterior plots</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_h</span><span class="p">,</span> <span class="n">n_h</span><span class="p">,</span> <span class="s1">&#39;k:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Original data&#39;</span><span class="p">)</span>
+<span class="n">y_pol</span> <span class="o">=</span> <span class="n">polynom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">means_pol</span><span class="p">)</span>
+<span class="n">y_EGE</span> <span class="o">=</span> <span class="n">EGE</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">means_EGE</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_pol</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;polynom model&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_EGE</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;EGE model&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;$m_</span><span class="si">{bb}</span><span class="s1">$ invariant mass peak with overplotted</span><span class="se">\n</span><span class="s1"> mean posterior plots&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Frequency density&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Invariant mass / GeV/c</span><span class="se">\u00b2</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="c1"># polynom and EGE model posterior predictive plots</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">bins_h</span><span class="p">,</span> <span class="n">n_h</span><span class="p">,</span> <span class="s1">&#39;k:&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nfits</span><span class="p">):</span>
+    <span class="n">y_pol</span> <span class="o">=</span> <span class="n">polynom</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">post_samples_pol</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">y_EGE</span> <span class="o">=</span> <span class="n">EGE</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">*</span><span class="n">post_samples_EGE</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_pol</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_EGE</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;$m_</span><span class="si">{bb}</span><span class="s1">$ invariant mass peak with overplotted </span><span class="se">\n</span><span class="s1"> posterior predictive plots&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Invariant mass / GeV/c</span><span class="se">\u00b2</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div>
+
+
+<p><img alt="png" src="../compare.png" /></p>
+<p>We can see there is a little disagreement in the heights of the peak in both models, and the posterior predictive plot shows that the "EGE" model has a little more deviation than the "polynom" model. </p>
+<h3 id="model-comparisons">Model comparisons</h3>
+<p>Since we previously obtained values of the marginal error back when we ran the sampler, we can calculate the <a href="https://en.wikipedia.org/wiki/Bayes_factor">Bayes' factor</a> of the two models. This tells us which model is most likely to explain the observed data, and can be found by running the following:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logZ_pol</span> <span class="o">-</span> <span class="n">logZ_EGE</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Bayes Factor: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">K</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="highlight"><pre><span></span><code>Bayes Factor: 57.44659681610874
+</code></pre></div>
+
+<p>A Bayes' factor of 1.0 would suggest that both models are equally likely to explain the observed data. However, this result is in strong favour of the "polynom" function, meaning it is much more likely to explain the observed data than the exponential model. Typically, a Bayes factor over 30 is considered a strong preference of models, and over 100 is a decisive preference of models.</p>
                 
               
               
@@ -868,6 +1338,20 @@ Finally, the third attribute is the invariant mass for the process <script type=
             </div>
           </a>
         
+        
+          <a href="../../TheOnlineMCMC/TheOnlineMCMC/" title="Zero Installation Sampling with The Online MCMC" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-footer-nav__title">
+              <div class="md-ellipsis">
+                <span class="md-footer-nav__direction">
+                  Next
+                </span>
+                Zero Installation Sampling with The Online MCMC
+              </div>
+            </div>
+            <div class="md-footer-nav__button md-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4z"/></svg>
+            </div>
+          </a>
         
       </nav>
     </div>

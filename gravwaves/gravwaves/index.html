@@ -301,6 +301,18 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../TheOnlineMCMC/TheOnlineMCMC/" title="Zero Installation Sampling with The Online MCMC" class="md-nav__link">
+      Zero Installation Sampling with The Online MCMC
+    </a>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -604,15 +616,14 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="k">Parameters</span> <span class="n">describing</span> <span class="n">the</span> <span class="n">GW150914</span> <span class="n">signal</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code>Parameters describing the GW150914 signal:
 
-  <span class="n">chirp</span> <span class="n">mass</span> <span class="o">=</span> <span class="mi">28</span><span class="p">.</span><span class="mi">432363440275488</span>   <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">049549938503053295</span> 
-  <span class="n">mass</span> <span class="n">ratio</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">7520294836733314</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">06062816795824152</span>
+  chirp mass = 28.432363440275488   ± 0.049549938503053295 
+  mass ratio = 0.7520294836733314 ± 0.06062816795824152
 
-<span class="n">geocent</span> <span class="k">time</span> <span class="o">=</span> <span class="mi">1126259462</span><span class="p">.</span><span class="mi">4128802</span> <span class="err">±</span> <span class="mi">7</span><span class="p">.</span><span class="mi">509222877728134</span><span class="n">e</span><span class="o">-</span><span class="mi">05</span> 
-<span class="k">True</span> <span class="n">geocent</span> <span class="k">time</span> <span class="o">=</span> <span class="mi">1126259462</span><span class="p">.</span><span class="mi">4</span>
+geocent time = 1126259462.4128802 ± 7.509222877728134e-05 
+True geocent time = 1126259462.4
 </code></pre></div>
-
 
 <p>The time of the event lines up quite nicely. Next, we can attempt to calculate the mass of each black hole, which is fairly straight forward now that we know the chirp mass and mass ratio. The following function will return the masses of the black holes, given the chirp mass, mass ratio, and their errors.</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">bbhMass</span><span class="p">(</span><span class="n">chirp</span><span class="p">,</span><span class="n">chirperr</span><span class="p">,</span><span class="n">ratio</span><span class="p">,</span><span class="n">ratioerr</span><span class="p">):</span>
@@ -647,17 +658,16 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="n">Black</span> <span class="n">hole</span> <span class="n">masses</span> <span class="p">(</span><span class="k">in</span> <span class="n">solar</span> <span class="n">masses</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><code>Black hole masses (in solar masses):
 
-   <span class="n">largest</span> <span class="n">black</span> <span class="n">hole</span> <span class="o">=</span> <span class="mi">37</span><span class="p">.</span><span class="mi">73812541182669</span> <span class="err">±</span> <span class="mi">2</span><span class="p">.</span><span class="mi">2926680096744576</span> 
-  <span class="n">smallest</span> <span class="n">black</span> <span class="n">hole</span> <span class="o">=</span> <span class="mi">28</span><span class="p">.</span><span class="mi">38018296825545</span> <span class="err">±</span> <span class="mi">4</span><span class="p">.</span><span class="mi">151147606610291</span>
+   largest black hole = 37.73812541182669 ± 2.2926680096744576 
+  smallest black hole = 28.38018296825545 ± 4.151147606610291
 
-<span class="k">True</span> <span class="n">black</span> <span class="n">hole</span> <span class="n">masses</span> <span class="p">(</span><span class="k">in</span> <span class="n">solar</span> <span class="n">masses</span><span class="p">):</span>
+True black hole masses (in solar masses):
 
-   <span class="n">largest</span> <span class="n">black</span> <span class="n">hole</span> <span class="o">=</span> <span class="mi">36</span><span class="p">.</span><span class="mi">2</span>
-  <span class="n">smallest</span> <span class="n">black</span> <span class="n">hole</span> <span class="o">=</span> <span class="mi">29</span><span class="p">.</span><span class="mi">1</span>
+   largest black hole = 36.2
+  smallest black hole = 29.1
 </code></pre></div>
-
 
 <p>Our estimates here are within one standard deviation error of the accpeted black hole masses. This is a good result given that we only used 4 of 15 parameters. However allowing the other 11 parameters to vary would certainly reduce the error on our estimate, at the cost of 15 hours processing time.</p>
                 

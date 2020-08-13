@@ -362,6 +362,18 @@
   </li>
 
     
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../../TheOnlineMCMC/TheOnlineMCMC/" title="Zero Installation Sampling with The Online MCMC" class="md-nav__link">
+      Zero Installation Sampling with The Online MCMC
+    </a>
+  </li>
+
+    
   </ul>
 </nav>
                   </div>
@@ -548,10 +560,9 @@
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">PyMC3 version: 3.8</span>
-<span class="err">dynesty version: 1.0.1</span>
+<div class="highlight"><pre><span></span><code>PyMC3 version: 3.8
+dynesty version: 1.0.1
 </code></pre></div>
-
 
 <h2 id="viewing-the-data">Viewing the data</h2>
 <p>The data is in the form of a histogram with over 16000 bins, each with width of one <a href="https://en.wikipedia.org/wiki/Multichannel_analyzer">"MCA-Channel"</a>. This unit of energy is specific to the detector used to collect the GRS, and so we also must calibrate the spectrum to have a bin width in keV.</p>
@@ -706,17 +717,16 @@ Using scipy's "find_peaks" function, we can select some photopeaks in the spectr
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="n">Sampling</span> <span class="mi">4</span> <span class="n">chains</span><span class="p">,</span> <span class="mi">0</span> <span class="n">divergences</span><span class="p">:</span> <span class="mi">100</span><span class="o">%|</span><span class="err">██████████</span><span class="o">|</span> <span class="mi">7200</span><span class="o">/</span><span class="mi">7200</span> <span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">10</span><span class="o">&lt;</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span> <span class="mi">699</span><span class="p">.</span><span class="mi">00</span><span class="n">draws</span><span class="o">/</span><span class="n">s</span><span class="p">]</span> 
-<span class="n">Sampling</span> <span class="mi">4</span> <span class="n">chains</span><span class="p">,</span> <span class="mi">0</span> <span class="n">divergences</span><span class="p">:</span> <span class="mi">100</span><span class="o">%|</span><span class="err">██████████</span><span class="o">|</span> <span class="mi">7200</span><span class="o">/</span><span class="mi">7200</span> <span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">09</span><span class="o">&lt;</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span> <span class="mi">757</span><span class="p">.</span><span class="mi">94</span><span class="n">draws</span><span class="o">/</span><span class="n">s</span><span class="p">]</span> 
-<span class="n">Sampling</span> <span class="mi">4</span> <span class="n">chains</span><span class="p">,</span> <span class="mi">0</span> <span class="n">divergences</span><span class="p">:</span> <span class="mi">100</span><span class="o">%|</span><span class="err">██████████</span><span class="o">|</span> <span class="mi">7200</span><span class="o">/</span><span class="mi">7200</span> <span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">10</span><span class="o">&lt;</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span> <span class="mi">715</span><span class="p">.</span><span class="mi">65</span><span class="n">draws</span><span class="o">/</span><span class="n">s</span><span class="p">]</span> 
-<span class="n">Sampling</span> <span class="mi">4</span> <span class="n">chains</span><span class="p">,</span> <span class="mi">0</span> <span class="n">divergences</span><span class="p">:</span> <span class="mi">100</span><span class="o">%|</span><span class="err">██████████</span><span class="o">|</span> <span class="mi">7200</span><span class="o">/</span><span class="mi">7200</span> <span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">10</span><span class="o">&lt;</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span> <span class="mi">674</span><span class="p">.</span><span class="mi">49</span><span class="n">draws</span><span class="o">/</span><span class="n">s</span><span class="p">]</span> 
-<span class="n">Sampling</span> <span class="mi">4</span> <span class="n">chains</span><span class="p">,</span> <span class="mi">0</span> <span class="n">divergences</span><span class="p">:</span> <span class="mi">100</span><span class="o">%|</span><span class="err">██████████</span><span class="o">|</span> <span class="mi">7200</span><span class="o">/</span><span class="mi">7200</span> <span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">10</span><span class="o">&lt;</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span> <span class="mi">661</span><span class="p">.</span><span class="mi">42</span><span class="n">draws</span><span class="o">/</span><span class="n">s</span><span class="p">]</span> 
-<span class="n">Sampling</span> <span class="mi">4</span> <span class="n">chains</span><span class="p">,</span> <span class="mi">0</span> <span class="n">divergences</span><span class="p">:</span> <span class="mi">100</span><span class="o">%|</span><span class="err">██████████</span><span class="o">|</span> <span class="mi">7200</span><span class="o">/</span><span class="mi">7200</span> <span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">10</span><span class="o">&lt;</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span> <span class="mi">710</span><span class="p">.</span><span class="mi">30</span><span class="n">draws</span><span class="o">/</span><span class="n">s</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code>Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200 [00:10&lt;00:00, 699.00draws/s] 
+Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200 [00:09&lt;00:00, 757.94draws/s] 
+Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200 [00:10&lt;00:00, 715.65draws/s] 
+Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200 [00:10&lt;00:00, 674.49draws/s] 
+Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200 [00:10&lt;00:00, 661.42draws/s] 
+Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200 [00:10&lt;00:00, 710.30draws/s]
 
 
-<span class="mi">276</span><span class="p">.</span><span class="mi">74090600013733</span> <span class="n">seconds</span> <span class="p">(</span><span class="mi">46</span><span class="p">.</span><span class="mi">123484333356224</span> <span class="n">seconds</span> <span class="n">per</span> <span class="n">peak</span><span class="p">)</span> <span class="n">taken</span> <span class="k">to</span> <span class="n">run</span> <span class="n">PyMC3</span> <span class="n">sampling</span><span class="p">.</span>
+276.74090600013733 seconds (46.123484333356224 seconds per peak) taken to run PyMC3 sampling.
 </code></pre></div>
-
 
 <h3 id="sampling-the-data-alternate-method">Sampling the data - Alternate method</h3>
 <p>The above method uses a Poisson likelihood, since a metric like counts is non-negative. Although, since the peaks in the gamma-ray spectrum have large enough amplitudes, the likelihood can be well approximated by a normal distribution, with a estimate for the noise standard deviation. Guessing this standard deviation value is tricky, so instead we can set it as an extra parameter for the sampler. A good prior to start with is a uniform probabillity distribution in log-space, meaning the standard deviation has an equal probabillity of having any order of magnitude between an upper and lower bound.</p>
@@ -775,12 +785,11 @@ Using scipy's "find_peaks" function, we can select some photopeaks in the spectr
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="n">Sampling</span> <span class="mi">4</span> <span class="n">chains</span><span class="p">,</span> <span class="mi">0</span> <span class="n">divergences</span><span class="p">:</span> <span class="mi">100</span><span class="o">%|</span><span class="err">██████████</span><span class="o">|</span> <span class="mi">7200</span><span class="o">/</span><span class="mi">7200</span> <span class="p">[</span><span class="mi">00</span><span class="p">:</span><span class="mi">09</span><span class="o">&lt;</span><span class="mi">00</span><span class="p">:</span><span class="mi">00</span><span class="p">,</span> <span class="mi">727</span><span class="p">.</span><span class="mi">73</span><span class="n">draws</span><span class="o">/</span><span class="n">s</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><code>Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200 [00:09&lt;00:00, 727.73draws/s]
 
 
-<span class="mi">43</span><span class="p">.</span><span class="mi">72043991088867</span> <span class="n">seconds</span> <span class="n">taken</span> <span class="k">to</span> <span class="n">run</span> <span class="n">PyMC3</span> <span class="n">alternate</span> <span class="n">sampling</span><span class="p">.</span>
+43.72043991088867 seconds taken to run PyMC3 alternate sampling.
 </code></pre></div>
-
 
 <p>We can now briefly use the trace to see what values the sampler converged on for each parameter. I'll return to these values later when finding the uncertainty of the counts under the photopeak.</p>
 <div class="codehilite"><pre><span></span><code><span class="c1"># collect samples of each parameter</span>
@@ -808,15 +817,14 @@ Using scipy's "find_peaks" function, we can select some photopeaks in the spectr
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="k">Parameter</span> <span class="n">mean</span> <span class="k">values</span> <span class="k">with</span> <span class="n">uncertainties</span> <span class="k">for</span> <span class="n">a</span> <span class="n">photopeak</span> <span class="k">in</span> <span class="n">a</span> <span class="n">sample</span> <span class="k">of</span> <span class="n">Ba</span><span class="o">-</span><span class="mi">133</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code>Parameter mean values with uncertainties for a photopeak in a sample of Ba-133:
 
-             <span class="n">Amplitude</span> <span class="o">=</span> <span class="mi">805</span><span class="p">.</span><span class="mi">5161312481847</span> <span class="err">±</span> <span class="mi">22</span><span class="p">.</span><span class="mi">51101688252669</span> <span class="n">counts</span> 
-           <span class="n">Peak</span> <span class="n">Energy</span> <span class="o">=</span> <span class="mi">160</span><span class="p">.</span><span class="mi">6059216398261</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">018834853387709613</span> <span class="n">keV</span> 
-    <span class="n">Standard</span> <span class="n">Deviation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5233786079419919</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">019371192247871535</span> <span class="n">keV</span> 
-     <span class="n">Background</span> <span class="n">Counts</span> <span class="o">=</span> <span class="mi">1333</span><span class="p">.</span><span class="mi">599554840382</span> <span class="err">±</span> <span class="mi">7</span><span class="p">.</span><span class="mi">251969008469188</span> <span class="n">counts</span> 
-                 <span class="n">Noise</span> <span class="o">=</span> <span class="mi">1</span><span class="p">.</span><span class="mi">5885697487281636</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">05223363708405703</span> <span class="n">counts</span>
+             Amplitude = 805.5161312481847 ± 22.51101688252669 counts 
+           Peak Energy = 160.6059216398261 ± 0.018834853387709613 keV 
+    Standard Deviation = 0.5233786079419919 ± 0.019371192247871535 keV 
+     Background Counts = 1333.599554840382 ± 7.251969008469188 counts 
+                 Noise = 1.5885697487281636 ± 0.05223363708405703 counts
 </code></pre></div>
-
 
 <h3 id="results">Results</h3>
 <p>Now that the data has been sampled, we can collect the information for each parameter posterior using the traces. By using a dictionary, we can also collect the mean and standard deviation for each parameter, which will be useful later for plotting the fitted curves.</p>
@@ -880,14 +888,13 @@ Using scipy's "find_peaks" function, we can select some photopeaks in the spectr
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="k">Parameter</span> <span class="n">mean</span> <span class="k">values</span> <span class="k">with</span> <span class="n">uncertainties</span> <span class="k">for</span> <span class="n">a</span> <span class="n">photopeak</span> <span class="k">in</span> <span class="n">a</span> <span class="n">sample</span> <span class="k">of</span> <span class="n">Ba</span><span class="o">-</span><span class="mi">133</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code>Parameter mean values with uncertainties for a photopeak in a sample of Ba-133:
 
-            <span class="n">Amplitude</span> <span class="o">=</span> <span class="mi">789</span><span class="p">.</span><span class="mi">3499838312316</span> <span class="err">±</span> <span class="mi">25</span><span class="p">.</span><span class="mi">40762174271906</span> <span class="n">counts</span> 
-           <span class="n">Peak</span> <span class="n">Energy</span> <span class="o">=</span> <span class="mi">160</span><span class="p">.</span><span class="mi">60556153256505</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">019374762693360942</span> <span class="n">keV</span> 
-    <span class="n">Standard</span> <span class="n">Deviation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5324207733753832</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">017697951515753676</span> <span class="n">keV</span> 
-     <span class="n">Background</span> <span class="n">Counts</span> <span class="o">=</span> <span class="mi">1334</span><span class="p">.</span><span class="mi">1324943543657</span> <span class="err">±</span> <span class="mi">6</span><span class="p">.</span><span class="mi">560639436166777</span> <span class="n">counts</span>
+            Amplitude = 789.3499838312316 ± 25.40762174271906 counts 
+           Peak Energy = 160.60556153256505 ± 0.019374762693360942 keV 
+    Standard Deviation = 0.5324207733753832 ± 0.017697951515753676 keV 
+     Background Counts = 1334.1324943543657 ± 6.560639436166777 counts
 </code></pre></div>
-
 
 <h3 id="plotting-the-posterior">Plotting the posterior</h3>
 <p>Using the mean values for each parameter, we can define a Gaussian curve for each peak. Plotting this curve over the original data gives the best fit curve for that data. This best fit can be integrated, and by summing the integrals for each peak, the total counts of the gamma-ray spectrum can be found.</p>
@@ -993,10 +1000,9 @@ Using scipy's "find_peaks" function, we can select some photopeaks in the spectr
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">Total counts = 22933.86204613347 ± 195.58699451020811 counts </span>
-<span class="err">Percentage error = 0.8500378971345341%</span>
+<div class="highlight"><pre><span></span><code>Total counts = 22933.86204613347 ± 195.58699451020811 counts 
+Percentage error = 0.8500378971345341%
 </code></pre></div>
-
 
 <p>This percentage error was found using a Poisson likelihood, as described above. For a comparison, this integration can be repeated for the alternate sampling method, with a normal likelihood. Using the same alternate parameters that were found earlier, run the same integration process as before:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">peak_integral_alt</span> <span class="o">=</span> <span class="n">integrate</span><span class="o">.</span><span class="n">quad</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> 
@@ -1014,10 +1020,9 @@ Using scipy's "find_peaks" function, we can select some photopeaks in the spectr
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">Alternate total counts = 22943.751210742565 ± 193.76313608385547 counts </span>
-<span class="err">Alternate percentage error = 0.8447589197287152%</span>
+<div class="highlight"><pre><span></span><code>Alternate total counts = 22943.751210742565 ± 193.76313608385547 counts 
+Alternate percentage error = 0.8447589197287152%
 </code></pre></div>
-
 
 <p>It appears both methods result in a very simillar pecentage error, even though the alternate method is a little faster on my machine. This validates the theory that using a normal likelihood distribution on this photopeak approximates a Poisson distribution pretty well.</p>
 <p>In both cases, a percentage error of around 1% is more than acceptable, in general. Initially, I used a least-squares algorithm to fit curves to this same data set, which produced a percentage error around 1.3%. This leads me to conclude that using an MCMC algorithm was quite successful.</p>
@@ -1080,9 +1085,8 @@ Using scipy's "find_peaks" function, we can select some photopeaks in the spectr
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">10.890472173690796 seconds taken to run dynesty sampling</span>
+<div class="highlight"><pre><span></span><code>10.890472173690796 seconds taken to run dynesty sampling
 </code></pre></div>
-
 
 <p>We can now collect the results and view the summary of the sampling process, which includes the log of the marginal likelihood, number of interations, and some other values:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">results</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">results</span>
@@ -1090,8 +1094,8 @@ Using scipy's "find_peaks" function, we can select some photopeaks in the spectr
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="gh">Summary</span>
-<span class="gh">=======</span>
+<div class="highlight"><pre><span></span><code>Summary
+=======
 nlive: 1000
 niter: 13873
 ncall: 86323
@@ -1099,7 +1103,6 @@ eff(%): 17.229
 logz: -212.097 +/-  0.141
 None
 </code></pre></div>
-
 
 <h3 id="results_1">Results</h3>
 <p>To retrieve the posteriors for each parameter from a nested sampling algorithm, you need to resample using weights, which dynesty outputs with the results. This can be done easily as is shown below:</p>
@@ -1133,14 +1136,13 @@ None
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="k">Parameter</span> <span class="n">mean</span> <span class="k">values</span> <span class="k">with</span> <span class="n">uncertainties</span> <span class="k">for</span> <span class="n">a</span> <span class="n">photopeak</span> <span class="k">in</span> <span class="n">a</span> <span class="n">sample</span> <span class="k">of</span> <span class="n">Ba</span><span class="o">-</span><span class="mi">133</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code>Parameter mean values with uncertainties for a photopeak in a sample of Ba-133:
 
-             <span class="n">Amplitude</span> <span class="o">=</span> <span class="mi">809</span><span class="p">.</span><span class="mi">6473274589662</span> <span class="err">±</span> <span class="mi">24</span><span class="p">.</span><span class="mi">636099224592314</span> <span class="n">counts</span> 
-           <span class="n">Peak</span> <span class="n">Energy</span> <span class="o">=</span> <span class="mi">160</span><span class="p">.</span><span class="mi">60478084398832</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">019342705091128825</span> <span class="n">keV</span> 
-    <span class="n">Standard</span> <span class="n">Deviation</span> <span class="o">=</span> <span class="mi">0</span><span class="p">.</span><span class="mi">5237467836545735</span> <span class="err">±</span> <span class="mi">0</span><span class="p">.</span><span class="mi">01933901750104941</span> <span class="n">keV</span> 
-     <span class="n">Background</span> <span class="n">Counts</span> <span class="o">=</span> <span class="mi">1333</span><span class="p">.</span><span class="mi">4565559019425</span> <span class="err">±</span> <span class="mi">6</span><span class="p">.</span><span class="mi">802782860785766</span> <span class="n">counts</span>
+             Amplitude = 809.6473274589662 ± 24.636099224592314 counts 
+           Peak Energy = 160.60478084398832 ± 0.019342705091128825 keV 
+    Standard Deviation = 0.5237467836545735 ± 0.01933901750104941 keV 
+     Background Counts = 1333.4565559019425 ± 6.802782860785766 counts
 </code></pre></div>
-
 
 <h3 id="plotting-the-posterior_1">Plotting the posterior</h3>
 <p>So far, dynesty is in strong agreement with PyMC3, with both the values and errors being comparable to those from either PyMC3 sampling method we investigated. Below are two plots, the left plot shows the mean Gaussian curve produced by dynesty, and the right shows the posterior predictive plot:</p>
@@ -1220,10 +1222,9 @@ None
 </code></pre></div>
 
 
-<div class="codehilite"><pre><span></span><code><span class="err">Total counts = 22968.854117562147 ± 201.03466521968398 counts </span>
-<span class="err">Percentage error = 0.8793029468008915%</span>
+<div class="highlight"><pre><span></span><code>Total counts = 22968.854117562147 ± 201.03466521968398 counts 
+Percentage error = 0.8793029468008915%
 </code></pre></div>
-
 
 <p>Within their errors, dynesty and both PyMC3 methods agree on the total counts under the curve, and have produce a percentage error under 1%. </p>
 <p>PyMC3 is a little more intuative to use in general, however dynesty is a lot faster than PyMC3 on my machine, and also gives a value for the marginal likelihood in the process.</p>
