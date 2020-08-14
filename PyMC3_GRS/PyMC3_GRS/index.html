@@ -633,7 +633,7 @@ Using scipy's "find_peaks" function, we can select some photopeaks in the spectr
 <p><img alt="png" src="../output_12_0.png" /></p>
 <h2 id="the-model">The model</h2>
 <p>The decays that cause the photopeaks in a GRS have a discrete energy. The width of the photopeaks is caused by imperfections in the detector crystal, such as defects or excess thermal energy. This causes each peak to have a <a href="https://en.wikipedia.org/wiki/Gaussian_function">Gaussian nature</a>, rather than a sharp peak.</p>
-<p>I'll attempt to fit a Gaussian curve to each peak, by first defining the Gaussian fuction to be used:</p>
+<p>I'll attempt to fit a Gaussian curve to each peak, by first defining the Gaussian function to be used:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">gauss</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">xc</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">y0</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gaussian function</span>
@@ -659,8 +659,8 @@ Using scipy's "find_peaks" function, we can select some photopeaks in the spectr
 
 
 <h3 id="sampling-the-data">Sampling the data</h3>
-<p>Next, I'll use the above guesses to initialise each model. PyMC3 requires the user to provide a prior for each parameter, and a likelihood function, which can be easily set using the PyMC3 in-built Normal, Uniform, and Poisson probabillity distribution functions. </p>
-<p>I'll be using a <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson</a> likelihood, since Poisson distributions show how many times an event is likely to occur in a certain time period, assuming that events are independant and occur at a constant rate. Since radioactive decays are independant, and the half-life of Ba-133 is around 10.5 years, this makes a Poisson distribution <a href="https://en.wikipedia.org/wiki/Photon_statistics">suited for photon counting.</a></p>
+<p>Next, I'll use the above guesses to initialise each model. PyMC3 requires the user to provide a prior for each parameter, and a likelihood function, which can be easily set using the PyMC3 in-built Normal, Uniform, and Poisson probability distribution functions. </p>
+<p>I'll be using a <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson</a> likelihood, since Poisson distributions show how many times an event is likely to occur in a certain time period, assuming that events are independent and occur at a constant rate. Since radioactive decays are independant, and the half-life of Ba-133 is around 10.5 years, this makes a Poisson distribution <a href="https://en.wikipedia.org/wiki/Photon_statistics">suited for photon counting.</a></p>
 <p>This is done within the scope of each model defined above, using the "with" statement:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">peaks</span><span class="p">)):</span>
     <span class="k">with</span> <span class="n">gauss_models</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
@@ -729,8 +729,8 @@ Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200
 </code></pre></div>
 
 <h3 id="sampling-the-data-alternate-method">Sampling the data - Alternate method</h3>
-<p>The above method uses a Poisson likelihood, since a metric like counts is non-negative. Although, since the peaks in the gamma-ray spectrum have large enough amplitudes, the likelihood can be well approximated by a normal distribution, with a estimate for the noise standard deviation. Guessing this standard deviation value is tricky, so instead we can set it as an extra parameter for the sampler. A good prior to start with is a uniform probabillity distribution in log-space, meaning the standard deviation has an equal probabillity of having any order of magnitude between an upper and lower bound.</p>
-<p>I'll showcase this method, but I'll use the previous method for the results section below. I'll also use only the 2nd peak found, as it has the noisiest data and will likely produce the most interesting results. Start by initiating a new set of models using simillar code as before, but with the new likelihood.</p>
+<p>The above method uses a Poisson likelihood, since a metric like counts is non-negative. Although, since the peaks in the gamma-ray spectrum have large enough amplitudes, the likelihood can be well approximated by a normal distribution, with a estimate for the noise standard deviation. Guessing this standard deviation value is tricky, so instead we can set it as an extra parameter for the sampler. A good prior to start with is a uniform probability distribution in log-space, meaning the standard deviation has an equal probability of having any order of magnitude between an upper and lower bound.</p>
+<p>I'll showcase this method, but I'll use the previous method for the results section below. I'll also use only the 2nd peak found, as it has the noisiest data and will likely produce the most interesting results. Start by initiating a new set of models using similar code as before, but with the new likelihood.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">gauss_model_alt</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
 <span class="k">with</span> <span class="n">gauss_model_alt</span><span class="p">:</span>
     <span class="c1"># set prior parameters</span>
@@ -852,7 +852,7 @@ Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200
 <p>As an example, I'll use the 2nd peak again due to its noisy data: </p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">plotposts</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Function to plot posteriors using corner.py and scipy&#39;s gaussian KDE function.</span>
+<span class="sd">    Function to plot posteriors using corner.py and scipy&#39;s Gaussian KDE function.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">fig</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">hist_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>

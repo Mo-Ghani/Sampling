@@ -512,8 +512,8 @@
                 
                 
                 <h1 id="using-emcee-and-ultranest-to-model-the-light-curves-from-kepler-10">Using emcee and UltraNest to model the light curves from Kepler-10</h1>
-<p>Kepler-10 is a star located roughly 608 lightyears from Earth. Kepler-10 was targeted by NASA in their search for an Earth-like exoplanet, and in 2011 the first exoplanet orbiting Kepler-10 was discovered. The planet, Kepler-10b, is a rocky planet with 1.4x the radius of Earth, and 3.7x the mass.</p>
-<p>As Kepler-10b passes in front of its star, it obstructs some flux (the light energy per unit time per unit area) from the star, casting a shadow towards Earth. We see this as a slight periodic dip in light intesity, occuring every time the exoplanet is infront of its star. Measuring the light curve (flux as a function of time) from a star with an exoplanet is called "transit detection", and can be used to infer the existense of an exoplanet and find the properties of the star-planet system.</p>
+<p>Kepler-10 is a star located roughly 608 light years from Earth. Kepler-10 was targeted by NASA in their search for an Earth-like exoplanet, and in 2011 the first exoplanet orbiting Kepler-10 was discovered. The planet, Kepler-10b, is a rocky planet with 1.4x the radius of Earth, and 3.7x the mass.</p>
+<p>As Kepler-10b passes in front of its star, it obstructs some flux (the light energy per unit time per unit area) from the star, casting a shadow towards Earth. We see this as a slight periodic dip in light intensity, occurring every time the exoplanet is in front of its star. Measuring the light curve (flux as a function of time) from a star with an exoplanet is called "transit detection", and can be used to infer the existence of an exoplanet and find the properties of the star-planet system.</p>
 <p>In this example, I will create a model describing the flux of a star with, a single orbiting planet, as a function of time. I will then use the "emcee" and "UltraNest" samplers to fit the model parameters to some real Kepler-10 light curve data, provided by NASA.</p>
 <h2 id="useful-imports">Useful imports</h2>
 <div class="codehilite"><pre><span></span><code><span class="c1"># numpy</span>
@@ -550,7 +550,7 @@ UltraNest version: 2.2.2
 
 <h2 id="viewing-the-data">Viewing the data</h2>
 <p>Light curve models can vary from simple square shaped transits, to extremely complicated transits involving limb-darkening and other effects. To decide which model is most appropriate, we need to first see the data we will be using.</p>
-<p>The light curve data is in the form of a FITS file. These files can be easily loaded into a Table format (simillar to a Pandas DataFrame) using astropy. The data is quite large, so I chose to look at the first 1325 data points only. Whilst extracting the data, any data points with a flux of "nan" need to be removed from both the "flux" and "time" lists.</p>
+<p>The light curve data is in the form of a FITS file. These files can be easily loaded into a Table format (similar to a Pandas DataFrame) using astropy. The data is quite large, so I chose to look at the first 1325 data points only. Whilst extracting the data, any data points with a flux of "nan" need to be removed from both the "flux" and "time" lists.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">table</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;kplr011904151-2010265121752_llc.fits&quot;</span><span class="p">)</span>
 <span class="n">tab</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span><span class="n">tab</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
@@ -583,7 +583,7 @@ UltraNest version: 2.2.2
 <p><img alt="png" src="../output_8_0.png" /></p>
 <p>The above plot shows regular dips in flux, as expected from exoplanet transits. The dips appear to be "V-shaped", with sloped sides and a flat bottom. This suggests we could use a model of regular trapezium shaped flux drops. However, the slopes are fairly steep, so we could also use a much simpler square shaped flux drop instead. This would save on time, but may come at the cost of accuracy.</p>
 <h2 id="the-model">The model</h2>
-<p>Below is a diagram showing which parameters are needed to define a trapezium shaped transit (left), and how I will go about implementing the model in Python (right). I started with a simple recurring step function, then modified the step to have the triangular shape with height "h", which can be calculated using basic trigonometry. Finally, I added a hard floor at a flux change of df, to create the trapezium shape. The square transit shape is simillar, but tt and tf are equal.</p>
+<p>Below is a diagram showing which parameters are needed to define a trapezium shaped transit (left), and how I will go about implementing the model in Python (right). I started with a simple recurring step function, then modified the step to have the triangular shape with height "h", which can be calculated using basic trigonometry. Finally, I added a hard floor at a flux change of df, to create the trapezium shape. The square transit shape is similar, but tt and tf are equal.</p>
 <p><img alt="" src="../transits.png" title="Model" /></p>
 <p>Using this, I defined a the function that will be used to model the transit:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">transit</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tt</span><span class="p">,</span> <span class="n">tf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">off</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">square</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -595,7 +595,7 @@ UltraNest version: 2.2.2
 <span class="sd">    :param p: period of planet&#39;s orbit</span>
 <span class="sd">    :param tt: total time of transit</span>
 <span class="sd">    :param tf: time during transit in which flux doesn&#39;t change</span>
-<span class="sd">    :param off: time offset. A value of 0 means the transit begins immidiately</span>
+<span class="sd">    :param off: time offset. A value of 0 means the transit begins immediately</span>
 <span class="sd">    :param square: If True, the shape of the transit will be square (tt == tf)</span>
 <span class="sd">    :return: 1D array, flux from the star</span>
 <span class="sd">    &quot;&quot;&quot;</span> 
@@ -676,7 +676,7 @@ UltraNest version: 2.2.2
 
 
 <h3 id="sampling-the-data">Sampling the data</h3>
-<p>The "emcee" sampler requires the user to provide a prior, likelihood, and posterior function, all in their log forms. These functions are very simillar for the trapezium and square shaped transit models; the key difference being the "tf" parameter is omitted for the square model. Since I decided on using normal and uniform priors for each parameter, The log of the prior takes the following forms:</p>
+<p>The "emcee" sampler requires the user to provide a prior, likelihood, and posterior function, all in their log forms. These functions are very similar for the trapezium and square shaped transit models; the key difference being the "tf" parameter is omitted for the square model. Since I decided on using normal and uniform priors for each parameter, The log of the prior takes the following forms:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">logprior</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to return the log of the prior for a trapezium shaped transit light curve model</span>
@@ -1103,11 +1103,11 @@ Star density (square transit model): 1048.78853195487 ± 79.23816897368705 kg/m�
 True star density: 1070 kg/m³
 </code></pre></div>
 
-<p>This shows that not only does a square transit shape predict the density of the star remarkably well, it also has a slightly lower fractional uncertainty on it's estimate compared to the trapezium shaped transit. A reason for this may be that Kepler-10 is around the same size as the Sun, and Kepler-10b is actually larger than Earth, yet the planet is only infront of its star for only 3 hours. This means the planet has to be travelling fast, resulting in very steep slopes on the trapezium transit light curve. It seems involving the extra "tf" parameter only serves to complicate the model and add uncertainty when using a square wave is just as good, as is proven above.</p>
+<p>This shows that not only does a square transit shape predict the density of the star remarkably well, it also has a slightly lower fractional uncertainty on it's estimate compared to the trapezium shaped transit. A reason for this may be that Kepler-10 is around the same size as the Sun, and Kepler-10b is actually larger than Earth, yet the planet is only in front of its star for only 3 hours. This means the planet has to be travelling fast, resulting in very steep slopes on the trapezium transit light curve. It seems involving the extra "tf" parameter only serves to complicate the model and add uncertainty when using a square wave is just as good, as is proven above.</p>
 <h2 id="modelling-with-ultranest">Modelling with UltraNest</h2>
 <p>If we want a more definitive way of determining which model better desribes the observed data, we'll need to find the Bayes factor, which requires the marginalised likelihoods for the trapezium and square transit shapes. We can do this using the "UltraNest" nested sampling package.</p>
 <h3 id="sampling-the-data_1">Sampling the data</h3>
-<p>This works in a simillar way to emcee, in fact we can use the same likelihood functions defined earlier, however we do have to create a new prior function. UltraNest samples from a unit hypercube parameter space, and so the prior function must transform the parameters back into their true space. The two functions below show how this is done using scipy's inverse error function "ndtri":</p>
+<p>This works in a similar way to emcee, in fact we can use the same likelihood functions defined earlier, however we do have to create a new prior function. UltraNest samples from a unit hypercube parameter space, and so the prior function must transform the parameters back into their true space. The two functions below show how this is done using scipy's inverse error function "ndtri":</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">prior_transform</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transforms parameters from a unit hypercube space to their true space </span>
