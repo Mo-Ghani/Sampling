@@ -295,8 +295,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan" class="md-nav__link">
-      Particle Identification in Proton-Proton Collisions with PyStan
+    <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan and DNest4" class="md-nav__link">
+      Particle Identification in Proton-Proton Collisions with PyStan and DNest4
     </a>
   </li>
 
@@ -404,8 +404,8 @@
                 
                 
                 <h1 id="using-bilby-with-dynesty-to-estimate-the-properties-of-the-first-ever-detected-gravitational-wave-signal">Using bilby with dynesty to estimate the properties of the first ever detected gravitational wave signal</h1>
-<p>Einstein's theory of General Relativity, 1916, predicted that space-time can act as a medium for "gravitational waves", which are ripples caused by extremely violent cosmic events, such as black holes or neutron stars colliding. It was predicted that these waves travel at the speed of light, and could carry information about the event that caused them, and even reveal the true nature of gravity. Einstein also predicted that the waves would be so small, that their presence would never be detected. However, almost 100 years later in 2015, <a href="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.061102">LIGO detected the first gravitational wave signal</a> "GW150914" using a 4km long interferometer. the arms of which only stretched by a thousandth the width of a proton. </p>
-<p>The event that caused the gravitational waves was a collision between two massive black holes. In this example, I'll use the gravitational wave analysis package <a href="https://lscsoft.docs.ligo.org/bilby/index.html">"bilby"</a> along with the sampler "dynesty" to find the mass of the two black holes that caused GW150914.</p>
+<p>Einstein's theory of General Relativity, 1916, predicted that space-time can act as a medium for <a href="https://en.wikipedia.org/wiki/Gravitational_wave">"gravitational waves"</a>, which are ripples caused by extremely violent cosmic events such as black holes or neutron stars colliding. Einstein predicted that these waves travel at the speed of light, and could carry information about the event that caused them, and perhaps even reveal the "true" nature of gravity. He also predicted that the waves would be so small, that their presence would never be detected. However, almost 100 years later in 2015, <a href="https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.116.061102">LIGO detected the first gravitational wave signal</a> "GW150914" using a 4km long interferometer, the arms of which only stretched by a thousandth the width of a proton. </p>
+<p>The event that caused the gravitational waves was a merger of two massive black holes. In this example, I'll use the gravitational wave analysis package <a href="https://lscsoft.docs.ligo.org/bilby/index.html">"bilby"</a> along with the sampler "dynesty" to find the mass of the two black holes that caused GW150914.</p>
 <h2 id="useful-imports">Useful imports</h2>
 <div class="codehilite"><pre><span></span><code><span class="c1"># numpy</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -510,7 +510,7 @@
 <p><img alt="" src="../strainvfreq.png" /></p>
 <h2 id="setting-the-priors">Setting the priors</h2>
 <p>The model describing the black hole merger depends on 15 parameters. Running a sampler with this many parameters can take half a day to run. To save some time, I'll fix all but 4 parameters: the chirp mass, the mass ratio, the phase, and the geocent time.</p>
-<p>The chirp mass and mass ratio are two parameters wich depend on the mass of the two black holes that caused the gravitational waves. When these two parameters are derived, we can use them to calculate the masses of the black holes. Since we don't know much about the system parameters that we're allowing to vary, uniform priors are most appropriate:</p>
+<p>The chirp mass and mass ratio are two parameters which depend only on the mass of the two black holes that caused the gravitational waves. When these two parameters are derived, we can use them to calculate the masses of the black holes. Since we don't know much about the system parameters that we're allowing to vary, uniform priors are most appropriate:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">prior</span> <span class="o">=</span> <span class="n">bilby</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">prior</span><span class="o">.</span><span class="n">PriorDict</span><span class="p">()</span>
 <span class="c1"># uniform priors for variable parameters</span>
 <span class="n">prior</span><span class="p">[</span><span class="s1">&#39;chirp_mass&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Uniform</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;chirp_mass&#39;</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span><span class="n">maximum</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)</span>
@@ -649,21 +649,21 @@ True geocent time = 1126259462.4
 <span class="p">(</span><span class="n">m1</span><span class="p">,</span><span class="n">m1err</span><span class="p">),</span> <span class="p">(</span><span class="n">m2</span><span class="p">,</span><span class="n">m2err</span><span class="p">)</span> <span class="o">=</span> <span class="n">bbhMass</span><span class="p">(</span><span class="n">chirp_mass</span><span class="p">,</span><span class="n">chirp_mass_err</span><span class="p">,</span>
                                  <span class="n">mass_ratio</span><span class="p">,</span><span class="n">mass_ratio_err</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Black hole masses (in solar masses): </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> 
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Black hole masses from sampling (in solar masses): </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> 
       <span class="s2">&quot;   largest black hole = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">m1err</span><span class="p">)</span> <span class="o">+</span> 
       <span class="s2">&quot;  smallest black hole = </span><span class="si">{}</span><span class="s2"> </span><span class="se">\u00B1</span><span class="s2"> </span><span class="si">{}</span><span class="s2"> </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">m2</span><span class="p">,</span> <span class="n">m2err</span><span class="p">)</span> <span class="o">+</span>
-      <span class="s2">&quot;True black hole masses (in solar masses): </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> 
+      <span class="s2">&quot;Accepted black hole masses (in solar masses): </span><span class="se">\n</span><span class="s2"> </span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> 
       <span class="s2">&quot;   largest black hole = </span><span class="si">{}</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">36.2</span><span class="p">)</span> <span class="o">+</span> 
       <span class="s2">&quot;  smallest black hole = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">29.1</span><span class="p">))</span>
 </code></pre></div>
 
 
-<div class="highlight"><pre><span></span><code>Black hole masses (in solar masses):
+<div class="highlight"><pre><span></span><code>Black hole masses from sampling (in solar masses):
 
    largest black hole = 37.73812541182669 ± 2.2926680096744576 
   smallest black hole = 28.38018296825545 ± 4.151147606610291
 
-True black hole masses (in solar masses):
+Accepted black hole masses (in solar masses):
 
    largest black hole = 36.2
   smallest black hole = 29.1
@@ -703,13 +703,13 @@ True black hole masses (in solar masses):
           </a>
         
         
-          <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan and DNest4" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                Particle Identification in Proton-Proton Collisions with PyStan
+                Particle Identification in Proton-Proton Collisions with PyStan and DNest4
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">

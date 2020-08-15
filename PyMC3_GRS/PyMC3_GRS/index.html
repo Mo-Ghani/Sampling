@@ -356,8 +356,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan" class="md-nav__link">
-      Particle Identification in Proton-Proton Collisions with PyStan
+    <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan and DNest4" class="md-nav__link">
+      Particle Identification in Proton-Proton Collisions with PyStan and DNest4
     </a>
   </li>
 
@@ -527,8 +527,8 @@
                 
                 <h1 id="using-pymc3-and-dynesty-to-fit-gaussian-curves-to-photopeaks-in-a-gamma-ray-spectrum">Using PyMC3 and dynesty to fit Gaussian curves to photopeaks in a gamma-ray spectrum</h1>
 <p>A gamma-ray spectrum (GRS) is a histogram describing the counts of detected photons as a function of photon energy. GRS can be useful when evaluating the dosage received from a sample containing unknown radioisotopes. To do this, the total counts produced above background by a source has to be calculated. </p>
-<p>Above the background level, a gamma source produces sharp peaks, called "photopeaks", due to discrete energy level changes in a nucleus. A method for finding the total counts is to fit a curve to every photopeak in a GRS, and integrate each one to find the total area contained under photopeaks.</p>
-<p>In this example, I'll use MCMC to fit Gaussian curves to peaks found in gamma-ray spectrum of a sample of Ba-133.</p>
+<p>Above the background level, a gamma source produces sharp peaks, called "photopeaks", due to discrete energy level changes in a nucleus. A method for finding the total counts from a source is to fit a curve to every photopeak in a GRS, and integrate each one to find the total area contained under photopeaks.</p>
+<p>In this example, I'll use "PyMC3" and "dynesty" to fit Gaussian curves to peaks found in gamma-ray spectrum of a sample of Ba-133.</p>
 <h2 id="useful-imports">Useful imports</h2>
 <div class="codehilite"><pre><span></span><code><span class="c1"># numpy</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -539,13 +539,12 @@
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">integrate</span>
 <span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">ndtri</span><span class="p">,</span> <span class="n">gammaln</span>
 
-<span class="c1"># Plotting</span>
+<span class="c1"># plotting</span>
 <span class="kn">import</span> <span class="nn">corner</span>
-
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="o">%</span><span class="n">matplotlib</span> <span class="n">inline</span>
 
-<span class="c1"># Samplers</span>
+<span class="c1"># samplers</span>
 <span class="kn">import</span> <span class="nn">pymc3</span> <span class="k">as</span> <span class="nn">pm</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;PyMC3 version: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">pm</span><span class="o">.</span><span class="n">__version__</span><span class="p">))</span>
 
@@ -565,9 +564,9 @@ dynesty version: 1.0.1
 </code></pre></div>
 
 <h2 id="viewing-the-data">Viewing the data</h2>
-<p>The data is in the form of a histogram with over 16000 bins, each with width of one <a href="https://en.wikipedia.org/wiki/Multichannel_analyzer">"MCA-Channel"</a>. This unit of energy is specific to the detector used to collect the GRS, and so we also must calibrate the spectrum to have a bin width in keV.</p>
+<p>The data is in the form of a histogram with over 16000 bins, each with width of one <a href="https://en.wikipedia.org/wiki/Multichannel_analyzer">"MCA-Channel"</a>. This unit of energy is specific to the detector used to collect the GRS, and so we also must calibrate the spectrum to have a bin width in <a href="https://en.wikipedia.org/wiki/Electronvolt">keV</a>.</p>
 <p>Start by loading in both the calibration parameters, and the entire gamma-ray spectrum as a list:</p>
-<div class="codehilite"><pre><span></span><code><span class="c1">#Load detector calibration</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># load detector calibration</span>
 <span class="n">cali_dir</span> <span class="o">=</span> <span class="s1">&#39;calibration.txt&#39;</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">cali_dir</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
     <span class="n">calibration</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
@@ -575,7 +574,7 @@ dynesty version: 1.0.1
 <span class="n">c_0</span> <span class="o">=</span> <span class="n">calibration</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">c_2</span> <span class="o">=</span> <span class="n">calibration</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
 
-<span class="c1">#Load gamma-ray spectrum data</span>
+<span class="c1"># load gamma-ray spectrum data</span>
 <span class="n">spectra_dir</span> <span class="o">=</span> <span class="s1">&#39;Ba.TKA&#39;</span>
 <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">spectra_dir</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
     <span class="n">counts</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">file</span><span class="p">]</span>
@@ -584,9 +583,9 @@ dynesty version: 1.0.1
 
 
 <p>The spectrum contains an X-ray region at lower energies, and an extremely noisy region at higher energies. Both of these regions are not very useful for this demonstration, so I'll only show the section I'll be searching for photopeaks.</p>
-<div class="codehilite"><pre><span></span><code><span class="n">xrange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">counts</span><span class="p">)))</span>  <span class="c1"># Bins for gamma-ray spectrum</span>
+<div class="codehilite"><pre><span></span><code><span class="n">xrange</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">counts</span><span class="p">)))</span>  <span class="c1"># bins for gamma-ray spectrum</span>
 
-<span class="c1"># Plot the spectrum</span>
+<span class="n">b</span> <span class="n">Plot</span> <span class="n">the</span> <span class="n">spectrum</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xrange</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">fill</span><span class="p">(</span><span class="n">xrange</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span> <span class="mf">0.4</span><span class="p">)</span>
@@ -602,7 +601,7 @@ dynesty version: 1.0.1
 <p><img alt="png" src="../output_8_0.png" /></p>
 <p>The spectrum is made up of a smooth background counts curve, with sharp peaks sitting on top. These are the photopeaks we're searching for.
 Using scipy's "find_peaks" function, we can select some photopeaks in the spectrum to analyse. This function looks for local maxima by comparing a point to it's neighbours. The optional arguments specify the minimum height for a peak to be returned, and a "neighbourhood width", so only the largest peak in a given neighbourhood will be returned. </p>
-<div class="codehilite"><pre><span></span><code><span class="c1"># Find prominent peaks in data using scipy</span>
+<div class="codehilite"><pre><span></span><code><span class="c1"># find prominent peaks in data using scipy</span>
 <span class="n">peaks</span> <span class="o">=</span> <span class="n">find_peaks</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1300</span><span class="p">,</span> <span class="n">distance</span><span class="o">=</span><span class="mi">100</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">3</span><span class="p">:]</span>
 </code></pre></div>
 
@@ -614,7 +613,7 @@ Using scipy's "find_peaks" function, we can select some photopeaks in the spectr
 <span class="n">peaks_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">c_0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">peak</span><span class="o">-</span><span class="n">ranger</span><span class="p">,</span> <span class="n">peak</span><span class="o">+</span><span class="n">ranger</span><span class="p">))</span> <span class="o">+</span> <span class="n">c_2</span> <span class="k">for</span> <span class="n">peak</span> <span class="ow">in</span> <span class="n">peaks</span><span class="p">]</span>
 <span class="n">peaks_y</span> <span class="o">=</span> <span class="p">[</span><span class="n">counts</span><span class="p">[</span><span class="n">peak</span><span class="o">-</span><span class="n">ranger</span><span class="p">:</span><span class="n">peak</span><span class="o">+</span><span class="n">ranger</span><span class="p">]</span> <span class="k">for</span> <span class="n">peak</span> <span class="ow">in</span> <span class="n">peaks</span><span class="p">]</span>
 
-<span class="c1"># Plot selected peaks from gamma-ray spectrum</span>
+<span class="c1"># plot selected peaks from gamma-ray spectrum</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
@@ -660,8 +659,8 @@ Using scipy's "find_peaks" function, we can select some photopeaks in the spectr
 
 <h3 id="sampling-the-data">Sampling the data</h3>
 <p>Next, I'll use the above guesses to initialise each model. PyMC3 requires the user to provide a prior for each parameter, and a likelihood function, which can be easily set using the PyMC3 in-built Normal, Uniform, and Poisson probability distribution functions. </p>
-<p>I'll be using a <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson</a> likelihood, since Poisson distributions show how many times an event is likely to occur in a certain time period, assuming that events are independent and occur at a constant rate. Since radioactive decays are independant, and the half-life of Ba-133 is around 10.5 years, this makes a Poisson distribution <a href="https://en.wikipedia.org/wiki/Photon_statistics">suited for photon counting.</a></p>
-<p>This is done within the scope of each model defined above, using the "with" statement:</p>
+<p>I'll be using a <a href="https://en.wikipedia.org/wiki/Poisson_distribution">Poisson</a> likelihood, since Poisson distributions show how many times an event is likely to occur in a certain time period, assuming that events are independent and occur at a constant rate. Since radioactive decays are independant, and the half-life of Ba-133 (10.5 years) is long enough for the decay rate to be roughly constant over a one week measurement, this makes a Poisson distribution <a href="https://en.wikipedia.org/wiki/Photon_statistics">suited for photon counting.</a></p>
+<p>The priors and likelihood can be set within the scope of each model defined above, using the "with" statement:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">peaks</span><span class="p">)):</span>
     <span class="k">with</span> <span class="n">gauss_models</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
         <span class="c1"># set prior parameters</span>
@@ -687,7 +686,7 @@ Using scipy's "find_peaks" function, we can select some photopeaks in the spectr
         <span class="n">w_model</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="s1">&#39;Standard Deviation&#39;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="n">w_min</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="n">w_max</span><span class="p">)</span>  
         <span class="n">y0_model</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s1">&#39;Background Counts&#39;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">y0_mu</span><span class="p">,</span> <span class="n">sd</span><span class="o">=</span><span class="n">y0_sig</span><span class="p">)</span>
 
-        <span class="c1"># Expected value of outcome</span>
+        <span class="c1"># expected value of outcome</span>
         <span class="n">mu</span> <span class="o">=</span> <span class="n">gauss</span><span class="p">(</span><span class="n">peaks_x</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">a_model</span><span class="p">,</span> <span class="n">xc_model</span><span class="p">,</span> <span class="n">w_model</span><span class="p">,</span> <span class="n">y0_model</span><span class="p">)</span>
 
         <span class="c1"># Poisson likelihood of observations</span>
@@ -729,7 +728,7 @@ Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200
 </code></pre></div>
 
 <h3 id="sampling-the-data-alternate-method">Sampling the data - Alternate method</h3>
-<p>The above method uses a Poisson likelihood, since a metric like counts is non-negative. Although, since the peaks in the gamma-ray spectrum have large enough amplitudes, the likelihood can be well approximated by a normal distribution, with a estimate for the noise standard deviation. Guessing this standard deviation value is tricky, so instead we can set it as an extra parameter for the sampler. A good prior to start with is a uniform probability distribution in log-space, meaning the standard deviation has an equal probability of having any order of magnitude between an upper and lower bound.</p>
+<p>The above method uses a Poisson likelihood. However, since the peaks in the gamma-ray spectrum have large enough amplitudes, the likelihood can be well approximated by a normal distribution, with a estimate for the noise standard deviation. Guessing this standard deviation value is tricky, so instead we can set it as an extra parameter for the sampler. A good prior to start with is a uniform probability distribution in log-space, meaning the standard deviation has an equal probability of having any order of magnitude between an upper and lower bound.</p>
 <p>I'll showcase this method, but I'll use the previous method for the results section below. I'll also use only the 2nd peak found, as it has the noisiest data and will likely produce the most interesting results. Start by initiating a new set of models using similar code as before, but with the new likelihood.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">gauss_model_alt</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span>
 <span class="k">with</span> <span class="n">gauss_model_alt</span><span class="p">:</span>
@@ -762,9 +761,9 @@ Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200
     <span class="c1"># set uniform prior</span>
     <span class="n">sigma_model</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Uniform</span><span class="p">(</span><span class="s1">&#39;Noise&#39;</span><span class="p">,</span> <span class="n">lower</span><span class="o">=</span><span class="n">sigma_min</span><span class="p">,</span> <span class="n">upper</span><span class="o">=</span><span class="n">sigma_max</span><span class="p">)</span>
 
-    <span class="c1"># Expected value of outcome</span>
+    <span class="c1"># expected value of outcome</span>
     <span class="n">mu</span> <span class="o">=</span> <span class="n">gauss</span><span class="p">(</span><span class="n">peaks_x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">a_model</span><span class="p">,</span> <span class="n">xc_model</span><span class="p">,</span> <span class="n">w_model</span><span class="p">,</span> <span class="n">y0_model</span><span class="p">)</span>
-    <span class="c1"># Normal likelihood of observations with noise</span>
+    <span class="c1"># normal likelihood of observations with noise</span>
     <span class="n">Y_obs</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s1">&#39;Y_obs&#39;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">sd</span><span class="o">=</span><span class="mi">10</span> <span class="o">**</span> <span class="n">sigma_model</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">peaks_y</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 </code></pre></div>
 
@@ -848,7 +847,7 @@ Sampling 4 chains, 0 divergences: 100%|██████████| 7200/7200
 </code></pre></div>
 
 
-<p>To visualise the information given for each parameter, we can define a function to plot the parameter posteriors, and also create contour plots that describe how any two parameters might depend on each other. This is done using "corner.py". </p>
+<p>To visualise the information given for each parameter, we can define a function to plot the parameter posteriors, and also create contour plots that describe how any two parameters might depend on each other. This is done using <a href="https://corner.readthedocs.io/en/latest/">"corner.py"</a>. </p>
 <p>As an example, I'll use the 2nd peak again due to its noisy data: </p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">plotposts</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>

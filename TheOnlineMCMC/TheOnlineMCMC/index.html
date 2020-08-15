@@ -211,8 +211,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan" class="md-nav__link">
-      Particle Identification in Proton-Proton Collisions with PyStan
+    <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan and DNest4" class="md-nav__link">
+      Particle Identification in Proton-Proton Collisions with PyStan and DNest4
     </a>
   </li>
 
@@ -376,7 +376,7 @@
                 
                 
                 <h1 id="using-the-online-mcmc-to-fit-a-model-without-any-installations">Using The Online MCMC to fit a model without any installations</h1>
-<p>Sometimes it's not easy to install packages in Python without knowing what you're doing, and even then you might be limited by your operating system or hard-drive space. Instead of installing Python, or any of the samplers described on this website, you can use <a href="http://www.theonlinemcmc.com/">The Online MCMC</a>. This is a free-to-use website which allows you to simply enter a model, define the parameter priors, input the data, and the website does the rest. </p>
+<p>Sometimes it's not easy to install packages in Python without knowing what you're doing. Even if you do, you might be limited by your operating system or hard-drive space. Instead of installing Python, or any of the samplers described on this website, you can use <a href="http://www.theonlinemcmc.com/">The Online MCMC</a>. This is a free-to-use website which allows you to simply enter a model, define the parameter priors, input the data, and the website does the rest. </p>
 <p>In this example, I'll use a photopeak from my <a href="https://mo-ghani.github.io/Sampling/PyMC3_GRS/PyMC3_GRS/">gamma-ray spectroscopy example</a> to demonstrate how to use The Online MCMC to fit a model to some data.</p>
 <h2 id="useful-imports">Useful imports</h2>
 <div class="codehilite"><pre><span></span><code><span class="c1"># no imports necessary for using The Online MCMC</span>
@@ -463,7 +463,7 @@
 <p>Now that we know what our data looks like, and what our model looks like, we can pass everything to The Online MCMC website. Below is a screenshot of what all my inputs looked like on The Online MCMC. I'll talk through everything I did afterwards:</p>
 <p><img alt="png" src="../onlineMCMC.PNG" /></p>
 <p>First, I inputted the model. The Online MCMC allows for several basic functions to be used, such as trigonometric functions and exponential functions, so there is no need to approximate a model. The Online MCMC also allows for piecewise functions, which take different forms depending on the values of the x-axis. </p>
-<p>Next, the website automatically produces a list of variables in your model equation. I set x as an independant variable, and the other variables as parameters. For the independant variable x, I inputted the list of x-values (in this example the list contained in the "energy" variabe). For the parameters, the priors have to be defined. I did this simply by guessing at the values of the parameters using the photopeak plot above. I used a uniform prior for the background counts and standard deviation, and a normal prior for the other parameters.</p>
+<p>Next, the website automatically detects and produces a list of variables in your model equation. I set "x" as an independant variable, and the other variables as parameters. For the independant variable "x", I inputted the list of x-values (in this example the list contained in the "energy" variable). For the parameters, the priors have to be defined. I did this simply by guessing at the values of the parameters using the photopeak plot above. I used a uniform prior for the background counts and standard deviation, and a normal prior for the other parameters.</p>
 <p>I next inputted the data (the list contained in the "counts" variable), and chose a likelihood. The Online MCMC gives a choice of Normal, Poisson, and Student's t likelihoods, of which I chose a Poisson distribution. Again, for more details on why I chose a Poisson likelihood, check out <a href="https://mo-ghani.github.io/Sampling/PyMC3_GRS/PyMC3_GRS/#sampling-the-data">this section</a>.</p>
 <p>Finally, I chose a sampler. I chose to use <a href="https://pypi.org/project/nestle/">Nestle</a>, although some other samplers I could have chosen are <a href="https://emcee.readthedocs.io/en/stable/">emcee</a>, <a href="https://dynesty.readthedocs.io/en/latest/">dynesty</a>, and <a href="https://docs.pymc.io/">PyMC3</a>. I set up the number of live points, and chose a sampling method 'multi'.</p>
 <p>From there, all you have to do is enter an email address so the website can send the results once the sampling is complete, and click 'submit'. </p>
@@ -472,7 +472,7 @@
 <p><img alt="png" src="../corner.PNG" /></p>
 <p>This plot shows us the posteriors for each parameter, along with contour plots showing how a parameter may vary with any other. </p>
 <p>The Online MCMC also provides a link to download the posterior samples, so you can go ahead with further analysis if needed. Comparing to <a href="https://mo-ghani.github.io/Sampling/PyMC3_GRS/PyMC3_GRS/#sampling-the-data-alternate-method">this section</a>, we can see that the mean values from both The Online MCMC and PyMC3 are very much in agreement, and the standard deviation errors are also simillar.</p>
-<p>Since this is only an example to show you can use The Online MCMC to sample data, I won't go into all the further analysis on the photopeaks (which can be found <a href="https://mo-ghani.github.io/Sampling/PyMC3_GRS/PyMC3_GRS/#results">here</a>).</p>
+<p>Since this is only an example to show how you can use The Online MCMC to sample data, I won't go into all the further analysis on the photopeaks (which can be found <a href="https://mo-ghani.github.io/Sampling/PyMC3_GRS/PyMC3_GRS/#results">here</a>).</p>
                 
               
               
@@ -491,7 +491,7 @@
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan and DNest4" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -500,7 +500,7 @@
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                Particle Identification in Proton-Proton Collisions with PyStan
+                Particle Identification in Proton-Proton Collisions with PyStan and DNest4
               </div>
             </div>
           </a>

@@ -15,7 +15,7 @@
     
     
       
-        <title>Particle Identification in Proton-Proton Collisions with PyStan - Demonstrations of MCMC and Nested Samplers in Physics</title>
+        <title>Particle Identification in Proton-Proton Collisions with PyStan and DNest4 - Demonstrations of MCMC and Nested Samplers in Physics</title>
       
     
     
@@ -77,7 +77,7 @@
           </span>
           <span class="md-header-nav__topic md-ellipsis">
             
-              Particle Identification in Proton-Proton Collisions with PyStan
+              Particle Identification in Proton-Proton Collisions with PyStan and DNest4
             
           </span>
         </div>
@@ -220,14 +220,14 @@
     
     
       <label class="md-nav__link md-nav__link--active" for="__toc">
-        Particle Identification in Proton-Proton Collisions with PyStan
+        Particle Identification in Proton-Proton Collisions with PyStan and DNest4
         <span class="md-nav__icon md-icon">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 9h14V7H3v2m0 4h14v-2H3v2m0 4h14v-2H3v2m16 0h2v-2h-2v2m0-10v2h2V7h-2m0 6h2v-2h-2v2z"/></svg>
         </span>
       </label>
     
-    <a href="./" title="Particle Identification in Proton-Proton Collisions with PyStan" class="md-nav__link md-nav__link--active">
-      Particle Identification in Proton-Proton Collisions with PyStan
+    <a href="./" title="Particle Identification in Proton-Proton Collisions with PyStan and DNest4" class="md-nav__link md-nav__link--active">
+      Particle Identification in Proton-Proton Collisions with PyStan and DNest4
     </a>
     
       
@@ -512,7 +512,7 @@
                 
                 
                 <h1 id="using-pystan-and-dnest4-to-identify-particles-produced-in-proton-proton-collisions">Using PyStan and DNest4 to identify particles produced in proton-proton collisions</h1>
-<p>The Large Hadron Collider (LHC) is a particle accelerator that is capable of producing proton beams at near light-speed. Two of these beams are targeted at each other, so that very high-energy protons collide head-on. This collision creates many new particles, most of which are known hadrons or mesons. However, some of the created particles are heavy bosons such as the W boson, and the Higgs boson.</p>
+<p>The <a href="https://home.cern/science/accelerators/large-hadron-collider">Large Hadron Collider (LHC)</a> is a particle accelerator that is capable of producing proton beams at near light-speed. Two of these beams are targeted at each other, so that very high-energy protons collide head-on. This collision creates many new particles, most of which are known hadrons or mesons. However, some of the created particles are heavy bosons such as the W boson, and the Higgs boson.</p>
 <p>These bosons have a very short lifetime, limited by the <a href="https://en.wikipedia.org/wiki/Uncertainty_principle">uncertainty principle</a>, and so they decay long before they can reach the particle detectors. The only way to identify the existence of these particles is to infer their presence from their decay products.</p>
 <p>In the following example, I'll use "PyStan" and "DNest4" to identify particles created in proton-proton collisions at LHC.</p>
 <h2 id="useful-imports">Useful imports</h2>
@@ -530,7 +530,7 @@
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">corner</span>
 
-<span class="c1"># sampler</span>
+<span class="c1"># samplers</span>
 <span class="kn">import</span> <span class="nn">pystan</span>
 <span class="kn">from</span> <span class="nn">dnest4</span> <span class="kn">import</span> <span class="n">randh</span><span class="p">,</span> <span class="n">wrap</span>
 <span class="kn">import</span> <span class="nn">dnest4</span>
@@ -549,7 +549,7 @@ DNest4 version: 0.2.4
 
 <h2 id="viewing-the-data">Viewing the data</h2>
 <p>First, I'll use pandas to load the data. The data set is made up of 1.1 million collisions, each with 28 different attributes. The first 21 attributes are "low-level", and are only really useful for calculating the last 7 attributes. The last 7 attributes describe the <a href="https://en.wikipedia.org/wiki/Invariant_mass">invariant mass</a> for different processes.</p>
-<p>I'll explain further what these processes are later on, but for now I'll start by loading in the data. Since the data set is so large at 1.1 million data points, I decided to randomly sample 10000 of them, just to save some processing time.</p>
+<p>I'll explain further what these processes are later on, but for now I'll start by loading in the data. Since the data set is so large at 1.1 million data points, I decided to randomly choose 10000 of them for analysis, just to save some processing time.</p>
 <div class="codehilite"><pre><span></span><code><span class="c1"># load data</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;HIGGS.csv&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="c1"># select only last 7 attributes</span>
@@ -560,13 +560,13 @@ DNest4 version: 0.2.4
 </code></pre></div>
 
 
-<p>For a particle A, which decays via the process <script type="math/tex">A \rightarrow B + C</script> into particles B and C, the invariant mass squared</p>
+<p>For a particle A with mass <script type="math/tex">m_{A}</script>, which decays via the process <script type="math/tex">A \rightarrow B + C</script> into particles B and C which both have mass, energy, and momentum <script type="math/tex">m_{B,C}, E_{B,C}, \vec{p}_{B,C}</script> respectively, the invariant mass squared</p>
 <p>
 <script type="math/tex; mode=display"> m_A^2 = m_{B+C}^2 = (E_B + E_C)^2 - |(\vec{p}_B + \vec{p}_C)|^2 </script>
 </p>
 <p>is a Lorentz invariant quantity, meaning it is the same in all reference frames. This means that in the zero-momentum frame of reference, the invariant mass is just given by the mass of the particle A, <script type="math/tex">m_A</script>.</p>
-<p>The data set is made up of 10000 collisions, in any of which particle A may have been produced. Particle A's subsequent decay results in a a peak around <script type="math/tex">m_A</script>, and therefore by finding the centre of the peak the invariant mass of the particle can be found. Mass is typically used to identify particles since a particle's mass is unique. </p>
-<p>There are three attributes in particular that are of interest for us. The first is the invariant mass of the process <script type="math/tex">W \rightarrow l \nu</script> that describes a W boson decay into a lepton neutrino pair. The peak invariant mass <script type="math/tex">m_{l\nu}</script> of this distribution should be at the W boson mass <script type="math/tex">m_W</script>.
+<p>The data set is made up of 10000 collisions, in any of which particle A may have been produced. Particle A's subsequent decay results in a peak around <script type="math/tex">m_A</script> when a histogram of measured invariant mass is plotted, and therefore by finding the centre of the peak the invariant mass of the particle can be found. Mass is typically used to identify particles since a particle's mass is unique, and so finding the mass <script type="math/tex">m_A</script> can identify what particle A is.</p>
+<p>There are three data attributes in particular that are of interest for us. The first is the invariant mass of the process <script type="math/tex">W \rightarrow l \nu</script> that describes a W boson decay into a lepton neutrino pair. The peak invariant mass <script type="math/tex">m_{l\nu}</script> of this distribution should be at the W boson mass <script type="math/tex">m_W</script>.
 The second attribute is the invariant mass for the process <script type="math/tex">t \rightarrow W b</script> that describes a top quark decaying into a W boson and a bottom quark. The invariant mass <script type="math/tex">m_{Wb}</script> should peak at the mass of the top quark <script type="math/tex">m_t</script>.
 Finally, the third attribute is the invariant mass for the process <script type="math/tex">h_0 \rightarrow b \bar{b}</script> of a Higgs decay into a bottom-antibottom meson. The invariant mass <script type="math/tex">m_{b\bar{b}}</script> should peak at the mass of the Higgs boson <script type="math/tex">m_{h_0}</script>.</p>
 <p>Since we have the three invariant mass distributions, we can use them to measure the masses of the W boson, top quark, and Higgs boson. This is done by plotting a histogram of the invariant mass distributions, since the y-axis gives an idea of the relative frequency of each collision having a certain invariant mass:</p>
@@ -600,7 +600,7 @@ Finally, the third attribute is the invariant mass for the process <script type=
 
 <p><img alt="png" src="../output_9_0.png" /></p>
 <h2 id="the-model">The model</h2>
-<p>The peaks reach a sharp peak, after which they fall off with what looks like a <script type="math/tex">1/m^\alpha</script> relationship. To model this, I used a quadratic ascending limb, and a reciprocal quadratic decending limb. The model is implemented in Python with the following parameters:</p>
+<p>The peaks reach a sharp peak, after which they fall off with what looks like a <script type="math/tex">1/m^\alpha</script> relationship. To model this, I used a polynomial ascending limb, and a reciprocal polynomial decending limb. The model is implemented in Python with the following parameters:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">polynom</span><span class="p">(</span><span class="n">masses</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">m_in</span><span class="p">,</span> <span class="n">m_max</span><span class="p">,</span> <span class="n">m_fin</span><span class="p">,</span> <span class="n">t_1</span><span class="p">,</span> <span class="n">t_2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to model a particle production frequency as a function of invariant mass</span>
@@ -642,8 +642,8 @@ Finally, the third attribute is the invariant mass for the process <script type=
 <p><img alt="png" src="../output_14_0.png" /></p>
 <p>The model looks like it sufficiently describes the frequency peak. The parameter that we are primarily interested in is m_max, since it predicts the most frequent invariant mass in this range; which for this example should be equal to the mass of the W boson.</p>
 <h2 id="modelling-with-pystan">Modelling with PyStan</h2>
-<p>PyStan is a Python wrapper for a C++ based sampler "Stan". To use PyStan, we first have to write a code string in C++. This code string is split into 5 blocks: functions (optional), data, parameters, transformed parameters (optional), and model. </p>
-<p>The functions block contains user-defined functions, such as the model function defined above. The data block initialises variables such as the number of data points, the invariant masses, and their respective frequency densities. The parameters block initialises the parameters of the model. The transformed parameters block gives the expected value of the model, given the current parameters. Finally, the model block sets the priors and likelihood distrubutions.</p>
+<p>PyStan is a Python wrapper for a C++ based sampler <a href="https://mc-stan.org/">"Stan"</a>. To use PyStan, we first have to write a code string in C++. This code string is split into 5 blocks: "functions" (optional), "data", "parameters", "transformed parameters" (optional), and "model". The optional blocks are not required for some models, but are required in this example.</p>
+<p>The functions block contains user-defined functions, such as the "polynom" function defined above. The data block initialises variables such as the number of data points, the invariant masses, and their respective frequency densities. The parameters block initialises the parameters of the model. The transformed parameters block gives the expected value of the model, given the current parameters. Finally, the model block sets the priors and likelihood distrubutions.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">pystan_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">functions {{</span>
 <span class="s2">    real polynom(real x, real h, real m_in, real m_max,</span>
@@ -712,7 +712,7 @@ Finally, the third attribute is the invariant mass for the process <script type=
 </code></pre></div>
 
 
-<p>In the above code string, there is an extra parameter "sigma". This parameter is used to model the noise of the data. Since this values is difficult to guess, the value of sigma is set to be uniform in log-space. This means that noise standard deviation has an equal probabillity of being between an order of magnitude of -2 and 2. This is used as an alternate to using a Poisson distribution. A comparison example between this likelihood and a Poisson likelihood can be found on this site <a href="https://mo-ghani.github.io/Sampling/PyMC3_GRS/PyMC3_GRS/#sampling-the-data-alternate-method">here</a>.</p>
+<p>In the above code string, there is an extra parameter "sigma". This parameter is used to model the noise of the data. Since this value is difficult to guess, the value of sigma is set to be uniform in log-space. This means that noise standard deviation has an equal probabillity of being between an order of magnitude of -2 and 2. This is used as an alternate to using a Poisson distribution. A comparison example between this likelihood and a Poisson likelihood can be found on this site <a href="https://mo-ghani.github.io/Sampling/PyMC3_GRS/PyMC3_GRS/#sampling-the-data-alternate-method">here</a>.</p>
 <p>Next, we need to pass information to the code string. This is done using a dictionary that contains the number of data points, frequency density, and invariant mass data points, and another dictionary that contains all the prior bounds for each parameter.</p>
 <p>I'll start using the <script type="math/tex">m_{lv}</script> distribution:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">data_w</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;N&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_w</span><span class="p">),</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">n_w</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">:</span> <span class="n">bins_w</span><span class="p">}</span>
@@ -824,7 +824,7 @@ Time taken to sample m_bb peak: 1.7904999256134032 seconds
 
 
 <h3 id="results">Results</h3>
-<p>Now that all of the peaks have been sampled, we can check out the posterior samples returned by PyStan. We'll start by plotting a corner plot for the <script type="math/tex">m_{l\nu}</script> model, which shows the posterior distributions for each parameter, along with a contour plot describing how a parameter may vary with any other. This is done using "corner.py" and a Gaussian KDE function from scipy:</p>
+<p>Now that all of the peaks have been sampled, we can check out the posterior samples returned by PyStan. We'll start by plotting a corner plot for the <script type="math/tex">m_{l\nu}</script> model, which shows the posterior distributions for each parameter, along with a contour plot describing how a parameter may vary with any other. This is done using <a href="https://corner.readthedocs.io/en/latest/">"corner.py"</a> and a Gaussian KDE function from scipy:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">plotposts</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">hist_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))]</span>
@@ -840,7 +840,7 @@ Time taken to sample m_bb peak: 1.7904999256134032 seconds
 
 
 <p><img alt="png" src="../output_36_0.png" /></p>
-<p>We're interested in only the value of m_max for each model, since it describes the mass of the particle that created the peak. We can collect the means and standard deviation errors for each parameter, along with randomly sampling from the posteriors so that we can create a posterior predictive plot.</p>
+<p>We're interested in only the value of "m_max" for each model, since it describes the mass of the particle that created the peak. We can collect the means and standard deviation errors for each parameter, along with randomly sampling from the posteriors so that we can create a posterior predictive plot.</p>
 <div class="codehilite"><pre><span></span><code><span class="c1"># mean and error of parameters for m_lv distribution</span>
 <span class="n">means_w</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">samples_w</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
 <span class="n">errors_w</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">samples_w</span><span class="p">[:,</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
@@ -890,9 +890,9 @@ Mean Invariant Mass of m_bb peak: 121.08971310473981 ± 0.7304177489930841 GeV/c
 Mass of Higgs boson: 125 GeV/c²
 </code></pre></div>
 
-<p>The values for m_max make good estimates for the masses of the particles that caused the peaks. The predictions are systematically slightly lower than the true masses, which is likely due to the model I used being only a simplified approximation, instead of a more accurate model. The increased error on the estimate for the mass of the top quark is likely due to a much higher level of noise in the data.</p>
+<p>The values for "m_max" make good estimates for the masses of the particles that caused the peaks. The predictions are systematically slightly lower than the true masses, which is likely due to the model I used being only a simplified approximation, instead of a more accurate model. The increased error on the estimate for the mass of the top quark is likely due to a much higher level of noise in the data.</p>
 <h3 id="plotting-the-posterior">Plotting the posterior</h3>
-<p>We can plot the posterior distributions for each peak to see the quality of the fit produced by the sampler. Below are plots for both the mean posterior (left) and the posterior predictive (right).</p>
+<p>We can plot the posterior distributions for each peak to see the quality of the fit produced by the sampler. Below are plots for both the mean posterior (left) and the posterior predictive (right). In descending order, the rows show these plots for the <script type="math/tex">m_{l\nu}</script>, <script type="math/tex">m_{Wb}</script>, and <script type="math/tex">m_{b\bar{b}}</script> distributions respectively.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1400</span><span class="p">,</span><span class="mi">1400</span><span class="p">)</span>
 <span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
 
@@ -950,7 +950,7 @@ Mass of Higgs boson: 125 GeV/c²
 
 <p><img alt="png" src="../output_43_0.png" /></p>
 <h2 id="modelling-with-dnest4">Modelling with DNest4</h2>
-<p>In an attempt to improve on the previous model, I came up with a modification on the <a href="https://en.wikipedia.org/wiki/Crystal_Ball_function">Crystal Ball Function</a>. To evaluate whether or not this new model explains the data better than the previous model, I'll use a nested sampler <a href="https://github.com/eggplantbren/DNest4">"Dnest4"</a>, so that I can calculate the Bayes' factor of the models. DNest4 is a sampler that uses <a href="https://arxiv.org/pdf/1606.03757.pdf">diffuse nested sampling</a>, which is a variation on typical nested sampling that works well when variables have strong dependancies on each other.</p>
+<p>In an attempt to improve on the previous model, I came up with a modification on the <a href="https://en.wikipedia.org/wiki/Crystal_Ball_function">Crystal Ball Function</a>. To evaluate whether or not this new model explains the data better than the previous model, I'll use a nested sampler <a href="https://github.com/eggplantbren/DNest4">"Dnest4"</a>, so that I can calculate the Bayes' factor of the models. DNest4 is a sampler that uses <a href="https://arxiv.org/pdf/1606.03757.pdf">diffusive nested sampling</a>, which is a variation on typical nested sampling that works well when variables have strong dependancies on each other.</p>
 <h3 id="the-model_1">The model</h3>
 <p>The new model is a little more complex than the previous model, but has the same number of parameters. The function is made of three pieces: an exponential ascending limb, a Gaussian centre, and an exponential descending limb. The function is implemented as follows:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">EGE</span><span class="p">(</span><span class="n">masses</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">a_L</span><span class="p">,</span> <span class="n">a_H</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
@@ -1243,7 +1243,7 @@ Effective sample size = 247.0799673512741
 Mass of the Higgs boson: 125 GeV/c²
 </code></pre></div>
 
-<p>The EGE model is slightly better at predicting the Higgs boson mass, however both have simillar errors on their estimates.</p>
+<p>The EGE model is slightly better at predicting the Higgs boson mass, but still both samplers have simillar errors on their estimates.</p>
 <h3 id="plotting-the-posterior_1">Plotting the posterior</h3>
 <p>Using the "plotposts" function from before, we can create a corner plot for the EGE model.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">,</span> <span class="s1">&#39;mu&#39;</span><span class="p">,</span> <span class="s1">&#39;sig&#39;</span><span class="p">,</span> <span class="s1">&#39;a_L&#39;</span><span class="p">,</span> <span class="s1">&#39;a_H&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
@@ -1305,7 +1305,7 @@ Mass of the Higgs boson: 125 GeV/c²
 <div class="highlight"><pre><span></span><code>Bayes Factor: 57.44659681610874
 </code></pre></div>
 
-<p>A Bayes' factor of 1.0 would suggest that both models are equally likely to explain the observed data. However, this result is in strong favour of the "polynom" function, meaning it is much more likely to explain the observed data than the exponential model. Typically, a Bayes factor over 30 is considered a strong preference of models, and over 100 is a decisive preference of models.</p>
+<p>A Bayes' factor of 1.0 would suggest that both models are equally likely to explain the observed data. However, this result is in strong favour of the "polynom" function, meaning it is much more likely to explain the observed data than the "EGE" model. Typically, a Bayes factor over 30 is considered a strong preference of models, and over 100 is a decisive preference of models.</p>
                 
               
               

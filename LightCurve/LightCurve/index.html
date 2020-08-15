@@ -349,8 +349,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan" class="md-nav__link">
-      Particle Identification in Proton-Proton Collisions with PyStan
+    <a href="../../particleID/particleID/" title="Particle Identification in Proton-Proton Collisions with PyStan and DNest4" class="md-nav__link">
+      Particle Identification in Proton-Proton Collisions with PyStan and DNest4
     </a>
   </li>
 
@@ -512,8 +512,8 @@
                 
                 
                 <h1 id="using-emcee-and-ultranest-to-model-the-light-curves-from-kepler-10">Using emcee and UltraNest to model the light curves from Kepler-10</h1>
-<p>Kepler-10 is a star located roughly 608 light years from Earth. Kepler-10 was targeted by NASA in their search for an Earth-like exoplanet, and in 2011 the first exoplanet orbiting Kepler-10 was discovered. The planet, Kepler-10b, is a rocky planet with 1.4x the radius of Earth, and 3.7x the mass.</p>
-<p>As Kepler-10b passes in front of its star, it obstructs some flux (the light energy per unit time per unit area) from the star, casting a shadow towards Earth. We see this as a slight periodic dip in light intensity, occurring every time the exoplanet is in front of its star. Measuring the light curve (flux as a function of time) from a star with an exoplanet is called "transit detection", and can be used to infer the existence of an exoplanet and find the properties of the star-planet system.</p>
+<p><a href="https://en.wikipedia.org/wiki/Kepler-10">Kepler-10</a> is a star located roughly 608 light years from Earth. Kepler-10 was targeted by NASA in their search for an Earth-like exoplanet, and in 2011 the first exoplanet orbiting Kepler-10 was discovered. The planet, Kepler-10b, is a rocky planet with 1.4x the radius of Earth, and 3.7x the mass.</p>
+<p>As Kepler-10b passes in front of its star, it obstructs some flux (the light energy per unit time per unit area) from the star, casting a shadow towards Earth. We see this as a slight periodic dip in light intensity, occurring every time the exoplanet is in front of its star. Measuring the light curve (flux as a function of time) from a star with an exoplanet is called <a href="https://en.wikipedia.org/wiki/Methods_of_detecting_exoplanets#Transit_photometry">"transit detection"</a>, and can be used to infer the existence of an exoplanet and find the properties of the star-planet system.</p>
 <p>In this example, I will create a model describing the flux of a star with, a single orbiting planet, as a function of time. I will then use the "emcee" and "UltraNest" samplers to fit the model parameters to some real Kepler-10 light curve data, provided by NASA.</p>
 <h2 id="useful-imports">Useful imports</h2>
 <div class="codehilite"><pre><span></span><code><span class="c1"># numpy</span>
@@ -583,7 +583,7 @@ UltraNest version: 2.2.2
 <p><img alt="png" src="../output_8_0.png" /></p>
 <p>The above plot shows regular dips in flux, as expected from exoplanet transits. The dips appear to be "V-shaped", with sloped sides and a flat bottom. This suggests we could use a model of regular trapezium shaped flux drops. However, the slopes are fairly steep, so we could also use a much simpler square shaped flux drop instead. This would save on time, but may come at the cost of accuracy.</p>
 <h2 id="the-model">The model</h2>
-<p>Below is a diagram showing which parameters are needed to define a trapezium shaped transit (left), and how I will go about implementing the model in Python (right). I started with a simple recurring step function, then modified the step to have the triangular shape with height "h", which can be calculated using basic trigonometry. Finally, I added a hard floor at a flux change of df, to create the trapezium shape. The square transit shape is similar, but tt and tf are equal.</p>
+<p>Below is a diagram showing which parameters are needed to define a trapezium shaped transit (left), and how I will go about implementing the model in Python (right). I started with a simple recurring step function, then modified the step to have the triangular shape with height "h", which can be calculated using basic trigonometry. Finally, I added a hard floor at a flux change of df, to create the trapezium shape. The square transit shape is similar, but "tt" and "tf" are equal.</p>
 <p><img alt="" src="../transits.png" title="Model" /></p>
 <p>Using this, I defined a the function that will be used to model the transit:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">transit</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tt</span><span class="p">,</span> <span class="n">tf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">off</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">square</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -643,7 +643,7 @@ UltraNest version: 2.2.2
 
 <p>I'll be using both a trapezium and square shape transit in tandem throughout this example, and I'll compare the performance and accuracies of both models.</p>
 <h2 id="modelling-with-emcee">Modelling with emcee</h2>
-<p>Now that we know the parameters that will describe the model, we can start guessing at the parameter priors by using the plots above. Due to the noise, I'll use a uniform prior on f, but a normal prior on other parameters. Since the square transit model does not require the "tf" parameter, we can omit it from the list of square transit priors for a little extra time save. This model is quite complicated with six parameters, and eyeballing the values of each parameter can be tricky. Using a little trial and error, I came up with the following guesses:</p>
+<p>Now that we know the parameters that will describe the model, we can start guessing at the parameter priors by using the plots above. Due to the noise, I'll use a uniform prior on "f", but a normal prior on other parameters. Since the square transit model does not require the "tf" parameter, we can omit it from the list of square transit priors for a little extra time save. This model is quite complicated with six parameters, and eyeballing the values of each parameter can be tricky. Using a little trial and error, I came up with the following guesses:</p>
 <div class="codehilite"><pre><span></span><code><span class="c1"># uniform prior on flux</span>
 <span class="n">f_min</span> <span class="o">=</span> <span class="mf">4.9</span>
 <span class="n">f_max</span> <span class="o">=</span> <span class="mf">5.8</span>
@@ -833,7 +833,7 @@ time taken to sample a square transit model with emcee: 19.97200083732605 second
 
 
 <h3 id="results">Results</h3>
-<p>Let's take a look at what we found. Looking at the trapezium model, we can plot the posteriors of each parameter, along with contour plots describing how one parameter may vary with any other. This can be done using "corner.py", and a scipy Gaussian KDE function.</p>
+<p>Let's take a look at what we found. Looking at the trapezium model, we can plot the posteriors of each parameter, along with contour plots describing how one parameter may vary with any other. This can be done using <a href="https://corner.readthedocs.io/en/latest/">"corner.py"</a>, and a scipy Gaussian KDE function.</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">plotposts</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">fig</span> <span class="o">=</span> <span class="n">corner</span><span class="o">.</span><span class="n">corner</span><span class="p">(</span><span class="n">samples</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">hist_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">))]</span>
