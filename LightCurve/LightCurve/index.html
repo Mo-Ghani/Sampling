@@ -512,7 +512,7 @@
                 
                 
                 <h1 id="using-emcee-and-ultranest-to-model-the-light-curves-from-kepler-10">Using emcee and UltraNest to model the light curves from Kepler-10</h1>
-<p><a href="https://en.wikipedia.org/wiki/Kepler-10">Kepler-10</a> is a star located roughly 608 light years from Earth. Kepler-10 was targeted by NASA in their search for an Earth-like exoplanet, and in 2011 the first exoplanet orbiting Kepler-10 was discovered. The planet, Kepler-10b, is a rocky planet with 1.4x the radius of Earth, and 3.7x the mass.</p>
+<p><a href="https://en.wikipedia.org/wiki/Kepler-10">Kepler-10</a> is a star located roughly 608 light-years from Earth. Kepler-10 was targeted by NASA in their search for an Earth-like exoplanet, and in 2011 the first exoplanet orbiting Kepler-10 was discovered. The planet, Kepler-10b, is a rocky planet with 1.4x the radius of Earth, and 3.7x the mass.</p>
 <p>As Kepler-10b passes in front of its star, it obstructs some flux (the light energy per unit time per unit area) from the star, casting a shadow towards Earth. We see this as a slight periodic dip in light intensity, occurring every time the exoplanet is in front of its star. Measuring the light curve (flux as a function of time) from a star with an exoplanet is called <a href="https://en.wikipedia.org/wiki/Methods_of_detecting_exoplanets#Transit_photometry">"transit detection"</a>, and can be used to infer the existence of an exoplanet and find the properties of the star-planet system.</p>
 <p>In this example, I will create a model describing the flux of a star with, a single orbiting planet, as a function of time. I will then use the "emcee" and "UltraNest" samplers to fit the model parameters to some real Kepler-10 light curve data, provided by NASA.</p>
 <h2 id="useful-imports">Useful imports</h2>
@@ -549,7 +549,7 @@ UltraNest version: 2.2.2
 </code></pre></div>
 
 <h2 id="viewing-the-data">Viewing the data</h2>
-<p>Light curve models can vary from simple square shaped transits, to extremely complicated transits involving limb-darkening and other effects. To decide which model is most appropriate, we need to first see the data we will be using.</p>
+<p>Light curve models can vary from simple square-shaped transits, to extremely complicated transits involving limb-darkening and other effects. To decide which model is most appropriate, we need to first see the data we will be using.</p>
 <p>The light curve data is in the form of a FITS file. These files can be easily loaded into a Table format (similar to a Pandas DataFrame) using astropy. The data is quite large, so I chose to look at the first 1325 data points only. Whilst extracting the data, any data points with a flux of "nan" need to be removed from both the "flux" and "time" lists.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">table</span> <span class="o">=</span> <span class="n">fits</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;kplr011904151-2010265121752_llc.fits&quot;</span><span class="p">)</span>
 <span class="n">tab</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -581,9 +581,9 @@ UltraNest version: 2.2.2
 
 
 <p><img alt="png" src="../output_8_0.png" /></p>
-<p>The above plot shows regular dips in flux, as expected from exoplanet transits. The dips appear to be "V-shaped", with sloped sides and a flat bottom. This suggests we could use a model of regular trapezium shaped flux drops. However, the slopes are fairly steep, so we could also use a much simpler square shaped flux drop instead. This would save on time, but may come at the cost of accuracy.</p>
+<p>The above plot shows regular dips in flux, as expected from exoplanet transits. The dips appear to be "V-shaped", with sloped sides and a flat bottom. This suggests we could use a model of regular trapezium-shaped flux drops. However, the slopes are fairly steep, so we could also use a much simpler square-shaped flux drop instead. This would save on time, but may come at the cost of accuracy.</p>
 <h2 id="the-model">The model</h2>
-<p>Below is a diagram showing which parameters are needed to define a trapezium shaped transit (left), and how I will go about implementing the model in Python (right). I started with a simple recurring step function, then modified the step to have the triangular shape with height "h", which can be calculated using basic trigonometry. Finally, I added a hard floor at a flux change of df, to create the trapezium shape. The square transit shape is similar, but "tt" and "tf" are equal.</p>
+<p>Below is a diagram showing which parameters are needed to define a trapezium-shaped transit (left), and how I will go about implementing the model in Python (right). I started with a simple recurring step function, then modified the step to have the triangular shape with height "h", which can be calculated using basic trigonometry. Finally, I added a hard floor at a flux change of df, to create the trapezium shape. The square transit shape is similar, but "tt" and "tf" are equal.</p>
 <p><img alt="" src="../transits.png" title="Model" /></p>
 <p>Using this, I defined a the function that will be used to model the transit:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">transit</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tt</span><span class="p">,</span> <span class="n">tf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">off</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">square</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -906,7 +906,7 @@ fractional flux decrease = 0.00024373683466889182 ± 3.7647641082140636e-06
 
 <p>The period in both cases is around 20 hours. This is unique to one body in the Kepler-10 system: Our model describes the transits of Kepler-10b.</p>
 <h3 id="plotting-the-posterior">Plotting the posterior</h3>
-<p>We can sample from the posteriors further to create slightly different sets of the parameters. From this, we can plot a new line over our original data, creating a posterior predictive plot. The regions in which the model is most likely to fall in will appear darker on the plot, and so the darker the plot, the higher the probabillity of the flux passing through it.</p>
+<p>We can sample from the posteriors further to create slightly different sets of the parameters. From this, we can plot a new line over our original data, creating a posterior predictive plot. The regions in which the model is most likely to fall in will appear darker on the plot, and so the darker the plot, the higher the probability of the flux passing through it.</p>
 <p>Start by randomly choosing 400 of each parameter for the trapezium and square models:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">n_fits</span> <span class="o">=</span> <span class="mi">400</span>
 
@@ -983,7 +983,7 @@ fractional flux decrease = 0.00024373683466889182 ± 3.7647641082140636e-06
 <p><img alt="png" src="../output_48_0.png" /></p>
 <p>From the posterior predictive plots, it seems that both models explain the data fairly well. The trapezium model seems like it follows the data a little closer, but I won't dismiss the square transit model just yet. To decide which model best describes the data, we can see which best predicts properties of the Kepler-10 system.</p>
 <h3 id="model-comparisons">Model comparisons</h3>
-<p>Now that we have the mean values for each parameter, we can start to infer information about the star-planet system the model describes. I'll use both models for this, and find out which model predicts the properties the system with the greatest accuracy. For the derivations on equations for the following calculations, check out <a href="https://arxiv.org/pdf/1711.06601.pdf">this paper</a>. For each property, I'll state the most accpeted values found <a href="https://en.wikipedia.org/wiki/Kepler-10">here</a>.</p>
+<p>Now that we have the mean values for each parameter, we can start to infer information about the star-planet system the model describes. I'll use both models for this, and find out which model predicts the properties of the system with the greatest accuracy. For the derivations on equations for the following calculations, check out <a href="https://arxiv.org/pdf/1711.06601.pdf">this paper</a>. For each property, I'll state the most accepted values found <a href="https://en.wikipedia.org/wiki/Kepler-10">here</a>.</p>
 <p>The first property we can find is the ratio of the planet radius "Rp" and star radius "Rs". This is simply the square root of the mean flux drop:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">RpRs</span><span class="p">,</span> <span class="n">RpRs_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="n">dferr</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
 <span class="n">RpRs_square</span><span class="p">,</span> <span class="n">RpRs_square_err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df_square</span><span class="p">),</span> <span class="n">dferr_square</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">df_square</span><span class="p">))</span>
@@ -1001,7 +1001,7 @@ Accepted planet to star radius ratio: 0.0127
 </code></pre></div>
 
 <p>Both models are in close agreement with each other, and are quite close to the accepted value of the planet to star radius ratio (to within the same order of magnitude). We only used a handful of transits, and under one month of data, so the difference between predicted and accepted ratios here are acceptable. Sampling with the entire dataset instead of the shortened data I used does not improve this estimate.</p>
-<p>Next, we can attempt to find incination angle "I", usually defined as the angle between the plane of a celestial body's orbit and the plane that is normal to the line of sight from Earth. This isn't quite possible for the square model, due to the total transit and flat transit times being equal. To account for this, I'll instead say the flat transit time is 99% of the total transit time, just to keep everything finite.</p>
+<p>Next, we can attempt to find inclination angle "I", usually defined as the angle between the plane of a celestial body's orbit and the plane that is normal to the line of sight from Earth. This isn't quite possible for the square model, due to the total transit and flat transit times being equal. To account for this, I'll instead say the flat transit time is 99% of the total transit time, just to keep everything finite.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">tf_square</span><span class="p">,</span> <span class="n">tferr_square</span> <span class="o">=</span> <span class="mf">0.99</span><span class="o">*</span><span class="n">tt_square</span><span class="p">,</span> <span class="mf">0.99</span><span class="o">*</span><span class="n">tterr_square</span>
 </code></pre></div>
 
@@ -1333,7 +1333,7 @@ fractional flux decrease = 0.0002456676060063817 ± 3.5643330145173593e-06
 Marginalised likelihood for square transit model: -275.8168531966252 ± 0.06290063669114569
 </code></pre></div>
 
-<p>Using these marginal likelihoods, we can find the Bayes factor. This is the defined as the ratio of the marginal likelihoods. If the Bayes factor is larger than one, it means that the trapezium model is more likely to produce the observed data.</p>
+<p>Using these marginal likelihoods, we can find the Bayes factor. This is defined as the ratio of the marginal likelihoods. If the Bayes factor is larger than one, it means that the trapezium model is more likely to produce the observed data.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logZ_trap</span> <span class="o">-</span> <span class="n">logZ_square</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Bayes factor: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">K</span><span class="p">))</span>
 </code></pre></div>
@@ -1343,7 +1343,7 @@ Marginalised likelihood for square transit model: -275.8168531966252 ± 0.062900
 </code></pre></div>
 
 <p>This result tells us that the square transit model is only slightly more likely to produce the observed light curve, as we first predicted earlier with emcee.</p>
-<p>In reality, the transit model makes a lot more sense than a square transit shape. However, since there were only around 4 or 5 data points per transit, their shape was likely misrepresented. If instead we used a data set of a planet with a longer transit time, or took flux measurements more frequently, then the trapezium transit shape may become prefered.</p>
+<p>In reality, the transit model makes a lot more sense than a square transit shape. However, since there were only around 4 or 5 data points per transit, their shape was likely misrepresented. If instead we used a data set of a planet with longer transit time, or took flux measurements more frequently, then the trapezium transit shape may become prefered.</p>
                 
               
               

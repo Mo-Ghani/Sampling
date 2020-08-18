@@ -600,7 +600,7 @@ Finally, the third attribute is the invariant mass for the process <script type=
 
 <p><img alt="png" src="../output_9_0.png" /></p>
 <h2 id="the-model">The model</h2>
-<p>The peaks reach a sharp peak, after which they fall off with what looks like a <script type="math/tex">1/m^\alpha</script> relationship. To model this, I used a polynomial ascending limb, and a reciprocal polynomial decending limb. The model is implemented in Python with the following parameters:</p>
+<p>The peaks reach a sharp peak, after which they fall off with what looks like a <script type="math/tex">1/m^\alpha</script> relationship. To model this, I used a polynomial ascending limb, and a reciprocal polynomial descending limb. The model is implemented in Python with the following parameters:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">polynom</span><span class="p">(</span><span class="n">masses</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">m_in</span><span class="p">,</span> <span class="n">m_max</span><span class="p">,</span> <span class="n">m_fin</span><span class="p">,</span> <span class="n">t_1</span><span class="p">,</span> <span class="n">t_2</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Function to model a particle production frequency as a function of invariant mass</span>
@@ -643,7 +643,7 @@ Finally, the third attribute is the invariant mass for the process <script type=
 <p>The model looks like it sufficiently describes the frequency peak. The parameter that we are primarily interested in is m_max, since it predicts the most frequent invariant mass in this range; which for this example should be equal to the mass of the W boson.</p>
 <h2 id="modelling-with-pystan">Modelling with PyStan</h2>
 <p>PyStan is a Python wrapper for a C++ based sampler <a href="https://mc-stan.org/">"Stan"</a>. To use PyStan, we first have to write a code string in C++. This code string is split into 5 blocks: "functions" (optional), "data", "parameters", "transformed parameters" (optional), and "model". The optional blocks are not required for some models, but are required in this example.</p>
-<p>The functions block contains user-defined functions, such as the "polynom" function defined above. The data block initialises variables such as the number of data points, the invariant masses, and their respective frequency densities. The parameters block initialises the parameters of the model. The transformed parameters block gives the expected value of the model, given the current parameters. Finally, the model block sets the priors and likelihood distrubutions.</p>
+<p>The functions block contains user-defined functions, such as the "polynom" function defined above. The data block initialises variables such as the number of data points, the invariant masses, and their respective frequency densities. The parameters block initialises the parameters of the model. The transformed parameters block gives the expected value of the model, given the current parameters. Finally, the model block sets the priors and likelihood distributions.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">pystan_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">functions {{</span>
 <span class="s2">    real polynom(real x, real h, real m_in, real m_max,</span>
@@ -712,7 +712,7 @@ Finally, the third attribute is the invariant mass for the process <script type=
 </code></pre></div>
 
 
-<p>In the above code string, there is an extra parameter "sigma". This parameter is used to model the noise of the data. Since this value is difficult to guess, the value of sigma is set to be uniform in log-space. This means that noise standard deviation has an equal probabillity of being between an order of magnitude of -2 and 2. This is used as an alternate to using a Poisson distribution. A comparison example between this likelihood and a Poisson likelihood can be found on this site <a href="https://mo-ghani.github.io/Sampling/PyMC3_GRS/PyMC3_GRS/#sampling-the-data-alternate-method">here</a>.</p>
+<p>In the above code string, there is an extra parameter "sigma". This parameter is used to model the noise of the data. Since this value is difficult to guess, the value of sigma is set to be uniform in log-space. This means that noise standard deviation has an equal probability of being between an order of magnitude of -2 and 2. This is used as an alternative to using a Poisson distribution. A comparison example between this likelihood and a Poisson likelihood can be found on this site <a href="https://mo-ghani.github.io/Sampling/PyMC3_GRS/PyMC3_GRS/#sampling-the-data-alternate-method">here</a>.</p>
 <p>Next, we need to pass information to the code string. This is done using a dictionary that contains the number of data points, frequency density, and invariant mass data points, and another dictionary that contains all the prior bounds for each parameter.</p>
 <p>I'll start using the <script type="math/tex">m_{lv}</script> distribution:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">data_w</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;N&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">n_w</span><span class="p">),</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="n">n_w</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">:</span> <span class="n">bins_w</span><span class="p">}</span>
@@ -950,7 +950,7 @@ Mass of Higgs boson: 125 GeV/c²
 
 <p><img alt="png" src="../output_43_0.png" /></p>
 <h2 id="modelling-with-dnest4">Modelling with DNest4</h2>
-<p>In an attempt to improve on the previous model, I came up with a modification on the <a href="https://en.wikipedia.org/wiki/Crystal_Ball_function">Crystal Ball Function</a>. To evaluate whether or not this new model explains the data better than the previous model, I'll use a nested sampler <a href="https://github.com/eggplantbren/DNest4">"Dnest4"</a>, so that I can calculate the Bayes' factor of the models. DNest4 is a sampler that uses <a href="https://arxiv.org/pdf/1606.03757.pdf">diffusive nested sampling</a>, which is a variation on typical nested sampling that works well when variables have strong dependancies on each other.</p>
+<p>In an attempt to improve on the previous model, I came up with a modification on the <a href="https://en.wikipedia.org/wiki/Crystal_Ball_function">Crystal Ball Function</a>. To evaluate whether or not this new model explains the data better than the previous model, I'll use a nested sampler <a href="https://github.com/eggplantbren/DNest4">"Dnest4"</a>, so that I can calculate the Bayes' factor of the models. DNest4 is a sampler that uses <a href="https://arxiv.org/pdf/1606.03757.pdf">diffusive nested sampling</a>, which is a variation on typical nested sampling that works well when variables have strong dependencies on each other.</p>
 <h3 id="the-model_1">The model</h3>
 <p>The new model is a little more complex than the previous model, but has the same number of parameters. The function is made of three pieces: an exponential ascending limb, a Gaussian centre, and an exponential descending limb. The function is implemented as follows:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">EGE</span><span class="p">(</span><span class="n">masses</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">sig</span><span class="p">,</span> <span class="n">a_L</span><span class="p">,</span> <span class="n">a_H</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
@@ -1243,7 +1243,7 @@ Effective sample size = 247.0799673512741
 Mass of the Higgs boson: 125 GeV/c²
 </code></pre></div>
 
-<p>The EGE model is slightly better at predicting the Higgs boson mass, but still both samplers have simillar errors on their estimates.</p>
+<p>The EGE model is slightly better at predicting the Higgs boson mass, but still both samplers have similar errors on their estimates.</p>
 <h3 id="plotting-the-posterior_1">Plotting the posterior</h3>
 <p>Using the "plotposts" function from before, we can create a corner plot for the EGE model.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">,</span> <span class="s1">&#39;mu&#39;</span><span class="p">,</span> <span class="s1">&#39;sig&#39;</span><span class="p">,</span> <span class="s1">&#39;a_L&#39;</span><span class="p">,</span> <span class="s1">&#39;a_H&#39;</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="p">]</span>
@@ -1252,7 +1252,7 @@ Mass of the Higgs boson: 125 GeV/c²
 
 
 <p><img alt="png" src="../corner2.png" /></p>
-<p>This plot shows strong correlations between the exponential growth/decay parameters and the standard deviation. Next I'll use the posterior samples to plot the posteriors over the data. Below are two plots: the first shows the mean posterior plots of both the "EGE" and "polynom" models overplotted onto the <script type="math/tex">m_{bb}</script> data. The second plot shows the posterior predictive plots of the "polynom" and "EGE" models.</p>
+<p>This plot shows strong correlations between the exponential growth/decay parameters and the standard deviation. Next, I'll use the posterior samples to plot the posteriors over the data. Below are two plots: the first shows the mean posterior plots of both the "EGE" and "polynom" models overplotted onto the <script type="math/tex">m_{bb}</script> data. The second plot shows the posterior predictive plots of the "polynom" and "EGE" models.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">nfits</span> <span class="o">=</span> <span class="mi">150</span>
 
 <span class="c1"># collect random sets of parameters of polynom model</span>

@@ -558,7 +558,7 @@
 <h2 id="sampling-the-data">Sampling the data</h2>
 <p>Now that the likelihood and prior functions are set up, the sampler can now be implemented to derive some of the properties of the binary black hole system. This process is intensive, and takes a long time (1 hour 15 minutes) to run on my machine. </p>
 <p>The sampler I chose to use is "dynesty", which uses nested sampling to estimate the model parameters. For a more in-depth work through of dynesty, you can read through an example of <a href="https://mo-ghani.github.io/Sampling/PyMC3_GRS/PyMC3_GRS/#modelling-with-dynesty">gamma-ray spectroscopy using dynesty</a> on this site.</p>
-<p>Using bilby, we can run the sampler. First, we have to set the number of live points, and the stopping criterion as hyperparameters. For neatness, I've removed the log that bilby outputs whilst running. Instead I'll just show the summary that is outputted by bilby once the sampler has finished iterating. This summary contains information on the log evidence, and the Bayes factor of the model.</p>
+<p>Using bilby, we can run the sampler. First, we have to set the number of live points, and the stopping criterion as hyperparameters. For neatness, I've removed the log that bilby outputs whilst running. Instead, I'll just show the summary that is outputted by bilby once the sampler has finished iterating. This summary contains information on the log evidence, and the Bayes factor of the model.</p>
 <div class="codehilite"><pre><span></span><code><span class="n">nlive</span> <span class="o">=</span> <span class="mi">1000</span>          <span class="c1"># live points</span>
 <span class="n">stop</span> <span class="o">=</span> <span class="mf">0.1</span>            <span class="c1"># stopping criterion</span>
 <span class="n">method</span> <span class="o">=</span> <span class="s2">&quot;unif&quot;</span>       <span class="c1"># method of sampling</span>
@@ -669,7 +669,7 @@ Accepted black hole masses (in solar masses):
   smallest black hole = 29.1
 </code></pre></div>
 
-<p>Our estimates here are within one standard deviation error of the accpeted black hole masses. This is a good result given that we only used 4 of 15 parameters. However allowing the other 11 parameters to vary would certainly reduce the error on our estimate, at the cost of 15 hours processing time.</p>
+<p>Our estimates here are within one standard deviation error of the accepted black hole masses. This is a good result given that we only used 4 of 15 parameters. However allowing the other 11 parameters to vary would certainly reduce the error on our estimate, at the cost of 15 hours processing time.</p>
                 
               
               

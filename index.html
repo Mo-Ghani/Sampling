@@ -377,9 +377,9 @@
                 
                 <h1 id="the-uses-of-mcmc-and-nested-sampling-algorithms">The Uses Of MCMC and Nested Sampling Algorithms</h1>
 <p>There are various off-the-shelf samplers that make use of MCMC and nested sampling algorithms in Python, freely available for the public to use. 
-The following webpage is a collection of demonstrations of how a handful of popular samplers can be used to analyse real world, open source data sets. </p>
+The following webpage is a collection of demonstrations of how a handful of popular samplers can be used to analyse real-world, open-source data sets. </p>
 <ul>
-<li>A github repository containing all the examples on this webpage can be found <a href="https://github.com/Mo-Ghani/Sampling">here</a></li>
+<li>A GitHub repository containing all the examples on this webpage can be found <a href="https://github.com/Mo-Ghani/Sampling">here</a></li>
 <li>A Docker container containing all the samplers used on this webpage can be found <a href="https://hub.docker.com/r/mattpitkin/samplers/tags">here</a> </li>
 </ul>
 <h2 id="a-brief-introduction-to-bayesian-inference">A Brief Introduction to Bayesian Inference</h2>
@@ -395,7 +395,7 @@ The following webpage is a collection of demonstrations of how a handful of popu
 <p>
 <script type="math/tex; mode=display"> r = \frac{P(D|M^*) P(M^*)}{P(D|M^{i-1}) P(M^{i-1})} = \frac{P(M^*|D)}{P(M^{i-1}|D)}</script>
 </p>
-<p>is then calculated, using the prior and likelihood distributions. This ratio describes which model is most likely to explain the data, and so the proposed model <script type="math/tex">M^*</script> will be accepted if this ratio is greater than 1. Otherwise, the acceptance probability is <script type="math/tex">P = r</script>. Although this allows less likely models to be accepted, it means a wider parameter space can be explored such that a global likelihood maxima can be found, rather than a local maxima.</p>
+<p>is then calculated, using the prior and likelihood distributions. This ratio describes which model is most likely to explain the data, and so the proposed model <script type="math/tex">M^*</script> will be accepted if this ratio is greater than 1. Otherwise, the acceptance probability is <script type="math/tex">P = r</script>. Although this allows less likely models to be accepted, it means a wider parameter space can be explored such that a global likelihood maximum can be found, rather than a local maximum.</p>
 <p>Once a proposed model is accepted, it is added to a set of posterior samples which is returned by the MCMC algorithm when all iterations are complete. These samples can be used to construct <a href="https://en.wikipedia.org/wiki/Marginal_distribution">marginalised posterior distributions</a> for the individual model parameters without having to analytically or numerically integrate the posterior distribution.</p>
 <h2 id="nested-sampling">Nested Sampling</h2>
 <p><a href="https://en.wikipedia.org/wiki/Nested_sampling_algorithm">Nested sampling</a> algorithms are a variation on MCMC, which use numerical methods to calculate the marginal likelihood. The name "marginal likelihood" is literal, meaning that the evidence can be found as the integral of the likelihood with respect to the model (marginalising the model out). When models have tens or hundreds of parameters, this marginalisation becomes impossible. </p>
