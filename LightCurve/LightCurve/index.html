@@ -585,7 +585,7 @@ UltraNest version: 2.2.2
 <h2 id="the-model">The model</h2>
 <p>Below is a diagram showing which parameters are needed to define a trapezium-shaped transit (left), and how I will go about implementing the model in Python (right). I started with a simple recurring step function, then modified the step to have the triangular shape with height "h", which can be calculated using basic trigonometry. Finally, I added a hard floor at a flux change of df, to create the trapezium shape. The square transit shape is similar, but "tt" and "tf" are equal.</p>
 <p><img alt="" src="../transits.png" title="Model" /></p>
-<p>Using this, I defined a the function that will be used to model the transit:</p>
+<p>Using this, I defined the function that will be used to model the transit:</p>
 <div class="codehilite"><pre><span></span><code><span class="k">def</span> <span class="nf">transit</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tt</span><span class="p">,</span> <span class="n">tf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">off</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">square</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Flux, from a uniform star source with single orbiting planet, as a function of time</span>
